@@ -60,6 +60,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\_Scripts\Drag.cs" />
     <Compile Include="Assets\_Scripts\RollAI.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>D:/Programming/UnityProjects/World of Modding/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
