@@ -4,41 +4,84 @@ using UnityEngine;
 
 public class Drag : MonoBehaviour
 {
-    [SerializeField] private int ballY;
-
-    [Header("Debugging and Reference")]
+    [SerializeField] private string ballLayerMask;
 
     [SerializeField] private bool isDragged = false;
     [SerializeField] private Rigidbody2D rigid;
-    [SerializeField] private AnimationCurve curve;
+    [SerializeField] private GameObject drag;
 
-    #region update isDragged
-    private void OnMouseDown() 
-    {
-        isDragged = true;
-    }
-    private void OnMouseUp() 
-    {
-        isDragged = false;
-    }
-    #endregion#
+    //public Vector3 euler = new Vector3(90f, 0f, 1f);
 
-
-    private void FixedUpdate()
+    private void Update()
     {
-        if(isDragged)
+        if (Input.GetMouseButton(0))
         {
-            // calculate mouse pos
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            mousePos = new Vector3(mousePos.x, mousePos.y, ballY);
-            // get difference between mouse and ball 
-            Vector3 difference = mousePos - transform.position;
-            // apply that vector
-            rigid.velocity += new Vector2(curve.Evaluate(difference.x), curve.Evaluate(difference.y)) * 2;
-            
+            RaycastHit2D[] hits = Physics2D.GetRayIntersectionAll(Camera.main.ScreenPointToRay(Input.mousePosition), Mathf.Infinity);
+            if (hits.Length > 0)
+            {
+                for (int i = 0; i < hits.Length; i++)
+                {
+                    RaycastHit2D hit = hits[i];
+                    //Debug.DrawLine(Camera.main.transform.position, hit.point, Color.red);
+
+
+                    if (hit.transform == transform)
+                    {
+                        isDragged = true;
+                        drag = hit.transform.gameObject;
+                    }
+
+                }
+            }
         }
     }
 
-    
+    private void FixedUpdate()
+    {
+        if(isDragged||true)
+        {
+            Debug.Log("what's up=");
+            // positioning
+            //gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+            //Vector3 mousePosition = Input.mousePosition;
+            //Vector2 point = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 3600f));
+            //transform.position = new Vector3(point.x, point.y, 0);
+
+            //// changing the layer
+            //gameObject.layer = LayerMask.NameToLayer("Selected Ball");
+
+            // attaching 
+            for (int i = 0; i < 10; i++)
+            {
+                Debug.Log(i);
+                Vector3 euler = new Vector3(90f, 0f, i / 10 * 360);
+                Debug.Log(euler);
+                Debug.DrawLine(transform.position, transform.position + new Vector3(0f, 10f, 0f));
+                Debug.Log(Quaternion.Euler(euler) * Vector3.forward);
+                Debug.DrawRay(transform.position, (Quaternion.Euler(euler) * Vector3.forward) * 50, Color.blue);
+                RaycastHit2D hit = Physics2D.Raycast(transform.position, Quaternion.Euler(new Vector3(0f, 0f, i / 10) * 360) * Vector3.forward, 50, LayerMask.GetMask(ballLayerMask));
+                if (hit)
+                {
+                    Debug.DrawLine(hit.point, Camera.main.transform.position, Color.green);
+                    Debug.Log(hit);
+                }
+            }
+
+            // stop dragging
+            //if (Input.GetMouseButtonUp(0))
+            //{
+            //    if (drag != null) { drag.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None; }
+            //    isDragged = false;
+            //    drag = null;
+            //    gameObject.layer = LayerMask.NameToLayer("Detached Balls");
+            //    Debug.Log("stopped dragging");
+            //}
+
+        }
+        
+
+    }
+
+
 
 }
