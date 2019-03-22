@@ -53,12 +53,15 @@ public class Drag : MonoBehaviour
             // attaching 
             for (int i = 0; i < 10; i++)
             {
-                Debug.Log(i);
-                Vector3 euler = new Vector3(90f, 0f, i / 10 * 360);
+                Debug.Log("new iteration");
+                Vector3 euler = new Vector3(90f, 0f, i / 10f * 360f);
                 Debug.Log(euler);
+                // to show where the ray started
                 Debug.DrawLine(transform.position, transform.position + new Vector3(0f, 10f, 0f));
+                // to show the ray
                 Debug.Log(Quaternion.Euler(euler) * Vector3.forward);
                 Debug.DrawRay(transform.position, (Quaternion.Euler(euler) * Vector3.forward) * 50, Color.blue);
+                // to cast the ray
                 RaycastHit2D hit = Physics2D.Raycast(transform.position, Quaternion.Euler(new Vector3(0f, 0f, i / 10) * 360) * Vector3.forward, 50, LayerMask.GetMask(ballLayerMask));
                 if (hit)
                 {
