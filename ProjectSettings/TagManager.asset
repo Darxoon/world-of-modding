@@ -19,9 +19,9 @@ TagManager:
   - Geometry
   - SceneLayers
   - 
-  - 
-  - 
-  - 
+  - LightSources
+  - LightObstacles
+  - AmbientLight
   - 
   - 
   - 
