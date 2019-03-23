@@ -18,9 +18,9 @@ TagManager:
   - Attached Balls
   - Geometry
   - SceneLayers
-  - 
-  - 
-  - 
+  - LightSources
+  - LightObstacles
+  - Light
   - 
   - 
   - 
