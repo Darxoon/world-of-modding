@@ -63,6 +63,7 @@
     <Compile Include="Assets\_Scripts\Attach_1.cs" />
     <Compile Include="Assets\_Scripts\Drag.cs" />
     <Compile Include="Assets\_Scripts\RollAI.cs" />
+    <Compile Include="Assets\GetShadows.cs" />
     <Compile Include="Assets\Light2D\Examples\Scripts\Bat.cs" />
     <Compile Include="Assets\Light2D\Examples\Scripts\BlockSetProfile.cs" />
     <Compile Include="Assets\Light2D\Examples\Scripts\ButtonHelper.cs" />
