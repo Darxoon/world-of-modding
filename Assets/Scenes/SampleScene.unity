@@ -759,6 +759,32 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41e5a7be0025e254e84e48277ba91b86, type: 3}
+--- !u!1 &1029039521 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4248019372008310465, guid: 41e5a7be0025e254e84e48277ba91b86,
+    type: 3}
+  m_PrefabInstance: {fileID: 4248019373145083713}
+  m_PrefabAsset: {fileID: 0}
+--- !u!231 &1029039528
+SpringJoint2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1029039521}
+  m_Enabled: 0
+  serializedVersion: 4
+  m_EnableCollision: 1
+  m_ConnectedRigidBody: {fileID: 2071714795}
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_AutoConfigureConnectedAnchor: 0
+  m_Anchor: {x: 0, y: 0}
+  m_ConnectedAnchor: {x: 0, y: 0}
+  m_AutoConfigureDistance: 0
+  m_Distance: 1.8619708
+  m_DampingRatio: 0.73
+  m_Frequency: 1.91
 --- !u!1001 &1047404773
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1430,6 +1456,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 556607086}
   m_PrefabAsset: {fileID: 0}
+--- !u!50 &2071714795 stripped
+Rigidbody2D:
+  m_CorrespondingSourceObject: {fileID: 4248019372008310469, guid: 41e5a7be0025e254e84e48277ba91b86,
+    type: 3}
+  m_PrefabInstance: {fileID: 1193234891}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4248019373145083713
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1445,7 +1477,7 @@ PrefabInstance:
     - target: {fileID: 4248019372008310464, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.73
+      value: -0.59
       objectReference: {fileID: 0}
     - target: {fileID: 4248019372008310464, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}

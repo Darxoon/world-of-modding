@@ -1,8 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
-[RequireComponent(typeof(Attach))]
 public class Drag : MonoBehaviour
 {
     [SerializeField] private string ballLayerMask = "Attached Balls";
@@ -13,15 +13,19 @@ public class Drag : MonoBehaviour
     [SerializeField] private bool isDragged = false;
     [SerializeField] private GameObject drag;
 
-    private Attach attach;
+    [SerializeField] private List<RaycastHit2D> attachable;
+
     private Rigidbody2D rigid;
+
+    private Vector3 euler;
+    private RaycastHit2D hit;
+
 
     //public Vector3 euler = new Vector3(90f, 0f, 1f);
 
     private void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
-        attach = GetComponent<Attach>();
     }
 
     private void Update()
@@ -34,7 +38,7 @@ public class Drag : MonoBehaviour
                 for (int i = 0; i < hits.Length; i++)
                 {
                     RaycastHit2D hit = hits[i];
-                    //Debug.DrawLine(Camera.main.transform.position, hit.point, Color.red);
+                    Debug.DrawLine(Camera.main.transform.position, hit.point, Color.red);
 
 
                     if (hit.transform == transform)
@@ -46,7 +50,9 @@ public class Drag : MonoBehaviour
                 }
             }
         }
+
     }
+    
 
     private void FixedUpdate()
     {
@@ -62,12 +68,14 @@ public class Drag : MonoBehaviour
             gameObject.layer = LayerMask.NameToLayer("Selected Ball");
 
             // attaching 
-            attach.AttachRaycast(rays, ballLayerMask);
+
+            AttachRaycast(rays, ballLayerMask);
 
 
             // stop dragging
             if (Input.GetMouseButtonUp(0))
             {
+                //attachable.Sort();
                 if (drag != null) { rigid.constraints = RigidbodyConstraints2D.None; }
                 isDragged = false;
                 drag = null;
@@ -80,6 +88,46 @@ public class Drag : MonoBehaviour
 
     }
 
+
+
+    public void AttachRaycast(int rays, string ballLayerMask)
+    {
+        attachable = new List<RaycastHit2D>();
+        for (int i = 0; i < rays; i++)
+        {
+            // the vector for the ray
+            euler = new Vector3(i / (rays * 1f) * 360f, 90f, 0f);
+            // show the ray
+            Debug.DrawRay(transform.position, (Quaternion.Euler(euler) * Vector3.forward) * 50, Color.blue);
+            // cast the ray
+            hit = Physics2D.Raycast(transform.position, Quaternion.Euler(euler) * Vector3.forward, 50, LayerMask.GetMask(ballLayerMask));
+            if (hit)
+            {
+                // if it hit something
+                Debug.DrawLine(transform.position, hit.point, Color.green);
+                attachable.Add(hit);
+            }
+        }
+
+        attachable.OrderBy(hit => hit.distance);
+        attachable.Reverse();
+        List<Transform> transformsUsed = new List<Transform>();
+        // looping backwards
+        for (int i = attachable.Count - 1; i >= 0; i--)
+        {
+            if (transformsUsed.IndexOf(attachable[i].transform) == -1)
+                transformsUsed.Add(attachable[i].transform);
+            else
+                attachable.RemoveAt(i);
+        }
+        Debug.Log("lohl");
+        foreach (RaycastHit2D item in attachable)
+        {
+            Debug.Log(item.point);
+            Debug.DrawLine(Camera.main.transform.position, item.point, Color.red);
+        }
+
+    }
 
 
 }
