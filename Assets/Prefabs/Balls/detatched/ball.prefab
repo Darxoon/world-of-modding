@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4248019372008310466}
   - component: {fileID: 4248019372008310471}
   - component: {fileID: 4248019372008310468}
+  - component: {fileID: 6512710370182740239}
   m_Layer: 8
   m_Name: ball
   m_TagString: Untagged
@@ -30,7 +31,7 @@ Transform:
   m_GameObject: {fileID: 4248019372008310465}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2.479, y: 1.531, z: 0}
-  m_LocalScale: {x: 0.124086455, y: 0.124086455, z: 0.124086455}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -144,6 +145,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f610e4845e846d4d8ddd369db564d0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ballLayerMask: Attached Balls
+  rays: 50
   isDragged: 0
-  rigid: {fileID: 4248019372008310469}
   drag: {fileID: 0}
+--- !u!114 &6512710370182740239
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4248019372008310465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 098ee5f06b01d4a448ff9de4a1444377, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Attach))]
 public class Drag : MonoBehaviour
 {
     [SerializeField] private string ballLayerMask = "Attached Balls";
@@ -12,7 +13,7 @@ public class Drag : MonoBehaviour
     [SerializeField] private bool isDragged = false;
     [SerializeField] private GameObject drag;
 
-    private Attach_1 attach_1;
+    private Attach attach;
     private Rigidbody2D rigid;
 
     //public Vector3 euler = new Vector3(90f, 0f, 1f);
@@ -20,7 +21,7 @@ public class Drag : MonoBehaviour
     private void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
-        attach_1 = GetComponent<Attach_1>();
+        attach = GetComponent<Attach>();
     }
 
     private void Update()
@@ -61,13 +62,13 @@ public class Drag : MonoBehaviour
             gameObject.layer = LayerMask.NameToLayer("Selected Ball");
 
             // attaching 
-            attach_1.Attach(rays, ballLayerMask);
+            attach.AttachRaycast(rays, ballLayerMask);
 
 
             // stop dragging
             if (Input.GetMouseButtonUp(0))
             {
-                if (drag != null) { drag.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None; }
+                if (drag != null) { rigid.constraints = RigidbodyConstraints2D.None; }
                 isDragged = false;
                 drag = null;
                 gameObject.layer = LayerMask.NameToLayer("Detached Balls");
