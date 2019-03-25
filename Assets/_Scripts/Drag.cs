@@ -101,12 +101,9 @@ public class Drag : MonoBehaviour
             Debug.DrawRay(transform.position, (Quaternion.Euler(euler) * Vector3.forward) * 50, Color.blue);
             // cast the ray
             hit = Physics2D.Raycast(transform.position, Quaternion.Euler(euler) * Vector3.forward, 50, LayerMask.GetMask(ballLayerMask));
+            // if it hit something
             if (hit)
-            {
-                // if it hit something
-                Debug.DrawLine(transform.position, hit.point, Color.green);
                 attachable.Add(hit);
-            }
         }
 
         attachable.OrderBy(hit => hit.distance);
@@ -123,8 +120,7 @@ public class Drag : MonoBehaviour
         Debug.Log("lohl");
         foreach (RaycastHit2D item in attachable)
         {
-            Debug.Log(item.point);
-            Debug.DrawLine(Camera.main.transform.position, item.point, Color.red);
+            Debug.DrawLine(transform.position, item.point, Color.green);
         }
 
     }
