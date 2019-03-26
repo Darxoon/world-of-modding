@@ -6,13 +6,15 @@ using System.Linq;
 public class Drag : MonoBehaviour
 {
     [SerializeField] private string ballLayerMask = "Attached Balls";
-    [SerializeField] private int rays = 50;
+    public int rays = 50;
+    public int strands = 2;
 
     [Header("Debugging")]
 
     [SerializeField] private bool isDragged = false;
     [SerializeField] private GameObject drag;
 
+    public float[] attachable_arr;
     [SerializeField] private List<RaycastHit2D> attachable;
 
     private Rigidbody2D rigid;
@@ -52,7 +54,16 @@ public class Drag : MonoBehaviour
         }
 
     }
-    
+    private void LateUpdate()
+    {
+        int size = attachable.Count;
+        attachable_arr = new float[size];
+        for (int i = 0; i < size; i++)
+        {
+            attachable_arr[i] = attachable[i].distance;
+        }
+    }
+
 
     private void FixedUpdate()
     {
@@ -70,22 +81,44 @@ public class Drag : MonoBehaviour
             // attaching 
 
             AttachRaycast(rays, ballLayerMask);
-
+            
 
             // stop dragging
             if (Input.GetMouseButtonUp(0))
             {
-                //attachable.Sort();
+                AttachRaycast(rays, ballLayerMask);
+
+                // remove constraints
                 if (drag != null) { rigid.constraints = RigidbodyConstraints2D.None; }
+                // update fields
                 isDragged = false;
                 drag = null;
-                gameObject.layer = LayerMask.NameToLayer("Detached Balls");
+
+                // are the strands 1?
+                if(strands == 1)
+                {
+                    MakeSpringJoint(attachable[0]);
+                } else if(attachable.Count > 1)
+                {
+                    for (int i = 0; i < strands; i++)
+                    {
+                        MakeSpringJoint(attachable[i]);
+                    }
+                }
+
                 Debug.Log("stopped dragging");
             }
 
         }
 
 
+    }
+
+
+    void MakeSpringJoint(RaycastHit2D other)
+    {
+        SpringJoint2D joint = gameObject.AddComponent<SpringJoint2D>();
+        joint.connectedBody = other.rigidbody;
     }
 
 
@@ -107,7 +140,7 @@ public class Drag : MonoBehaviour
         }
 
         attachable.OrderBy(hit => hit.distance);
-        attachable.Reverse();
+
         List<Transform> transformsUsed = new List<Transform>();
         // looping backwards
         for (int i = attachable.Count - 1; i >= 0; i--)
@@ -117,7 +150,17 @@ public class Drag : MonoBehaviour
             else
                 attachable.RemoveAt(i);
         }
-        Debug.Log("lohl");
+
+        Vector2 difference = hit.point - new Vector2(transform.position.x, transform.position.y);
+        attachable.OrderBy(hit =>  new Vector2(Mathf.Abs(difference.x), Mathf.Abs(difference.y)).magnitude);
+
+        Debug.Log("here's the sorted list:");
+        for (int i = 0; i < attachable.Count; i++)
+        {
+            Debug.Log(attachable[i].distance);
+        }
+        Debug.Log("there was the sorted list");
+
         foreach (RaycastHit2D item in attachable)
         {
             Debug.DrawLine(transform.position, item.point, Color.green);
