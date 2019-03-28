@@ -8,19 +8,23 @@ public class Drag : MonoBehaviour
     [SerializeField] private string ballLayerMask = "Attached Balls";
     // goo properties
     public int rays = 50;
-    public int strands = 2;
+    public int strandCount = 2;
+    public int strandLength = 10;
+    // initial strands 
+    public GameObject[] initialStrands;
     // TEMPORARY
     [SerializeField] private Sprite strandSprite;
 
     [Header("Debugging")]
 
+    [SerializeField] private bool isTower = false;
     [SerializeField] private bool isDragged = false;
     [SerializeField] private GameObject drag;
 
     public float[] attachable_arr;
     [SerializeField] private List<RaycastHit2D> attachable;
 
-    private Rigidbody2D rigid;
+    public Rigidbody2D rigid;
 
     private Vector3 euler;
     private RaycastHit2D hit;
@@ -31,11 +35,22 @@ public class Drag : MonoBehaviour
     private void Start()
     {
         rigid = GetComponent<Rigidbody2D>();
+        attachable = new List<RaycastHit2D>();
+
+        if(initialStrands.Length > 0)
+        {
+            SetTowered();
+            for (int i = 0; i < initialStrands.Length; i++)
+            {
+                MakeStrand(initialStrands[i].transform);
+                initialStrands[i].GetComponent<Drag>().SetTowered();
+            }
+        }
     }
 
     private void Update()
     {
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && !isTower)
         {
             RaycastHit2D[] hits = Physics2D.GetRayIntersectionAll(Camera.main.ScreenPointToRay(Input.mousePosition), Mathf.Infinity);
             if (hits.Length > 0)
@@ -89,16 +104,17 @@ public class Drag : MonoBehaviour
                 drag = null;
 
                 // are the strands 1?
-                if(strands == 1)
+                if(strandCount == 1)
                 {
-                    MakeSpringJoint(attachable[0]);
+                    MakeStrand(attachable[0].transform);
                 } else if(attachable.Count > 1)
                 {
-                    for (int i = 0; i < strands; i++)
+                    for (int i = 0; i < strandCount; i++)
                     {
-                        MakeSpringJoint(attachable[i]);
+                        MakeStrand(attachable[i].transform);
                     }
                 }
+                SetTowered();
 
                 Debug.Log("stopped dragging");
             }
@@ -109,33 +125,37 @@ public class Drag : MonoBehaviour
     }
 
 
-    void MakeSpringJoint(RaycastHit2D other)
+    void MakeStrand(Transform other)
     {
         // make the joint
         SpringJoint2D joint = gameObject.AddComponent<SpringJoint2D>();
-        joint.connectedBody = other.rigidbody;
+        joint.connectedBody = other.GetComponent<Rigidbody2D>();
         joint.autoConfigureDistance = false;
+        joint.dampingRatio = 0.73f;
+        joint.frequency = 1.91f;
 
         // make the visual strand
-        GameObject child = new GameObject();
+        GameObject child = new GameObject("Strand");
         child.transform.SetParent(transform);
         // add the sprite renderer
         child.AddComponent<SpriteRenderer>().sprite = strandSprite;
         child.GetComponent<SpriteRenderer>().flipY = true;
         // add the strand controller 
-        child.AddComponent<Strand>().connectedBall = other.transform.gameObject;
+        child.AddComponent<Strand>().connectedBall = other.gameObject;
         // reset the position
         child.transform.localPosition = Vector3.zero;
         // freeze THIS BALL's rotation
         rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
-
+        
     }
 
 
 
     public void AttachRaycast(int rays, string ballLayerMask)
     {
-        attachable = new List<RaycastHit2D>();
+        // make the empty list
+        attachable.Clear();
+        // cast the rays
         for (int i = 0; i < rays; i++)
         {
             // the vector for the ray
@@ -143,14 +163,16 @@ public class Drag : MonoBehaviour
             // show the ray
             Debug.DrawRay(transform.position, (Quaternion.Euler(euler) * Vector3.forward) * 50, Color.blue);
             // cast the ray
-            hit = Physics2D.Raycast(transform.position, Quaternion.Euler(euler) * Vector3.forward, 50, LayerMask.GetMask(ballLayerMask));
+            hit = Physics2D.Raycast(transform.position, Quaternion.Euler(euler) * Vector3.forward, strandLength, LayerMask.GetMask(ballLayerMask));
             // if it hit something
             if (hit)
                 attachable.Add(hit);
         }
         
+        // sort the array
         attachable.Sort((a, b) => Vector3.Distance(transform.position, a.transform.position).CompareTo(Vector3.Distance(transform.position, b.transform.position)));
 
+        // look for duplicate gooballs
         List<Transform> transformsUsed = new List<Transform>();
         // looping backwards
         for (int i = attachable.Count - 1; i >= 0; i--)
@@ -161,14 +183,21 @@ public class Drag : MonoBehaviour
                 attachable.RemoveAt(i);
         }
 
-        attachable.Sort((a, b) => Vector3.Distance(transform.position, a.transform.position).CompareTo(Vector3.Distance(transform.position, b.transform.position)));
-
-        foreach (RaycastHit2D item in attachable)
+        // DEBUG draws the rays
+        for (int i = 0; i < attachable.Count; i++)
         {
-            Debug.DrawLine(transform.position, item.point, Color.green);
+            if(i < strandCount)
+                Debug.DrawLine(transform.position, attachable[i].point, Color.magenta);
+            else
+                Debug.DrawLine(transform.position, attachable[i].point, Color.green);
+
         }
 
     }
 
-
+    public void SetTowered()
+    {
+        isTower = true;
+        gameObject.layer = LayerMask.NameToLayer("Attached Balls");
+    }
 }
