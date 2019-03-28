@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 4248019372008310466}
   - component: {fileID: 4248019372008310471}
   - component: {fileID: 4248019372008310468}
-  - component: {fileID: 6512710370182740239}
   m_Layer: 8
   m_Name: ball
   m_TagString: Untagged
@@ -147,17 +146,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ballLayerMask: Attached Balls
   rays: 50
+  strands: 2
+  strandObj: {fileID: 0}
+  strandSprite: {fileID: 0}
   isDragged: 0
   drag: {fileID: 0}
---- !u!114 &6512710370182740239
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4248019372008310465}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 098ee5f06b01d4a448ff9de4a1444377, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  attachable_arr: []

@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 
 public class Drag : MonoBehaviour
 {
     [SerializeField] private string ballLayerMask = "Attached Balls";
     public int rays = 50;
     public int strands = 2;
+    [SerializeField] private Transform strandObj;
+    [SerializeField] private Sprite strandSprite;
 
     [Header("Debugging")]
 
@@ -53,15 +54,6 @@ public class Drag : MonoBehaviour
             }
         }
 
-    }
-    private void LateUpdate()
-    {
-        int size = attachable.Count;
-        attachable_arr = new float[size];
-        for (int i = 0; i < size; i++)
-        {
-            attachable_arr[i] = attachable[i].distance;
-        }
     }
 
 
@@ -117,8 +109,24 @@ public class Drag : MonoBehaviour
 
     void MakeSpringJoint(RaycastHit2D other)
     {
+        // make the joint
         SpringJoint2D joint = gameObject.AddComponent<SpringJoint2D>();
         joint.connectedBody = other.rigidbody;
+        joint.autoConfigureDistance = false;
+
+        // make the visual strand
+        GameObject child = new GameObject();
+        child.transform.SetParent(transform);
+        // add the sprite renderer
+        child.AddComponent<SpriteRenderer>().sprite = strandSprite;
+        child.GetComponent<SpriteRenderer>().flipY = true;
+        // add the strand controller 
+        child.AddComponent<Strand>().connectedBall = other.transform.gameObject;
+        // reset the position
+        child.transform.localPosition = Vector3.zero;
+        // freeze THIS BALL's rotation
+        rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
+
     }
 
 
@@ -138,8 +146,8 @@ public class Drag : MonoBehaviour
             if (hit)
                 attachable.Add(hit);
         }
-
-        attachable.OrderBy(hit => hit.distance);
+        
+        attachable.Sort((a, b) => Vector3.Distance(transform.position, a.transform.position).CompareTo(Vector3.Distance(transform.position, b.transform.position)));
 
         List<Transform> transformsUsed = new List<Transform>();
         // looping backwards
@@ -151,15 +159,7 @@ public class Drag : MonoBehaviour
                 attachable.RemoveAt(i);
         }
 
-        Vector2 difference = hit.point - new Vector2(transform.position.x, transform.position.y);
-        attachable.OrderBy(hit =>  new Vector2(Mathf.Abs(difference.x), Mathf.Abs(difference.y)).magnitude);
-
-        Debug.Log("here's the sorted list:");
-        for (int i = 0; i < attachable.Count; i++)
-        {
-            Debug.Log(attachable[i].distance);
-        }
-        Debug.Log("there was the sorted list");
+        attachable.Sort((a, b) => Vector3.Distance(transform.position, a.transform.position).CompareTo(Vector3.Distance(transform.position, b.transform.position)));
 
         foreach (RaycastHit2D item in attachable)
         {
