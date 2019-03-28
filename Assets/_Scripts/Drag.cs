@@ -145,10 +145,13 @@ public class Drag : MonoBehaviour
         // add the sprite renderer
         child.AddComponent<SpriteRenderer>().sprite = strandSprite;
         child.GetComponent<SpriteRenderer>().flipY = true;
+        child.GetComponent<SpriteRenderer>().sortingLayerName = "Strands";
         // add the strand controller 
         child.AddComponent<Strand>().connectedBall = other.gameObject;
         // reset the position
         child.transform.localPosition = Vector3.zero;
+        // change the layer 
+        child.layer = LayerMask.NameToLayer("Strands");
         // freeze THIS BALL's rotation
         rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
         

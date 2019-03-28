@@ -13,16 +13,16 @@ TagManager:
   - UI
   - 
   - 
+  - Strands
   - Detached Balls
   - Selected Ball
   - Attached Balls
   - Geometry
   - SceneLayers
-  - Strand
+  - 
   - LightSources
   - LightObstacles
   - AmbientLight
-  - 
   - 
   - 
   - 

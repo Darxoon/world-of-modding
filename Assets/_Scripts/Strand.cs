@@ -33,7 +33,7 @@ public class Strand : MonoBehaviour
 
 
         // calculate and apply center
-        Vector3 center = ((transform.parent.position + connectedBall.transform.position) * 0.5f);
+        Vector3 center = (transform.parent.position + connectedBall.transform.position) * 0.5f;
         transform.position = center;
 
     }
