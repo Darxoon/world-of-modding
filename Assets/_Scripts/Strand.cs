@@ -6,16 +6,17 @@ public class Strand : MonoBehaviour
 {
     public GameObject connectedBall;
 
+    [SerializeField] private float stretchMultiplier = 12f;
 
     private void Start()
     {
-        //transform.localScale *= 0.5f;
+        transform.localScale *= 0.5f;
     }
 
     private void Update()
     {
         // interpolate between goos
-        GetComponent<SpriteRenderer>().size = new Vector2(GetComponent<SpriteRenderer>().size.x, Vector2.Distance(transform.position, connectedBall.transform.position));
+        GetComponent<SpriteRenderer>().size = new Vector2(GetComponent<SpriteRenderer>().size.x, Vector2.Distance(transform.position, connectedBall.transform.position) * 10f);
 
 
         // calculate rotation
@@ -28,7 +29,7 @@ public class Strand : MonoBehaviour
         // calculate the actual difference between this goo ball and the other gooball
         float distance = Vector3.Distance(transform.parent.position, connectedBall.transform.position);
         // apply the scale
-        transform.localScale = new Vector3(transform.localScale.x, distance / 3, transform.localScale.z);
+        transform.localScale = new Vector3(transform.localScale.x, distance / 3f * stretchMultiplier, transform.localScale.z);
 
 
         // calculate and apply center

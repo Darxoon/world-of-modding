@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class Drag : MonoBehaviour
 {
+    // Layer mask
     [SerializeField] private string ballLayerMask = "Attached Balls";
+    // goo properties
     public int rays = 50;
     public int strands = 2;
-    [SerializeField] private Transform strandObj;
+    // TEMPORARY
     [SerializeField] private Sprite strandSprite;
 
     [Header("Debugging")]
