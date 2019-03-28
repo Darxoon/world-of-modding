@@ -146,9 +146,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ballLayerMask: Attached Balls
   rays: 50
-  strands: 2
-  strandObj: {fileID: 0}
+  strandCount: 2
+  strandLength: 10
+  initialStrands: []
   strandSprite: {fileID: 0}
+  dampingRatio: 0.73
+  frequency: 1.91
+  isTower: 0
   isDragged: 0
   drag: {fileID: 0}
   attachable_arr: []
+  rigid: {fileID: 0}

@@ -15,6 +15,11 @@ public class Drag : MonoBehaviour
     // TEMPORARY
     [SerializeField] private Sprite strandSprite;
 
+    [Header("Joint Settings")]
+
+    [SerializeField] private float dampingRatio = 0.73f;
+    [SerializeField] private float frequency = 1.91f;
+
     [Header("Debugging")]
 
     [SerializeField] private bool isTower = false;
