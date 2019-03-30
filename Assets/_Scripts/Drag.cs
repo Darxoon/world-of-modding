@@ -10,15 +10,20 @@ public class Drag : MonoBehaviour
     public int rays = 50;
     public int strandCount = 2;
     public int strandLength = 10;
+    public Vector2 strandDistanceRange = new Vector2(1f, 4f);
+    public float strandMulitplier = 1.01f;
     // initial strands 
     public GameObject[] initialStrands;
+    // the balls it is connected during the game
+    public List<GameObject> attachedBalls;
+    public Dictionary<int, Drag> gooStrands = new Dictionary<int, Drag>();
     // TEMPORARY
     [SerializeField] private Sprite strandSprite;
 
     [Header("Joint Settings")]
 
-    [SerializeField] private float dampingRatio = 0.73f;
-    [SerializeField] private float frequency = 1.91f;
+    [SerializeField] private float dampingRatio;
+    [SerializeField] private float frequency;
 
     [Header("Debugging")]
 
@@ -50,6 +55,10 @@ public class Drag : MonoBehaviour
                 MakeStrand(initialStrands[i].transform);
                 initialStrands[i].GetComponent<Drag>().SetTowered();
             }
+            attachedBalls = new List<GameObject>(initialStrands);
+        } else
+        {
+            attachedBalls = new List<GameObject>();
         }
     }
 
@@ -112,14 +121,35 @@ public class Drag : MonoBehaviour
                 if(strandCount == 1)
                 {
                     MakeStrand(attachable[0].transform);
+                    SetTowered();
                 } else if(attachable.Count > 1)
                 {
-                    for (int i = 0; i < strandCount; i++)
+                    // are they connected?
+                    if (attachable[0].transform.gameObject.GetComponent<Drag>().attachedBalls.Contains(attachable[1].transform.gameObject)
+                        || attachable[1].transform.gameObject.GetComponent<Drag>().attachedBalls.Contains(attachable[0].transform.gameObject))
                     {
-                        MakeStrand(attachable[i].transform);
+                        // if there are enough balls to attach to
+                        if (attachable.Count >= strandCount)
+                        {
+                            // attach to them normally
+                            for (int i = 0; i < strandCount; i++)
+                            {
+                                MakeStrand(attachable[i].transform);
+                            }
+                            SetTowered();
+                        }
+                    } 
+                    // else
+                    else
+                    {
+                        // act as a strand
+                        Debug.Log("I'm a strand!", gameObject);
+                        Drag other1 = attachable[0].transform.gameObject.GetComponent<Drag>();
+                        other1.gooStrands.Add(other1.attachedBalls.Count, this);
+                        other1.MakeStrand(attachable[1].transform);
+                        gameObject.SetActive(false);
                     }
                 }
-                SetTowered();
 
                 Debug.Log("stopped dragging");
             }
@@ -130,14 +160,15 @@ public class Drag : MonoBehaviour
     }
 
 
-    void MakeStrand(Transform other)
+    public void MakeStrand(Transform other)
     {
         // make the joint
         SpringJoint2D joint = gameObject.AddComponent<SpringJoint2D>();
         joint.connectedBody = other.GetComponent<Rigidbody2D>();
         joint.autoConfigureDistance = false;
-        joint.dampingRatio = 0.73f;
-        joint.frequency = 1.91f;
+        joint.dampingRatio = dampingRatio;
+        joint.frequency = frequency;
+        joint.distance = Mathf.Clamp(joint.distance, strandDistanceRange.x, strandDistanceRange.y) * strandMulitplier;
 
         // make the visual strand
         GameObject child = new GameObject("Strand");
@@ -154,7 +185,12 @@ public class Drag : MonoBehaviour
         child.layer = LayerMask.NameToLayer("Strands");
         // freeze THIS BALL's rotation
         rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
-        
+
+        // activate the Attached script 
+        GetComponent<Attached>().enabled = true;
+
+        // add the other goo ball to attached list 
+        attachedBalls.Add(other.gameObject);
     }
 
 
