@@ -162,6 +162,7 @@ public class Drag : MonoBehaviour
 
     public void MakeStrand(Transform other)
     {
+        Debug.Log("Making a strand!", gameObject);
         // make the joint
         SpringJoint2D joint = gameObject.AddComponent<SpringJoint2D>();
         joint.connectedBody = other.GetComponent<Rigidbody2D>();
@@ -185,9 +186,7 @@ public class Drag : MonoBehaviour
         child.layer = LayerMask.NameToLayer("Strands");
         // freeze THIS BALL's rotation
         rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
-
-        // activate the Attached script 
-        GetComponent<Attached>().enabled = true;
+        
 
         // add the other goo ball to attached list 
         attachedBalls.Add(other.gameObject);
@@ -243,5 +242,7 @@ public class Drag : MonoBehaviour
     {
         isTower = true;
         gameObject.layer = LayerMask.NameToLayer("Attached Balls");
+        // freeze THIS BALL's rotation
+        GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 }
