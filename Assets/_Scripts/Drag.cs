@@ -64,7 +64,7 @@ public class Drag : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButton(0) && !isTower)
+        if (Input.GetMouseButton(0) && !isTower && !GameManager.instance.isDragging)
         {
             RaycastHit2D[] hits = Physics2D.GetRayIntersectionAll(Camera.main.ScreenPointToRay(Input.mousePosition), Mathf.Infinity);
             if (hits.Length > 0)
@@ -78,6 +78,7 @@ public class Drag : MonoBehaviour
                     if (hit.transform == transform)
                     {
                         isDragged = true;
+                        GameManager.instance.isDragging = true;
                         drag = hit.transform.gameObject;
                     }
 
@@ -109,6 +110,7 @@ public class Drag : MonoBehaviour
             // stop dragging
             if (Input.GetMouseButtonUp(0))
             {
+                GameManager.instance.isDragging = false;
                 AttachRaycast(rays, ballLayerMask);
 
                 // remove constraints
