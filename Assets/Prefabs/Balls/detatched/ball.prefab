@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4248019372008310466}
   - component: {fileID: 4248019372008310471}
   - component: {fileID: 4248019372008310468}
+  - component: {fileID: 6568555147078007227}
   m_Layer: 8
   m_Name: ball
   m_TagString: Untagged
@@ -31,8 +32,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2.479, y: 1.531, z: 0}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
-  m_Children:
-  - {fileID: 951227878550155547}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -100,7 +100,7 @@ Rigidbody2D:
   m_LinearDrag: 2.83
   m_AngularDrag: 0.05
   m_GravityScale: 1.84
-  m_Material: {fileID: 6200000, guid: 43321e971cd60bc48848b50b961e0913, type: 2}
+  m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -153,7 +153,7 @@ MonoBehaviour:
   strandMulitplier: 1.01
   initialStrands: []
   attachedBalls: []
-  strandSprite: {fileID: 21300000, guid: 900f2c3fc2b937946ab6397388692da8, type: 3}
+  strandSprite: {fileID: 0}
   dampingRatio: 0.73
   frequency: 4
   isTower: 0
@@ -161,33 +161,116 @@ MonoBehaviour:
   drag: {fileID: 0}
   attachable_arr: []
   rigid: {fileID: 0}
---- !u!1 &7782780739892176694
-GameObject:
+--- !u!114 &6568555147078007227
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 951227878550155547}
-  m_Layer: 8
-  m_Name: wrapper
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &951227878550155547
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7782780739892176694}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4248019372008310464}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_GameObject: {fileID: 4248019372008310465}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 136f61d5b8aac1947bbf2281980c1bef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  curve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.99999446
+      inSlope: -0.0044365055
+      outSlope: -0.0044365055
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.43991706
+    - serializedVersion: 3
+      time: 1.5887947
+      value: 0.5647198
+      inSlope: -0.8238019
+      outSlope: -0.8238019
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.14275472
+    - serializedVersion: 3
+      time: 3
+      value: 0.00016585924
+      inSlope: -0.28389245
+      outSlope: -0.28389245
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.14557171
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  pushRadius: 3
+  gooArr:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  goos: []

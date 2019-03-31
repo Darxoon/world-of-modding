@@ -8,8 +8,6 @@ public class Strand : MonoBehaviour
 
     [SerializeField] private float stretchMultiplier = 12f;
 
-    bool isEnabled = false;
-
     private void Start()
     {
         transform.localScale *= 0.5f;
@@ -37,9 +35,6 @@ public class Strand : MonoBehaviour
         // calculate and apply center
         Vector3 center = (transform.parent.position + connectedBall.transform.position) * 0.5f;
         transform.position = center;
-
-        if (!isEnabled)
-            GetComponent<SpriteRenderer>().enabled = true;
 
     }
 }
