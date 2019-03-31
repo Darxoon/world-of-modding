@@ -27,9 +27,12 @@ public class Drag : MonoBehaviour
 
     [Header("Debugging")]
 
+    public GameObject wrapper;
     [SerializeField] private bool isTower = false;
     [SerializeField] private bool isDragged = false;
     [SerializeField] private GameObject drag;
+
+    private bool wrapperInactive = false;
 
     public float[] attachable_arr;
     [SerializeField] private List<RaycastHit2D> attachable;
@@ -46,6 +49,7 @@ public class Drag : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody2D>();
         attachable = new List<RaycastHit2D>();
+        wrapper = transform.parent.gameObject;
 
         if(initialStrands.Length > 0)
         {
@@ -60,11 +64,12 @@ public class Drag : MonoBehaviour
         {
             attachedBalls = new List<GameObject>();
         }
+        Debug.Log(strandSprite, gameObject);
     }
 
     private void Update()
     {
-        if (Input.GetMouseButton(0) && !isTower)
+        if (Input.GetMouseButton(0) && !isTower && !GameManager.instance.isDragging)
         {
             RaycastHit2D[] hits = Physics2D.GetRayIntersectionAll(Camera.main.ScreenPointToRay(Input.mousePosition), Mathf.Infinity);
             if (hits.Length > 0)
@@ -78,6 +83,7 @@ public class Drag : MonoBehaviour
                     if (hit.transform == transform)
                     {
                         isDragged = true;
+                        GameManager.instance.isDragging = true;
                         drag = hit.transform.gameObject;
                     }
 
@@ -85,12 +91,7 @@ public class Drag : MonoBehaviour
             }
         }
 
-    }
-
-
-    private void FixedUpdate()
-    {
-        if(isDragged)
+        if (isDragged)
         {
             // positioning
             gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
@@ -104,11 +105,12 @@ public class Drag : MonoBehaviour
             // attaching 
 
             AttachRaycast(rays, ballLayerMask);
-            
+
 
             // stop dragging
             if (Input.GetMouseButtonUp(0))
             {
+                GameManager.instance.isDragging = false;
                 AttachRaycast(rays, ballLayerMask);
 
                 // remove constraints
@@ -118,11 +120,12 @@ public class Drag : MonoBehaviour
                 drag = null;
 
                 // are the strands 1?
-                if(strandCount == 1)
+                if (strandCount == 1)
                 {
                     MakeStrand(attachable[0].transform);
                     SetTowered();
-                } else if(attachable.Count > 1)
+                }
+                else if (attachable.Count > 1)
                 {
                     // are they connected?
                     if (attachable[0].transform.gameObject.GetComponent<Drag>().attachedBalls.Contains(attachable[1].transform.gameObject)
@@ -138,7 +141,7 @@ public class Drag : MonoBehaviour
                             }
                             SetTowered();
                         }
-                    } 
+                    }
                     // else
                     else
                     {
@@ -156,8 +159,15 @@ public class Drag : MonoBehaviour
 
         }
 
+        if (wrapperInactive)
+        {
+            transform.parent = GameManager.instance.ballGroup;
+            wrapper.SetActive(false);
+        }
 
     }
+
+
 
 
     public void MakeStrand(Transform other)
@@ -175,19 +185,19 @@ public class Drag : MonoBehaviour
         GameObject child = new GameObject("Strand");
         child.transform.SetParent(transform);
         // add the sprite renderer
+        Debug.Log(strandSprite);
         child.AddComponent<SpriteRenderer>().sprite = strandSprite;
         child.GetComponent<SpriteRenderer>().flipY = true;
         child.GetComponent<SpriteRenderer>().sortingLayerName = "Strands";
+        child.GetComponent<SpriteRenderer>().enabled = false;
         // add the strand controller 
         child.AddComponent<Strand>().connectedBall = other.gameObject;
         // reset the position
         child.transform.localPosition = Vector3.zero;
         // change the layer 
         child.layer = LayerMask.NameToLayer("Strands");
-        // freeze THIS BALL's rotation
-        rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
-        
 
+        SetTowered();
         // add the other goo ball to attached list 
         attachedBalls.Add(other.gameObject);
     }
@@ -240,9 +250,12 @@ public class Drag : MonoBehaviour
 
     public void SetTowered()
     {
-        isTower = true;
-        gameObject.layer = LayerMask.NameToLayer("Attached Balls");
-        // freeze THIS BALL's rotation
-        GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+        if (!isTower)
+        {
+            isTower = true;
+            gameObject.layer = LayerMask.NameToLayer("Attached Balls");
+            // freeze THIS BALL's rotation
+            GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+        }
     }
 }
