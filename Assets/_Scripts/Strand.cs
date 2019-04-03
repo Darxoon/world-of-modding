@@ -6,6 +6,8 @@ public class Strand : MonoBehaviour
 {
     public GameObject connectedBall;
 
+    bool spriteEnabled = false;
+
     [SerializeField] private float stretchMultiplier = 12f;
 
     private void Start()
@@ -36,5 +38,11 @@ public class Strand : MonoBehaviour
         Vector3 center = (transform.parent.position + connectedBall.transform.position) * 0.5f;
         transform.position = center;
 
+
+        if(!spriteEnabled)
+        {
+            spriteEnabled = true;
+            GetComponent<SpriteRenderer>().enabled = true;
+        }
     }
 }

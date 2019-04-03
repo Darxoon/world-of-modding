@@ -86,12 +86,8 @@ public class Drag : MonoBehaviour
             }
         }
 
-    }
 
-
-    private void FixedUpdate()
-    {
-        if(isDragged)
+        if (isDragged)
         {
             // positioning
             gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
@@ -105,7 +101,7 @@ public class Drag : MonoBehaviour
             // attaching 
 
             AttachRaycast(rays, ballLayerMask);
-            
+
 
             // stop dragging
             if (Input.GetMouseButtonUp(0))
@@ -120,11 +116,12 @@ public class Drag : MonoBehaviour
                 drag = null;
 
                 // are the strands 1?
-                if(strandCount == 1)
+                if (strandCount == 1)
                 {
                     MakeStrand(attachable[0].transform);
                     SetTowered();
-                } else if(attachable.Count > 1)
+                }
+                else if (attachable.Count > 1)
                 {
                     // are they connected?
                     if (attachable[0].transform.gameObject.GetComponent<Drag>().attachedBalls.Contains(attachable[1].transform.gameObject)
@@ -140,7 +137,7 @@ public class Drag : MonoBehaviour
                             }
                             SetTowered();
                         }
-                    } 
+                    }
                     // else
                     else
                     {
@@ -162,6 +159,8 @@ public class Drag : MonoBehaviour
     }
 
 
+
+
     public void MakeStrand(Transform other)
     {
         Debug.Log("Making a strand!", gameObject);
@@ -177,9 +176,11 @@ public class Drag : MonoBehaviour
         GameObject child = new GameObject("Strand");
         child.transform.SetParent(transform);
         // add the sprite renderer
-        child.AddComponent<SpriteRenderer>().sprite = strandSprite;
-        child.GetComponent<SpriteRenderer>().flipY = true;
-        child.GetComponent<SpriteRenderer>().sortingLayerName = "Strands";
+        SpriteRenderer spriteRenderer = child.AddComponent<SpriteRenderer>();
+        spriteRenderer.sprite = strandSprite;
+        spriteRenderer.flipY = true;
+        spriteRenderer.sortingLayerName = "Strands";
+        spriteRenderer.enabled = false;
         // add the strand controller 
         child.AddComponent<Strand>().connectedBall = other.gameObject;
         // reset the position
