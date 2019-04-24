@@ -61,6 +61,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\_Scripts\BallSensor.cs" />
+    <Compile Include="Assets\_Scripts\ButtonController.cs" />
+    <Compile Include="Assets\_Scripts\ButtonHitbox.cs" />
+    <Compile Include="Assets\_Scripts\ButtonPop.cs" />
     <Compile Include="Assets\_Scripts\Drag.cs" />
     <Compile Include="Assets\_Scripts\GameManager.cs" />
     <Compile Include="Assets\_Scripts\MainMenu.cs" />
