@@ -66,7 +66,6 @@
     <Compile Include="Assets\_Scripts\Ingame\Strand.cs" />
     <Compile Include="Assets\_Scripts\Ingame\Walk.cs" />
     <Compile Include="Assets\_Scripts\UI\ButtonController.cs" />
-    <Compile Include="Assets\_Scripts\UI\ButtonHitbox.cs" />
     <Compile Include="Assets\_Scripts\UI\ButtonPop.cs" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
