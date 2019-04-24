@@ -2,14 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-void Start(){
-	renderer.material.color = Color.white;
-}
+class MouseHover : MonoBehaviour
+{
+    Renderer render;
 
-void OnMouseEnter(){
-	renderer.material.color = Color.black;
-}
+    void Start()
+    {
+        render = GetComponent<Renderer>();
+        render.material.color = Color.white;
+    }
 
-void OnMouseExit() {
-	renderer.material.color = Color.white;
+    void OnMouseEnter()
+    {
+        render.material.color = Color.black;
+    }
+
+    void OnMouseExit()
+    {
+        render.material.color = Color.white;
+    }
 }
