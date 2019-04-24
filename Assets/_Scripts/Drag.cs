@@ -9,7 +9,7 @@ public class Drag : MonoBehaviour
     // goo properties
     public int rays = 50;
     public int strandCount = 2;
-    public int strandLength = 10;
+    public float strandLength = 10;
     public Vector2 strandDistanceRange = new Vector2(1f, 4f);
     public float strandMulitplier = 1.01f;
     // initial strands 
@@ -40,6 +40,14 @@ public class Drag : MonoBehaviour
     private RaycastHit2D hit;
 
 
+    #region Getters
+
+    public bool IsDragged => isDragged;
+    public bool IsTower => isTower;
+
+    #endregion
+
+
     //public Vector3 euler = new Vector3(90f, 0f, 1f);
 
     private void Start()
@@ -64,7 +72,7 @@ public class Drag : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButton(0) && !isTower && !GameManager.instance.isDragging)
+        if (Input.GetMouseButton(0) && !IsTower && !GameManager.instance.isDragging)
         {
             RaycastHit2D[] hits = Physics2D.GetRayIntersectionAll(Camera.main.ScreenPointToRay(Input.mousePosition), Mathf.Infinity);
             if (hits.Length > 0)
@@ -207,7 +215,7 @@ public class Drag : MonoBehaviour
             // the vector for the ray
             euler = new Vector3(i / (rays * 1f) * 360f, 90f, 0f);
             // show the ray
-            Debug.DrawRay(transform.position, (Quaternion.Euler(euler) * Vector3.forward) * 50, Color.blue);
+            Debug.DrawRay(transform.position, (Quaternion.Euler(euler) * Vector3.forward) * strandLength, Color.blue);
             // cast the ray
             hit = Physics2D.Raycast(transform.position, Quaternion.Euler(euler) * Vector3.forward, strandLength, LayerMask.GetMask(ballLayerMask));
             // if it hit something

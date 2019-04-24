@@ -650,11 +650,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ball (10)
       objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310465, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
     - target: {fileID: 4248019372008310464, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -718,38 +713,12 @@ PrefabInstance:
         type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41e5a7be0025e254e84e48277ba91b86, type: 3}
---- !u!1 &783244356 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4248019372008310465, guid: 41e5a7be0025e254e84e48277ba91b86,
-    type: 3}
-  m_PrefabInstance: {fileID: 1971948100}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &783244357 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4248019372008310464, guid: 41e5a7be0025e254e84e48277ba91b86,
     type: 3}
   m_PrefabInstance: {fileID: 1971948100}
   m_PrefabAsset: {fileID: 0}
---- !u!231 &783244358
-SpringJoint2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 783244356}
-  m_Enabled: 0
-  serializedVersion: 4
-  m_EnableCollision: 1
-  m_ConnectedRigidBody: {fileID: 0}
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_AutoConfigureConnectedAnchor: 0
-  m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0, y: 0}
-  m_AutoConfigureDistance: 0
-  m_Distance: 1.8619708
-  m_DampingRatio: 0.73
-  m_Frequency: 1.91
 --- !u!1 &803539741
 GameObject:
   m_ObjectHideFlags: 0
@@ -1102,38 +1071,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4072e6efb6fc48b48aba95f716902388, type: 3}
---- !u!1 &1109048982 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4248019372008310465, guid: 41e5a7be0025e254e84e48277ba91b86,
-    type: 3}
-  m_PrefabInstance: {fileID: 1529966821}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1109048983 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4248019372008310464, guid: 41e5a7be0025e254e84e48277ba91b86,
     type: 3}
   m_PrefabInstance: {fileID: 1529966821}
   m_PrefabAsset: {fileID: 0}
---- !u!231 &1109048984
-SpringJoint2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1109048982}
-  m_Enabled: 0
-  serializedVersion: 4
-  m_EnableCollision: 1
-  m_ConnectedRigidBody: {fileID: 0}
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_AutoConfigureConnectedAnchor: 0
-  m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0, y: 0}
-  m_AutoConfigureDistance: 0
-  m_Distance: 1.8619708
-  m_DampingRatio: 0.73
-  m_Frequency: 1.91
 --- !u!4 &1153616257 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4248019372008310464, guid: 41e5a7be0025e254e84e48277ba91b86,
@@ -1370,11 +1313,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ball (11)
       objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310465, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
     - target: {fileID: 4248019372008310464, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1429,32 +1367,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: strandSprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 900f2c3fc2b937946ab6397388692da8,
-        type: 3}
-    - target: {fileID: 415820548588086122, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: m_Offset.y
-      value: -4.025555
-      objectReference: {fileID: 0}
-    - target: {fileID: 415820548588086122, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: m_Size.x
-      value: 4.1487117
-      objectReference: {fileID: 0}
-    - target: {fileID: 415820548588086122, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: m_Size.y
-      value: 4.1487117
-      objectReference: {fileID: 0}
-    - target: {fileID: 415820548588086122, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: m_Offset.x
-      value: -0.055172928
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41e5a7be0025e254e84e48277ba91b86, type: 3}
@@ -1760,6 +1672,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
+        type: 3}
+      propertyPath: initialStrands.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
+        type: 3}
+      propertyPath: initialStrands.Array.data[0]
+      value: 
+      objectReference: {fileID: 189612998}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41e5a7be0025e254e84e48277ba91b86, type: 3}
 --- !u!1001 &1716955373
@@ -1840,6 +1762,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 900f2c3fc2b937946ab6397388692da8,
         type: 3}
+    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
+        type: 3}
+      propertyPath: strandLength
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41e5a7be0025e254e84e48277ba91b86, type: 3}
 --- !u!1 &1717194635
@@ -2103,11 +2030,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ball (3)
       objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310465, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
     - target: {fileID: 4248019372008310464, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2166,14 +2088,8 @@ PrefabInstance:
     - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
       propertyPath: initialStrands.Array.size
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: strandSprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 900f2c3fc2b937946ab6397388692da8,
-        type: 3}
     - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
       propertyPath: initialStrands.Array.data[0]
@@ -2183,15 +2099,20 @@ PrefabInstance:
         type: 3}
       propertyPath: initialStrands.Array.data[1]
       value: 
-      objectReference: {fileID: 1583932765}
+      objectReference: {fileID: 670448009}
     - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
       propertyPath: initialStrands.Array.data[2]
       value: 
-      objectReference: {fileID: 670448009}
+      objectReference: {fileID: 1583932765}
     - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
       propertyPath: initialStrands.Array.data[3]
+      value: 
+      objectReference: {fileID: 1583932765}
+    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
+        type: 3}
+      propertyPath: initialStrands.Array.data[4]
       value: 
       objectReference: {fileID: 189612998}
     m_RemovedComponents: []
