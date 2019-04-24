@@ -1009,6 +1009,7 @@ MonoBehaviour:
   hitbox: {fileID: 295118501}
   normalScale: {x: 1.9346, y: 2.542845, z: 1}
   hoveringMultiplicator: 1.5
+  interpolationCoefficient: 0
 --- !u!61 &1197339871
 BoxCollider2D:
   m_ObjectHideFlags: 0
