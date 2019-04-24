@@ -60,16 +60,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\_Scripts\BallSensor.cs" />
-    <Compile Include="Assets\_Scripts\ButtonController.cs" />
-    <Compile Include="Assets\_Scripts\ButtonHitbox.cs" />
-    <Compile Include="Assets\_Scripts\ButtonPop.cs" />
-    <Compile Include="Assets\_Scripts\Drag.cs" />
     <Compile Include="Assets\_Scripts\GameManager.cs" />
-    <Compile Include="Assets\_Scripts\MainMenu.cs" />
-    <Compile Include="Assets\_Scripts\MouseHover.cs" />
-    <Compile Include="Assets\_Scripts\Strand.cs" />
-    <Compile Include="Assets\_Scripts\Walk.cs" />
+    <Compile Include="Assets\_Scripts\Ingame\BallSensor.cs" />
+    <Compile Include="Assets\_Scripts\Ingame\Drag.cs" />
+    <Compile Include="Assets\_Scripts\Ingame\Strand.cs" />
+    <Compile Include="Assets\_Scripts\Ingame\Walk.cs" />
+    <Compile Include="Assets\_Scripts\UI\ButtonController.cs" />
+    <Compile Include="Assets\_Scripts\UI\ButtonHitbox.cs" />
+    <Compile Include="Assets\_Scripts\UI\ButtonPop.cs" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_SDF-Surface-Mobile.shader" />
     <None Include="Assets\TextMesh Pro\Resources\LineBreaking Leading Characters.txt" />
     <None Include="Assets\TextMesh Pro\Resources\Shaders\TMPro_Properties.cginc" />
