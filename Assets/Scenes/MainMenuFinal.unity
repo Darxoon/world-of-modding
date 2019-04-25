@@ -507,13 +507,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Name: 
-  m_EditorClassIdentifier: 
   m_Name: 
-  m_EditorClassIdentifier: 
   m_Name: 
-  m_EditorClassIdentifier: 
   m_Name: 
-  m_EditorClassIdentifier: 
   hovering: 0
 --- !u!1 &383296517
 GameObject:
@@ -640,8 +636,8 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_text: PLAY
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 06450bb2e114a3647bc9d020ebeeb030, type: 2}
-  m_sharedMaterial: {fileID: 21047717686038152, guid: 06450bb2e114a3647bc9d020ebeeb030,
+  m_fontAsset: {fileID: 11400000, guid: f15c87f87f7b1e04191d23a801d02e8b, type: 2}
+  m_sharedMaterial: {fileID: 21047717686038152, guid: f15c87f87f7b1e04191d23a801d02e8b,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -1902,7 +1898,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 9, y: 187}
+  m_AnchoredPosition: {x: 9, y: 175}
   m_SizeDelta: {x: 72.5, y: 72.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1623740907
