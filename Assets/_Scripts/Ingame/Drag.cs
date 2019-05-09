@@ -201,6 +201,7 @@ public class Drag : MonoBehaviour
 
         // add the other goo ball to attached list 
         attachedBalls.Add(other.gameObject);
+        other.GetComponent<Drag>().attachedBalls.Add(gameObject);
     }
 
 
