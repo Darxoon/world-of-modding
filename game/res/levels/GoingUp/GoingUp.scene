@@ -1,0 +1,39 @@
+<scene minx="-430" miny="0" maxx="430" maxy="1000" backgroundcolor="0,0,0" >
+
+	<!-- ForceFields -->
+	<linearforcefield type="gravity" force="0,-10" dampeningfactor="0" antigrav="true" geomonly="false" />
+
+	<!-- Particles -->
+	<particles effect="bigleaves1" depth="240" pretick="0" />
+	<particles effect="smallleaves1" depth="-240" pretick="0" />
+
+	<!-- SceneLayers -->
+	<!--<SceneLayer name="bush_fg1a" depth="200" x="7.25" y="56.95" scalex="0.963" scaley="0.963" rotation="1.25" alpha="1" colorize="255,255,255" image="IMAGE_SCENE_GOINGUP_BUSH_FG1A"   />-->
+	<SceneLayer name="bush_fg1a" depth="200" x="7.25" y="56.95" scalex="0.963" scaley="0.963" rotation="1.25" alpha="1" colorize="255,255,255" image="imgCool"   />
+	<SceneLayer name="bush_fg1a" depth="200" x="312.25" y="68.93" scalex="0.963" scaley="0.963" rotation="-17.99" alpha="1" colorize="255,255,255" image="IMAGE_SCENE_GOINGUP_BUSH_FG1A"   />
+	<SceneLayer name="bush_fg1a" depth="200" x="-332.74" y="64.51" scalex="0.833" scaley="0.833" rotation="12.2" alpha="1" colorize="255,255,255" image="IMAGE_SCENE_GOINGUP_BUSH_FG1A"   />
+	<SceneLayer name="bush_leafy_1" depth="120" x="-29.44" y="32.14" scalex="1.252" scaley="1.252" rotation="12.92" alpha="1" colorize="255,255,255" image="IMAGE_SCENE_GOINGUP_BUSH_LEAFY_1"   />
+	<SceneLayer name="hill_fg1a" depth="0" x="-0.04" y="50.53" scalex="1.012" scaley="1" rotation="0" alpha="1" colorize="255,255,255" image="IMAGE_SCENE_GOINGUP_HILL_FG1A"   />
+	<SceneLayer name="tree_stripe1" depth="-8" x="-386.22" y="200.68" scalex="0.821" scaley="0.821" rotation="-155.58" alpha="1" colorize="255,255,255" image="IMAGE_SCENE_GOINGUP_TREE_STRIPE1"   />
+	<SceneLayer name="bush_leafy_1b" depth="-80" x="290.8" y="52.17" scalex="0.997" scaley="1.001" rotation="-6.31" alpha="1" colorize="255,255,255" image="IMAGE_SCENE_GOINGUP_BUSH_LEAFY_1B"   />
+	<SceneLayer name="bush_leafy_1b" depth="-80" x="-270.15" y="49.81" scalex="1.098" scaley="1.1" rotation="18.97" alpha="1" colorize="255,255,255" image="IMAGE_SCENE_GOINGUP_BUSH_LEAFY_1B"   />
+	<SceneLayer name="tree_stripe1" depth="-88" x="377" y="256" scalex="1.02" scaley="1.02" rotation="-27.66" alpha="1" colorize="255,255,255" image="IMAGE_SCENE_GOINGUP_TREE_STRIPE1"   />
+	<SceneLayer name="bush_leafy_1" depth="-120" x="330.53" y="46.15" scalex="1.252" scaley="1.252" rotation="-6.41" alpha="1" colorize="255,255,255" image="IMAGE_SCENE_GOINGUP_BUSH_LEAFY_1"   />
+	<SceneLayer name="bush_leafy_1" depth="-120" x="-313.65" y="78.78" scalex="1.253" scaley="1.25" rotation="12.97" alpha="1" colorize="255,255,255" image="IMAGE_SCENE_GOINGUP_BUSH_LEAFY_1"   />
+	<SceneLayer name="tutorialPost" depth="-360" x="-302.5" y="227" scalex="1" scaley="1" rotation="0" alpha="1" colorize="255,255,255" image="IMAGE_SCENE_GOINGUP_TUTORIALPOST"   />
+	<SceneLayer name="sky_blue2a" depth="-600" x="-0.08" y="420.94" scalex="3.361" scaley="6.042" rotation="0" alpha="1" colorize="255,255,255" image="IMAGE_SCENE_GOINGUP_SKY_BLUE2A"   />
+
+	<!-- Buttons -->
+
+	<!-- Labels -->
+
+	<!-- Static Geometry -->
+	<circle id="ground" static="true" tag="walkable" material="verysticky" x="-7" y="-817" radius="900" />
+	<line id="" static="true" tag="detaching" material="rock" anchor="436.5,331.5" normal="-1,-0.0071" />
+	<line id="" static="true" tag="detaching" material="rock" anchor="-437,321" normal="1,-0.0056" />
+	<line id="" static="true" material="rock" anchor="-14,18.5" normal="-0.0031,1" />
+
+	<!-- Dynamic Geometry -->
+
+	<!-- Geometry Constraints -->
+</scene>

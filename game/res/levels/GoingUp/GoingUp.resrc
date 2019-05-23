@@ -1,0 +1,12 @@
+<Resources>
+	<Image id="IMAGE_SCENE_GOINGUP_BUSH_FG1A" path="res/images/levelimages/bush_fg1a" />
+	<Image id="imgCool" path="res/images/levelimages/bush_fg1a" />
+	<Image id="IMAGE_SCENE_GOINGUP_BUSH_LEAFY_1" path="res/images/levelimages/bush_leafy_1" />
+	<Image id="IMAGE_SCENE_GOINGUP_HILL_FG1A" path="res/images/levelimages/hill_fg1a" />
+	<Image id="IMAGE_SCENE_GOINGUP_TREE_STRIPE1" path="res/images/levelimages/tree_stripe1" />
+	<Image id="IMAGE_SCENE_GOINGUP_BUSH_LEAFY_1B" path="res/images/levelimages/bush_leafy_1b" />
+	<Image id="IMAGE_SCENE_GOINGUP_TUTORIALPOST" path="res/levels/GoingUp/tutorialPost" />
+	<Image id="IMAGE_SCENE_GOINGUP_SKY_BLUE2A" path="res/images/levelimages/sky_blue2a" />
+	
+	<Sound id="SOUND_LEVEL_GOINGUP_TEMP_CARNIVALLOOP" path="res/music/temp_CarnivalLoop" />
+</Resources>
