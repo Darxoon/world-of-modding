@@ -3,13 +3,18 @@
 public class AspectUtility : MonoBehaviour
 {
 
-    public float _wantedAspectRatio = 1.3333333f;
+    public float _wantedAspectRatio = 16f / 9f;
     static float wantedAspectRatio;
     static Camera cam;
     static Camera backgroundCam;
 
+    // on window resize 
+    public float currentRatio;
+    public float newRatio;
+
     void Awake()
     {
+        currentRatio = (float)Screen.width / Screen.height;
         cam = GetComponent<Camera>();
         if (!cam)
         {
@@ -24,9 +29,20 @@ public class AspectUtility : MonoBehaviour
         SetCamera();
     }
 
+    private void Update()
+    {
+        newRatio = (float)Screen.width / Screen.height; 
+        if(newRatio != currentRatio)
+        {
+            currentRatio = newRatio;
+            Debug.Log("Aspect changed");
+            SetCamera();
+        }
+    }
+
     public static void SetCamera()
     {
-        float currentAspectRatio = (float)Screen.width / Screen.height;
+        float currentAspectRatio = (float)Screen.width / Screen.height; 
         // If the current aspect ratio is already approximately equal to the desired aspect ratio,
         // use a full-screen Rect (in case it was set to something else previously)
         if ((int)(currentAspectRatio * 100) / 100.0f == (int)(wantedAspectRatio * 100) / 100.0f)

@@ -189,6 +189,7 @@ MonoBehaviour:
     maxY: 0
     backgroundColor: {r: 0, g: 0, b: 0, a: 0}
   sceneLayers: []
+  fixedScreenSize: {x: 8.888889, y: 5}
   sceneLayerPrefab: {fileID: 7193680220141210578, guid: 37eebf06423f4fc4186be8a48c49113e,
     type: 3}
   sceneLayerGroup: {fileID: 248817499}
@@ -243,7 +244,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
+  m_BackGroundColor: {r: 0.2830189, g: 0.2830189, b: 0.2830189, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -302,4 +303,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60cf1faa95603d246b0d82ef4f5aa951, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _wantedAspectRatio: 1.8888888
+  _wantedAspectRatio: 1.7777778
+  currentRatio: 0
+  newRatio: 0

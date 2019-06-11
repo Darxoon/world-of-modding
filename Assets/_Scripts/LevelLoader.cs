@@ -69,6 +69,8 @@ public class LevelLoader : MonoBehaviour
     [SerializeField] private SceneInfo sceneInfo;
     [SerializeField] private SceneLayer[] sceneLayers;
 
+    [SerializeField] private Vector2 fixedScreenSize;
+
     [SerializeField] private GameObject sceneLayerPrefab;
 
     [Header("References")]
@@ -81,7 +83,7 @@ public class LevelLoader : MonoBehaviour
 
     // resources 
 
-    private Dictionary<string, Sprite>   imgResources;
+    private Dictionary<string, Sprite>      imgResources;
     private Dictionary<string, AudioClip>   soundResources;
     private Dictionary<string, string>      textResources;
 
@@ -91,15 +93,10 @@ public class LevelLoader : MonoBehaviour
 
         mainCam = Camera.main;
 
-        // set camera's aspect ratio 
-
-        mainCam.aspect = 16f / 9f;
-
         // load the files
         try
         {
-
-
+            
             XmlDocument resrc = new XmlDocument();
             XmlTextReader resrcReader = new XmlTextReader(Path.Combine(resDirectory, "res", levelDirectory, levelToLoad, levelToLoad + ".resrc"));
             resrcReader.Read();
@@ -151,7 +148,7 @@ public class LevelLoader : MonoBehaviour
             texture.LoadImage(File.ReadAllBytes(Path.Combine(resDirectory, item.Value + ".png")));
             // make sprite
             imgResources[item.Key] = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),
-                new Vector2(texture.width / 2, texture.height / 2)); 
+                new Vector2(.5f, .5f)); 
             // debug
             Debug.Log(item.Key);
         }
@@ -206,6 +203,11 @@ public class LevelLoader : MonoBehaviour
         foreach (SceneLayer item in sceneLayers)
         {
             GameObject sceneLayer = Instantiate(sceneLayerPrefab, sceneLayerGroup);
+            // position
+            sceneLayer.transform.position = item.pos / 15 * 2.4f * -item.depth / fixedScreenSize;
+            sceneLayer.transform.position = new Vector3(sceneLayer.transform.position.x, sceneLayer.transform.position.y, -item.depth / 100);
+            // scale 
+            sceneLayer.transform.localScale = item.scale * 2.4f * -item.depth;
             Debug.Log(item.image);
             sceneLayer.GetComponent<SpriteRenderer>().sprite = imgResources[item.image];
         }
