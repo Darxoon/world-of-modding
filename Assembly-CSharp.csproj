@@ -69,6 +69,7 @@
     <Compile Include="Assets\_Scripts\Ingame\Walk.cs" />
     <Compile Include="Assets\_Scripts\Ingame\WalkOnStrand.cs" />
     <Compile Include="Assets\_Scripts\LevelLoader.cs" />
+    <Compile Include="Assets\_Scripts\SceneLayerParallax.cs" />
     <Compile Include="Assets\_Scripts\UI\ButtonController.cs" />
     <Compile Include="Assets\_Scripts\UI\ButtonHitbox.cs" />
     <Compile Include="Assets\_Scripts\UI\ButtonPop.cs" />

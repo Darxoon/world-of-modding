@@ -39,9 +39,10 @@ public class LevelLoader : MonoBehaviour
         public Vector2 scale;
         public float rotation;
         public Color colorize;
-        public string image; 
+        public string image;
+        public string name;
 
-        public SceneLayer(string depth, string x, string y, string scaleX, string scaleY, string rotation, string alpha, string colorize, string image)
+        public SceneLayer(string depth, string x, string y, string scaleX, string scaleY, string rotation, string alpha, string colorize, string image, string name)
         {
             this.depth = float.Parse(depth);
             pos = new Vector2(float.Parse(x), float.Parse(y));
@@ -54,6 +55,7 @@ public class LevelLoader : MonoBehaviour
                 float.Parse(alpha));
             this.rotation = float.Parse(rotation);
             this.image = image;
+            this.name = name;
         }
     }
     #endregion
@@ -72,6 +74,12 @@ public class LevelLoader : MonoBehaviour
     [SerializeField] private Vector2 fixedScreenSize;
 
     [SerializeField] private GameObject sceneLayerPrefab;
+
+    [Header("Positioning fine tuning")]
+
+    [SerializeField] private float scale;
+    [SerializeField] private float positiveDistanceScale;
+    [SerializeField] private float negativeDistanceScale;
 
     [Header("References")]
 
@@ -187,16 +195,34 @@ public class LevelLoader : MonoBehaviour
         List<SceneLayer> sceneLayers = new List<SceneLayer>();
         foreach (XmlNode item in sceneLayerNodes)
         {
-            sceneLayers.Add(new SceneLayer(
-                item.Attributes["depth"].Value,
-                item.Attributes["x"].Value,
-                item.Attributes["y"].Value,
-                item.Attributes["scalex"].Value,
-                item.Attributes["scaley"].Value,
-                item.Attributes["rotation"].Value,
-                item.Attributes["alpha"].Value,
-                item.Attributes["colorize"].Value,
-                item.Attributes["image"].Value));
+            //sceneLayers.Add(new SceneLayer(
+            //    item.Attributes["depth"].Value,
+            //    item.Attributes["x"].Value,
+            //    item.Attributes["y"].Value,
+            //    item.Attributes["scalex"].Value,
+            //    item.Attributes["scaley"].Value,
+            //    item.Attributes["rotation"].Value,
+            //    item.Attributes["alpha"].Value,
+            //    item.Attributes["colorize"].Value,
+            //    item.Attributes["image"].Value), 
+            //    item.Attributes["name"].Value);
+
+            string[] colors = item.Attributes["colorize"].Value.Split(',');
+
+            sceneLayers.Add(new SceneLayer
+            {
+                depth = float.Parse(item.Attributes["depth"].Value),
+                pos = new Vector2(float.Parse(item.Attributes["x"].Value), float.Parse(item.Attributes["y"].Value)),
+                scale = new Vector2(float.Parse(item.Attributes["scalex"].Value), float.Parse(item.Attributes["scaley"].Value)),
+                rotation = float.Parse(item.Attributes["rotation"].Value),
+                colorize = new Color(
+                    float.Parse(colors[0]) / 255,
+                    float.Parse(colors[1]) / 255,
+                    float.Parse(colors[2]) / 255,
+                    float.Parse(item.Attributes["alpha"].Value)),
+                image = item.Attributes["image"].Value,
+                name = item.Attributes["name"].Value
+            });
         }
         this.sceneLayers = sceneLayers.ToArray();
 
@@ -204,12 +230,44 @@ public class LevelLoader : MonoBehaviour
         {
             GameObject sceneLayer = Instantiate(sceneLayerPrefab, sceneLayerGroup);
             // position
-            sceneLayer.transform.position = item.pos / 15 * 2.4f * -item.depth / fixedScreenSize;
+
+            Vector2 worldPosition = item.pos / 15 * scale / fixedScreenSize;
+            Vector2 relativeWorldPosition = worldPosition - (Vector2)mainCam.transform.position;
+
+            float distance;
+
+            if (item.depth > 0)
+                distance = Mathf.Sqrt(item.depth) * positiveDistanceScale * relativeWorldPosition.magnitude;
+            else if (item.depth < 0)
+                distance = (Mathf.Sqrt(-item.depth) + -item.depth) * negativeDistanceScale * relativeWorldPosition.magnitude;
+            else
+                distance = relativeWorldPosition.magnitude;
+            Vector2 offsettedRelativeWorldPosition = relativeWorldPosition.normalized * distance;
+
+            sceneLayer.transform.position = offsettedRelativeWorldPosition + (Vector2)mainCam.transform.position;
             sceneLayer.transform.position = new Vector3(sceneLayer.transform.position.x, sceneLayer.transform.position.y, -item.depth / 100);
+
+            // rotation 
+
+            sceneLayer.transform.rotation = Quaternion.Euler(0f, 0f, item.rotation);
+
             // scale 
-            sceneLayer.transform.localScale = item.scale * 2.4f * -item.depth;
+            sceneLayer.transform.localScale = item.scale * scale;
             Debug.Log(item.image);
             sceneLayer.GetComponent<SpriteRenderer>().sprite = imgResources[item.image];
+
+            // name 
+            sceneLayer.name = $"SceneLayer '{item.name}'";
+
+            // parallax component 
+
+            sceneLayer.AddComponent(typeof(SceneLayerParallax));
+            SceneLayerParallax parallaxComponent = sceneLayer.GetComponent<SceneLayerParallax>();
+            parallaxComponent.positiveDistanceScale = positiveDistanceScale;
+            parallaxComponent.negativeDistanceScale = negativeDistanceScale;
+            parallaxComponent.depth = item.depth;
+            parallaxComponent.worldPosition = worldPosition; 
+
         }
 
     }
