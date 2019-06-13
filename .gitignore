@@ -3,3 +3,4 @@ Library/*
 .vs/*
 *.meta
 *.meta
+ProjectSettings/XRSettings.asset
