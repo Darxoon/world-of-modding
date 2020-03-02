@@ -16,7 +16,7 @@ public class BallSensor : MonoBehaviour
         transform.rotation = Quaternion.identity;
         // update isGrounded and isTouchingWall
         isGrounded = groundCollider.IsTouchingLayers(LayerMask.GetMask("Geometry")) || groundCollider.IsTouchingLayers(LayerMask.GetMask("Detached Balls"));
-        Debug.Log(wallCollider.IsTouchingLayers(LayerMask.GetMask("Detached Balls")), gameObject);
+        //Debug.Log(wallCollider.IsTouchingLayers(LayerMask.GetMask("Detached Balls")), gameObject);
         isTouchingWall = wallCollider.IsTouchingLayers(LayerMask.GetMask("Geometry")) || wallCollider.IsTouchingLayers(LayerMask.GetMask("Detached Balls"));
     }
     

@@ -106,6 +106,7 @@ public class LevelLoader : MonoBehaviour
         {
             
             XmlDocument resrc = new XmlDocument();
+            Debug.Log($"{Path.Combine(resDirectory, "res", levelDirectory, levelToLoad, levelToLoad + ".resrc")}");
             XmlTextReader resrcReader = new XmlTextReader(Path.Combine(resDirectory, "res", levelDirectory, levelToLoad, levelToLoad + ".resrc"));
             resrcReader.Read();
             resrc.Load(resrcReader);

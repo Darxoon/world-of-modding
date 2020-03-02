@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Drag : MonoBehaviour
@@ -7,6 +8,7 @@ public class Drag : MonoBehaviour
     // Layer mask
     [SerializeField] private string ballLayerMask = "Attached Balls";
     // goo properties
+    public Vector3 originalScale;
     public int rays = 50;
     public int strandCount = 2;
     public float strandLength = 10;
@@ -18,18 +20,18 @@ public class Drag : MonoBehaviour
     public List<GameObject> attachedBalls;
     public Dictionary<int, Drag> gooStrands = new Dictionary<int, Drag>();
     // TEMPORARY
-    [SerializeField] private Sprite strandSprite;
+    [SerializeField] public Sprite strandSprite;
 
     [Header("Joint Settings")]
 
-    [SerializeField] private float dampingRatio;
-    [SerializeField] private float frequency;
+    [SerializeField] public float dampingRatio;
+    [SerializeField] public float frequency;
 
     [Header("Debugging")]
 
     [SerializeField] private bool isTower = false;
     [SerializeField] private bool isDragged = false;
-    [SerializeField] private GameObject drag;
+    //[SerializeField] private GameObject drag;
 
     public float[] attachable_arr;
     [SerializeField] private List<RaycastHit2D> attachable;
@@ -39,6 +41,7 @@ public class Drag : MonoBehaviour
     private Vector3 euler;
     private RaycastHit2D hit;
 
+    [SerializeField]public string randomID;
 
     #region Getters
 
@@ -50,8 +53,12 @@ public class Drag : MonoBehaviour
 
     //public Vector3 euler = new Vector3(90f, 0f, 1f);
 
+
+
     private void Start()
     {
+        originalScale = transform.lossyScale;
+        randomID = GameManager.GenerateRandomID(10);
         rigid = GetComponent<Rigidbody2D>();
         attachable = new List<RaycastHit2D>();
 
@@ -72,7 +79,7 @@ public class Drag : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButton(0) && !IsTower && !GameManager.instance.isDragging)
+        if (Input.GetMouseButtonDown(0) && !IsTower && !GameManager.instance.isDragging)
         {
             RaycastHit2D[] hits = Physics2D.GetRayIntersectionAll(Camera.main.ScreenPointToRay(Input.mousePosition), Mathf.Infinity);
             if (hits.Length > 0)
@@ -87,7 +94,7 @@ public class Drag : MonoBehaviour
                     {
                         isDragged = true;
                         GameManager.instance.isDragging = true;
-                        drag = hit.transform.gameObject;
+                        GameManager.instance.drag = hit.transform.gameObject;
                     }
 
                 }
@@ -97,6 +104,9 @@ public class Drag : MonoBehaviour
 
         if (isDragged)
         {
+            if(GetComponent<Drag>() != null)
+                Destroy(GetComponent<WalkOnStrand>());
+            transform.SetParent(StaticData.balls.transform, true);
             // positioning
             gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
             Vector3 mousePosition = Input.mousePosition;
@@ -117,11 +127,24 @@ public class Drag : MonoBehaviour
                 GameManager.instance.isDragging = false;
                 AttachRaycast(rays, ballLayerMask);
 
+                if (GameManager.instance.hoverStrand != null)
+                {
+                    isDragged = false;
+                    GameManager.instance.drag = null;
+                    gameObject.AddComponent<WalkOnStrand>().currentStrand = GameManager.instance.hoverStrand;
+                    transform.SetParent(GameManager.instance.hoverStrand.transform, true);
+                    return;
+                }
+
                 // remove constraints
-                if (drag != null) { rigid.constraints = RigidbodyConstraints2D.None; }
+                if (GameManager.instance.drag != null) { rigid.constraints = RigidbodyConstraints2D.None; }
                 // update fields
                 isDragged = false;
-                drag = null;
+                GameManager.instance.drag = null;
+
+                //check if we are hovering over a strand
+
+
 
                 // are the strands 1?
                 if (strandCount == 1)
@@ -157,7 +180,10 @@ public class Drag : MonoBehaviour
                         gameObject.SetActive(false);
                     }
                 }
-
+                else
+                {
+                    
+                }
                 Debug.Log("stopped dragging");
             }
 
@@ -171,34 +197,8 @@ public class Drag : MonoBehaviour
 
     public void MakeStrand(Transform other)
     {
-        Debug.Log("Making a strand!", gameObject);
-        // make the joint
-        SpringJoint2D joint = gameObject.AddComponent<SpringJoint2D>();
-        joint.connectedBody = other.GetComponent<Rigidbody2D>();
-        joint.autoConfigureDistance = false;
-        joint.dampingRatio = dampingRatio;
-        joint.frequency = frequency;
-        joint.distance = Mathf.Clamp(joint.distance, strandDistanceRange.x, strandDistanceRange.y) * strandMulitplier;
-
-        // make the visual strand
-        GameObject child = new GameObject("Strand");
-        child.transform.SetParent(transform);
-        // add the sprite renderer
-        SpriteRenderer spriteRenderer = child.AddComponent<SpriteRenderer>();
-        spriteRenderer.sprite = strandSprite;
-        spriteRenderer.flipY = true;
-        spriteRenderer.sortingLayerName = "Strands";
-        spriteRenderer.enabled = false;
-        // add the strand controller 
-        child.AddComponent<Strand>().connectedBall = other.gameObject;
-        // reset the position
-        child.transform.localPosition = Vector3.zero;
-        // change the layer 
-        child.layer = LayerMask.NameToLayer("Strands");
-        // freeze THIS BALL's rotation
+        StaticData.gameManager.MakeStrand(transform, other);
         rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
-        
-
         // add the other goo ball to attached list 
         attachedBalls.Add(other.gameObject);
         other.GetComponent<Drag>().attachedBalls.Add(gameObject);
