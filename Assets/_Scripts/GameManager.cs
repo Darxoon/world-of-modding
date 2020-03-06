@@ -37,9 +37,11 @@ public class GameManager : MonoBehaviour
         {
             foreach (Collider2D c in col)
             {
+                //Debug.Log(c.gameObject.name + " " + c.gameObject.layer + " " + LayerMask.NameToLayer("Strands"));
                 if(c.gameObject.layer == LayerMask.NameToLayer("Strands"))
                 {
-                    hoverStrand = c.gameObject;
+                    Debug.Log("Found a strand");
+                    hoverStrand = c.gameObject.transform.parent.gameObject;
                     FoundStrand = true;
                 }
             }
@@ -55,12 +57,12 @@ public class GameManager : MonoBehaviour
     /// </summary>
     /// <param name="b1">The gooball that invokes MakeStrand</param>
     /// <param name="b2">The gooball that we connect the strand to</param>
-    public void MakeStrand(Transform b1, Transform b2)
+    public void MakeStrand(Transform b1, Transform b2, float dampingRatio, float frequency, float strandThickness)
     {
         //check if we already have a strand that is connected to the same gooballs
-        foreach (Transform strand in StaticData.strands.transform)
+        foreach (Transform Strand in StaticData.strands.transform)
         {
-            Strand component = strand.GetComponent<Strand>();
+            Strand component = Strand.GetComponent<Strand>();
             GameObject ball1 = component.connectedBall1;
             GameObject ball2 = component.connectedBall2;            
             if(ball1 == b1.gameObject && ball2 == b2.gameObject || ball2 == b1.gameObject && ball1 == b2.gameObject)
@@ -76,6 +78,9 @@ public class GameManager : MonoBehaviour
 
         //spring joint
         SpringJoint2D joint = b1.gameObject.AddComponent<SpringJoint2D>();
+        joint.dampingRatio = dampingRatio;
+        joint.frequency = frequency;
+            
         joint.connectedBody = b2.gameObject.GetComponent<Rigidbody2D>();
         joint.autoConfigureDistance = false;
         joint.dampingRatio = b1.GetComponent<Drag>().dampingRatio;
@@ -83,24 +88,37 @@ public class GameManager : MonoBehaviour
         Drag b1Drag = b1.GetComponent<Drag>();
         joint.distance = Mathf.Clamp(joint.distance, b1Drag.strandDistanceRange.x, b1Drag.strandDistanceRange.y) * b1Drag.strandMulitplier;
 
-        //visual
+        //physical
         GameObject child = new GameObject($"Strand ({GenerateRandomID(5)})");
         child.tag = "Strand";
         child.transform.SetParent(StaticData.strands.transform);
 
-        SpriteRenderer spriteRenderer = child.AddComponent<SpriteRenderer>();
+
+        //visual
+        GameObject visual = new GameObject("StrandDisplay");
+        visual.transform.SetParent(child.transform);
+        SpriteRenderer spriteRenderer = visual.AddComponent<SpriteRenderer>();
         spriteRenderer.sprite = b1Drag.strandSprite;
         spriteRenderer.flipY = true;
         spriteRenderer.sortingLayerName = "Strands";
         spriteRenderer.enabled = false;
 
-        child.AddComponent<Strand>().connectedBall1 = b2.gameObject;
-        child.GetComponent<Strand>().connectedBall2 = b1.gameObject;
-        child.AddComponent<BoxCollider2D>().isTrigger = true;
+        Strand strand = child.AddComponent<Strand>();
+        strand.connectedBall1 = b2.gameObject;
+        //child.AddComponent<Strand>().connectedBall1 = b2.gameObject;
+        strand.connectedBall2 = b1.gameObject;
+        strand.renderer = spriteRenderer;
+        strand.rendererObject = visual;
+        strand.strandThickness = strandThickness;
+        visual.AddComponent<BoxCollider2D>().isTrigger = true;
 
         child.transform.localPosition = Vector3.zero;
 
-        child.layer = LayerMask.NameToLayer("Strands");
+        visual.layer = LayerMask.NameToLayer("Strands");
+
+
+
+
         //b1.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
     }
     /// <summary>

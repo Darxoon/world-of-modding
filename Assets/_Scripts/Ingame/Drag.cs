@@ -7,13 +7,9 @@ public class Drag : MonoBehaviour
 {
     // Layer mask
     [SerializeField] private string ballLayerMask = "Attached Balls";
+
     // goo properties
-    public Vector3 originalScale;
-    public int rays = 50;
-    public int strandCount = 2;
-    public float strandLength = 10;
-    public Vector2 strandDistanceRange = new Vector2(1f, 4f);
-    public float strandMulitplier = 1.01f;
+    
     // initial strands 
     public GameObject[] initialStrands;
     // the balls it is connected during the game
@@ -22,11 +18,35 @@ public class Drag : MonoBehaviour
     // TEMPORARY
     [SerializeField] public Sprite strandSprite;
 
-    [Header("Joint Settings")]
+    [Header("Gooball properties")]
+    public float extraMass = 0;
+    [SerializeField] private float _originalMass = 3.23f;
+    public float originalMass
+    {
+        get
+        {
+            return _originalMass;
+        }
+    }
+    public Vector3 originalScale;
+    public int rays = 50;
+
+
+
+    public Vector2 strandDistanceRange = new Vector2(1f, 4f);
+    public float strandMulitplier = 1.01f;
+    public float StrandThickness = 0.5f;
+
+    [Header("Strand Settings")]
 
     [SerializeField] public float dampingRatio;
     [SerializeField] public float frequency;
 
+    public int strandCount = 2;
+    public float strandLengthMax = 1.9f;
+    public float strandLengthMin = 0;
+    public float strandLengthShrink = 1.8f;
+    public float strandLenghtShrinkSpeed = 1f;
     [Header("Debugging")]
 
     [SerializeField] private bool isTower = false;
@@ -48,6 +68,7 @@ public class Drag : MonoBehaviour
     public bool IsDragged => isDragged;
     public bool IsTower => isTower;
 
+    private bool hasShrunkToSize = false;
     #endregion
 
 
@@ -57,9 +78,10 @@ public class Drag : MonoBehaviour
 
     private void Start()
     {
+        rigid = GetComponent<Rigidbody2D>();
+        rigid.mass = originalMass + extraMass;
         originalScale = transform.lossyScale;
         randomID = GameManager.GenerateRandomID(10);
-        rigid = GetComponent<Rigidbody2D>();
         attachable = new List<RaycastHit2D>();
 
         if(initialStrands.Length > 0)
@@ -79,6 +101,9 @@ public class Drag : MonoBehaviour
 
     private void Update()
     {
+
+        //rigid.mass = _originalMass + ExtraMass;
+
         if (Input.GetMouseButtonDown(0) && !IsTower && !GameManager.instance.isDragging)
         {
             RaycastHit2D[] hits = Physics2D.GetRayIntersectionAll(Camera.main.ScreenPointToRay(Input.mousePosition), Mathf.Infinity);
@@ -173,7 +198,8 @@ public class Drag : MonoBehaviour
                     else
                     {
                         // act as a strand
-                        Debug.Log("I'm a strand!", gameObject);
+                        //Debug.Log("I'm a strand!", gameObject);
+
                         Drag other1 = attachable[0].transform.gameObject.GetComponent<Drag>();
                         other1.gooStrands.Add(other1.attachedBalls.Count, this);
                         other1.MakeStrand(attachable[1].transform);
@@ -189,7 +215,13 @@ public class Drag : MonoBehaviour
 
         }
 
-
+        if (isTower && !hasShrunkToSize)
+        {
+            foreach (var gooball in attachedBalls)
+            {
+                
+            }
+        }
     }
 
 
@@ -197,11 +229,12 @@ public class Drag : MonoBehaviour
 
     public void MakeStrand(Transform other)
     {
-        StaticData.gameManager.MakeStrand(transform, other);
+        StaticData.gameManager.MakeStrand(transform, other, dampingRatio, frequency, StrandThickness);
         rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
         // add the other goo ball to attached list 
         attachedBalls.Add(other.gameObject);
         other.GetComponent<Drag>().attachedBalls.Add(gameObject);
+        isTower = true;
     }
 
 
@@ -216,9 +249,9 @@ public class Drag : MonoBehaviour
             // the vector for the ray
             euler = new Vector3(i / (rays * 1f) * 360f, 90f, 0f);
             // show the ray
-            Debug.DrawRay(transform.position, (Quaternion.Euler(euler) * Vector3.forward) * strandLength, Color.blue);
+            Debug.DrawRay(transform.position, (Quaternion.Euler(euler) * Vector3.forward) * strandLengthMax, Color.blue);
             // cast the ray
-            hit = Physics2D.Raycast(transform.position, Quaternion.Euler(euler) * Vector3.forward, strandLength, LayerMask.GetMask(ballLayerMask));
+            hit = Physics2D.Raycast(transform.position, Quaternion.Euler(euler) * Vector3.forward, strandLengthMax, LayerMask.GetMask(ballLayerMask));
             // if it hit something
             if (hit)
                 attachable.Add(hit);
@@ -239,6 +272,7 @@ public class Drag : MonoBehaviour
         }
 
         // DEBUG draws the rays
+#if DEBUG
         for (int i = 0; i < attachable.Count; i++)
         {
             if(i < strandCount)
@@ -247,6 +281,7 @@ public class Drag : MonoBehaviour
                 Debug.DrawLine(transform.position, attachable[i].point, Color.green);
 
         }
+#endif
 
     }
 

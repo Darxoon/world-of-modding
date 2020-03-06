@@ -6,13 +6,19 @@ public class Strand : MonoBehaviour
 {
     public GameObject connectedBall1;
     public GameObject connectedBall2;
+    public SpriteRenderer renderer;
+    public GameObject rendererObject;
+
     bool spriteEnabled = false;
 
-    [SerializeField] private float stretchMultiplier = 1.1f;
+    [SerializeField] private float stretchMultiplier = 1.35f;
+    public float strandThickness;
+
+    private float leThicc;
 
     private void Start()
     {
-        transform.localScale *= 0.5f;
+        //transform.localScale *= 0.5f;
     }
 
     private void Update()
@@ -25,13 +31,21 @@ public class Strand : MonoBehaviour
         Vector2 direction = connectedBall1.transform.position - transform.position;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         // apply rotation
-        transform.rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
+        rendererObject.transform.rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
 
 
         // calculate the actual difference between this goo ball and the other gooball
         float distance = Vector3.Distance(connectedBall2.transform.position, connectedBall1.transform.position);
         // apply the scale
-        transform.localScale = new Vector3(transform.localScale.x, distance / 3f * stretchMultiplier, transform.localScale.z);
+
+
+
+        //le  t h i c c  calculation
+
+        leThicc = 1 / distance;
+
+
+        rendererObject.transform.localScale = new Vector3(strandThickness * leThicc, distance / 3f * stretchMultiplier, 0);
 
 
         // calculate and apply center
@@ -42,7 +56,16 @@ public class Strand : MonoBehaviour
         if(!spriteEnabled)
         {
             spriteEnabled = true;
-            GetComponent<SpriteRenderer>().enabled = true;
+            renderer.enabled = true;
         }
+
+
+        //do the extra m a s s 
+
+
+
+
+
+
     }
 }
