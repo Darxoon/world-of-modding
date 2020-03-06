@@ -7,7 +7,8 @@ public class WalkOnStrand : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        thisGooballObject = GetComponent<Drag>();
+        currentStrandObject = currentStrand.GetComponent<Strand>();
+        thisGooballObject = GetComponent<Gooball>();
         //find out which ball are we gonna go to
         System.Random rand = new System.Random();
         int gooball = rand.Next(0, 1);
@@ -25,21 +26,23 @@ public class WalkOnStrand : MonoBehaviour
 
     public List<GameObject> gooballs = new List<GameObject>();
 
+
+
     void GetGooballs(GameObject gooball) {
         gooballs.Clear();
-        foreach (GameObject ball in gooball.GetComponent<Drag>().attachedBalls)
+        foreach (GameObject ball in gooball.GetComponent<Gooball>().attachedBalls)
         {
             gooballs.Add(ball);
         }
     }
 
     public GameObject currentGooball;
-    public Drag currentGooballObject;
+    public Gooball currentGooballObject;
 
-    public Drag thisGooballObject;
+    public Gooball thisGooballObject;
     //Vector3 nextPos;
     public GameObject nextBall;
-    public Drag nextGooballObject;
+    public Gooball nextGooballObject;
 
     bool isMoving = false;
     public float speed = 0.03f;
@@ -60,67 +63,30 @@ public class WalkOnStrand : MonoBehaviour
         {
             transform.position = Vector3.MoveTowards(transform.position, nextBall.transform.position, speed);
             if (transform.position == nextBall.transform.position) {
-                isMoving = false;
-
-                //double distnace = Vector3.Distance(currentStrandObject.connectedBall1.transform.position, currentStrandObject.connectedBall2.transform.position);
-                
-            }
-            //applyMass(); THIS IS FUCKING BROKEN, IT DOESNT WORK, VERY GLITCHY, END MY SUFFERING
-        }
-    }
-
-    private float massAppliedToPrevious;
-    private float currentMassApplied;
-    public void applyMass()
-    {
-        /*
-        if (currentGooball != null)
-        {
-            float percent = Vector3.Distance(transform.position, nextBall.transform.position) / Vector3.Distance(currentGooball.transform.position, nextBall.transform.position);
-
-            massAppliedToPrevious = thisGooballObject.originalMass * percent;
-            //know what mass we gon add
-            currentMassApplied = thisGooballObject.originalMass - massAppliedToPrevious;
-
-
-            //make sure its not negative
-            if(massAppliedToPrevious < 0)
-            {
-                massAppliedToPrevious = massAppliedToPrevious * -1;
-            }
-            if(currentMassApplied < 0)
-            {
-                currentMassApplied = currentMassApplied * -1;
+                isMoving = false;                
             }
         }
-        */
-
     }
 
     public void TowardsWhichGooball()
     {
         if (nextBall != null)
         {
-            //nextBall.GetComponent<Drag>().ExtraMass -= GetComponent<Drag>().originalMass;
+            currentStrandObject.ExitStrand(transform);
             currentGooball = nextBall;
-            currentGooballObject = currentGooball.GetComponent<Drag>();
+            currentGooballObject = currentGooball.GetComponent<Gooball>();
         }
         System.Random check = new System.Random();
         int whichGooball = check.Next(0, gooballs.Count);
-        //Debug.Log($"next gooball index is {whichGooball}, the size of list is {gooballs.Count}");
         nextBall = gooballs[whichGooball];
-        nextGooballObject = nextBall.GetComponent<Drag>();
-        //nextPos = nextBall.transform.position;
+        nextGooballObject = nextBall.GetComponent<Gooball>();
         isMoving = true;
         if (nextBall != null)
         {
-            currentStrand = GameManager.instance.getStrandBetweenBalls(currentGooball, nextBall);
+            currentStrand = GameManager.instance.getStrandBetweenBalls(currentGooball, nextBall).gameObject;
             currentStrandObject = currentStrand.GetComponent<Strand>();
-            transform.SetParent(StaticData.balls.transform); //did this shenanigan because the game kept gradually increasing the ball size when going from strand to strand
-            transform.localScale = thisGooballObject.originalScale;
+            currentStrandObject.EnterStrand(transform);
             transform.SetParent(currentStrand.transform, true);
-            //Debug.Log(currentStrand);
-            //nextBall.GetComponent<Drag>().ExtraMass += thisGooballObject.originalMass;
         }
     }
 

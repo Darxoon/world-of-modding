@@ -57,7 +57,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     /// <param name="b1">The gooball that invokes MakeStrand</param>
     /// <param name="b2">The gooball that we connect the strand to</param>
-    public void MakeStrand(Transform b1, Transform b2, float dampingRatio, float frequency, float strandThickness)
+    public Strand MakeStrand(Transform b1, Transform b2, float dampingRatio, float frequency, float strandThickness)
     {
         //check if we already have a strand that is connected to the same gooballs
         foreach (Transform Strand in StaticData.strands.transform)
@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
                     $"Strand's properties: \n" +
                     $"  ball1: {component.connectedBall1} \n" +
                     $"  ball2: {component.connectedBall2}");
-                return;
+                return null;
             }
         }
 
@@ -83,9 +83,9 @@ public class GameManager : MonoBehaviour
             
         joint.connectedBody = b2.gameObject.GetComponent<Rigidbody2D>();
         joint.autoConfigureDistance = false;
-        joint.dampingRatio = b1.GetComponent<Drag>().dampingRatio;
-        joint.frequency = b1.GetComponent<Drag>().frequency;
-        Drag b1Drag = b1.GetComponent<Drag>();
+        joint.dampingRatio = b1.GetComponent<Gooball>().dampingRatio;
+        joint.frequency = b1.GetComponent<Gooball>().frequency;
+        Gooball b1Drag = b1.GetComponent<Gooball>();
         joint.distance = Mathf.Clamp(joint.distance, b1Drag.strandDistanceRange.x, b1Drag.strandDistanceRange.y) * b1Drag.strandMulitplier;
 
         //physical
@@ -105,8 +105,10 @@ public class GameManager : MonoBehaviour
 
         Strand strand = child.AddComponent<Strand>();
         strand.connectedBall1 = b2.gameObject;
+        strand.connectedBall1Class = b2.GetComponent<Gooball>();
         //child.AddComponent<Strand>().connectedBall1 = b2.gameObject;
         strand.connectedBall2 = b1.gameObject;
+        strand.connectedBall2Class = b1.GetComponent<Gooball>();
         strand.renderer = spriteRenderer;
         strand.rendererObject = visual;
         strand.strandThickness = strandThickness;
@@ -116,17 +118,15 @@ public class GameManager : MonoBehaviour
 
         visual.layer = LayerMask.NameToLayer("Strands");
 
-
-
-
-        //b1.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+        return strand;
     }
+
     /// <summary>
     /// uses b1 and b2 gooballs to get the strand that is connecting them
     /// </summary>
     /// <param name="b1"></param>
     /// <param name="b2"></param>
-    public GameObject getStrandBetweenBalls(GameObject b1, GameObject b2)
+    public Strand getStrandBetweenBalls(GameObject b1, GameObject b2)
     {
         foreach(Transform strand in StaticData.strands.transform)
         {
@@ -135,7 +135,7 @@ public class GameManager : MonoBehaviour
             GameObject ball2 = component.connectedBall2;
             if (ball1 == b1.gameObject && ball2 == b2.gameObject || ball2 == b1.gameObject && ball1 == b2.gameObject)
             {
-                return strand.gameObject;
+                return component;
             }
         }
         return null;

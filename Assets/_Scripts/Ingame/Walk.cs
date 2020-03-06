@@ -15,7 +15,7 @@ public class Walk : MonoBehaviour
     public int walkcounter = 0;
 
     // Scripts and Components
-    [SerializeField] private Drag dragScript;
+    [SerializeField] private Gooball dragScript;
     [SerializeField] private BallSensor sensorScript;
 
     private Rigidbody2D rigid;

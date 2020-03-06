@@ -66,7 +66,7 @@
     <Compile Include="Assets\_Scripts\AspectUtility.cs" />
     <Compile Include="Assets\_Scripts\GameManager.cs" />
     <Compile Include="Assets\_Scripts\Ingame\BallSensor.cs" />
-    <Compile Include="Assets\_Scripts\Ingame\Drag.cs" />
+    <Compile Include="Assets\_Scripts\Ingame\Gooball.cs" />
     <Compile Include="Assets\_Scripts\Ingame\Strand.cs" />
     <Compile Include="Assets\_Scripts\Ingame\Walk.cs" />
     <Compile Include="Assets\_Scripts\Ingame\WalkOnStrand.cs" />

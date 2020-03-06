@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Drag : MonoBehaviour
+public class Gooball : MonoBehaviour
 {
     // Layer mask
     [SerializeField] private string ballLayerMask = "Attached Balls";
@@ -12,14 +12,15 @@ public class Drag : MonoBehaviour
     
     // initial strands 
     public GameObject[] initialStrands;
+
     // the balls it is connected during the game
     public List<GameObject> attachedBalls;
-    public Dictionary<int, Drag> gooStrands = new Dictionary<int, Drag>();
+    public Dictionary<int, Gooball> gooStrands = new Dictionary<int, Gooball>();
     // TEMPORARY
     [SerializeField] public Sprite strandSprite;
 
+    #region Gooball properties
     [Header("Gooball properties")]
-    public float extraMass = 0;
     [SerializeField] private float _originalMass = 3.23f;
     public float originalMass
     {
@@ -28,27 +29,37 @@ public class Drag : MonoBehaviour
             return _originalMass;
         }
     }
+
+    private float _towerMass = 3f;
+    public float towerMass
+    {
+        get
+        {
+            return _originalMass;
+        }
+    }
     public Vector3 originalScale;
-    public int rays = 50;
+    #endregion
 
-
-
-    public Vector2 strandDistanceRange = new Vector2(1f, 4f);
-    public float strandMulitplier = 1.01f;
-    public float StrandThickness = 0.5f;
-
+    #region Strand Settings
     [Header("Strand Settings")]
 
     [SerializeField] public float dampingRatio;
     [SerializeField] public float frequency;
 
+    public Vector2 strandDistanceRange = new Vector2(1f, 4f);
+    public float strandMulitplier = 1.01f;
+    public float StrandThickness = 0.5f;
     public int strandCount = 2;
     public float strandLengthMax = 1.9f;
     public float strandLengthMin = 0;
     public float strandLengthShrink = 1.8f;
     public float strandLenghtShrinkSpeed = 1f;
-    [Header("Debugging")]
+    #endregion
+    #region Attatchment system
+    [Header("Attatchment system")]
 
+    public int rays = 50;
     [SerializeField] private bool isTower = false;
     [SerializeField] private bool isDragged = false;
     //[SerializeField] private GameObject drag;
@@ -60,6 +71,11 @@ public class Drag : MonoBehaviour
 
     private Vector3 euler;
     private RaycastHit2D hit;
+    #endregion
+
+    public float extraMass = 0;
+    public List<Strand> strands = new List<Strand>();
+
 
     [SerializeField]public string randomID;
 
@@ -90,7 +106,7 @@ public class Drag : MonoBehaviour
             for (int i = 0; i < initialStrands.Length; i++)
             {
                 MakeStrand(initialStrands[i].transform);
-                initialStrands[i].GetComponent<Drag>().SetTowered();
+                initialStrands[i].GetComponent<Gooball>().SetTowered();
             }
             attachedBalls = new List<GameObject>(initialStrands);
         } else
@@ -99,10 +115,25 @@ public class Drag : MonoBehaviour
         }
     }
 
+    private void strandMass()
+    {
+        extraMass = 0;
+        float distancePercent = 0;
+        foreach (Strand strand in strands)
+        {
+            if(strand.gooballs.Count > 0)
+            foreach (Gooball gooball in strand.gooballs)
+            {
+                distancePercent = Vector3.Distance(transform.position, gooball.transform.position) / Vector3.Distance(transform.position, strand.otherBall(this).transform.position);
+                distancePercent = 1 - distancePercent;
+                extraMass += gooball.towerMass * distancePercent;
+            }
+        }
+    }
+
     private void Update()
     {
 
-        //rigid.mass = _originalMass + ExtraMass;
 
         if (Input.GetMouseButtonDown(0) && !IsTower && !GameManager.instance.isDragging)
         {
@@ -129,7 +160,7 @@ public class Drag : MonoBehaviour
 
         if (isDragged)
         {
-            if(GetComponent<Drag>() != null)
+            if(GetComponent<Gooball>() != null)
                 Destroy(GetComponent<WalkOnStrand>());
             transform.SetParent(StaticData.balls.transform, true);
             // positioning
@@ -180,8 +211,8 @@ public class Drag : MonoBehaviour
                 else if (attachable.Count > 1)
                 {
                     // are they connected?
-                    if (attachable[0].transform.gameObject.GetComponent<Drag>().attachedBalls.Contains(attachable[1].transform.gameObject)
-                        || attachable[1].transform.gameObject.GetComponent<Drag>().attachedBalls.Contains(attachable[0].transform.gameObject))
+                    if (attachable[0].transform.gameObject.GetComponent<Gooball>().attachedBalls.Contains(attachable[1].transform.gameObject)
+                        || attachable[1].transform.gameObject.GetComponent<Gooball>().attachedBalls.Contains(attachable[0].transform.gameObject))
                     {
                         // if there are enough balls to attach to
                         if (attachable.Count >= strandCount)
@@ -200,7 +231,7 @@ public class Drag : MonoBehaviour
                         // act as a strand
                         //Debug.Log("I'm a strand!", gameObject);
 
-                        Drag other1 = attachable[0].transform.gameObject.GetComponent<Drag>();
+                        Gooball other1 = attachable[0].transform.gameObject.GetComponent<Gooball>();
                         other1.gooStrands.Add(other1.attachedBalls.Count, this);
                         other1.MakeStrand(attachable[1].transform);
                         gameObject.SetActive(false);
@@ -215,12 +246,10 @@ public class Drag : MonoBehaviour
 
         }
 
-        if (isTower && !hasShrunkToSize)
+        if (isTower)
         {
-            foreach (var gooball in attachedBalls)
-            {
-                
-            }
+            strandMass();
+            rigid.mass = _originalMass + extraMass;
         }
     }
 
@@ -229,11 +258,22 @@ public class Drag : MonoBehaviour
 
     public void MakeStrand(Transform other)
     {
-        StaticData.gameManager.MakeStrand(transform, other, dampingRatio, frequency, StrandThickness);
+        Strand strand = StaticData.gameManager.MakeStrand(transform, other, dampingRatio, frequency, StrandThickness);
+        if(strand != null)
+        {
+            strands.Add(strand);
+            if (!other.GetComponent<Gooball>().strands.Contains(strand))
+            {
+                other.GetComponent<Gooball>().strands.Add(strand);
+            }
+        }
+            
         rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
-        // add the other goo ball to attached list 
-        attachedBalls.Add(other.gameObject);
-        other.GetComponent<Drag>().attachedBalls.Add(gameObject);
+        // add the other goo ball to attached list
+        if(!attachedBalls.Contains(other.gameObject))
+            attachedBalls.Add(other.gameObject);
+        if(!other.GetComponent<Gooball>().attachedBalls.Contains(gameObject))
+            other.GetComponent<Gooball>().attachedBalls.Add(gameObject);
         isTower = true;
     }
 
