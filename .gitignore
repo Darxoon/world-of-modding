@@ -4,3 +4,7 @@ Library/*
 *.meta
 *.meta
 ProjectSettings/XRSettings.asset
+.idea/*
+obj/*
+Assets/Plugins/JetBrains/*
+.gitignore.swp
