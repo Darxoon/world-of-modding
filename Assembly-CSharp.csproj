@@ -70,6 +70,8 @@
     <Compile Include="Assets\_Scripts\Ingame\Strand.cs" />
     <Compile Include="Assets\_Scripts\Ingame\Walk.cs" />
     <Compile Include="Assets\_Scripts\Ingame\WalkOnStrand.cs" />
+    <Compile Include="Assets\_Scripts\JSONLevel.cs" />
+    <Compile Include="Assets\_Scripts\JSONLevelLoader.cs" />
     <Compile Include="Assets\_Scripts\Legacy\ForceFields\LinearForceField.cs" />
     <Compile Include="Assets\_Scripts\Legacy\ForceFields\RadialForceField.cs" />
     <Compile Include="Assets\_Scripts\Legacy\GooBallController.cs" />

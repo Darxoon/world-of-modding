@@ -2017,6 +2017,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1840382758}
   - component: {fileID: 1840382759}
+  - component: {fileID: 1840382760}
   m_Layer: 0
   m_Name: Level
   m_TagString: Untagged
@@ -2057,6 +2058,18 @@ MonoBehaviour:
   drag: {fileID: 0}
   hoverStrand: {fileID: 0}
   isDragging: 0
+--- !u!114 &1840382760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1840382757}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a01d15a53c110a84a8449b56b0de8a2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1871259475
 PrefabInstance:
   m_ObjectHideFlags: 0
