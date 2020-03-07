@@ -137,13 +137,13 @@ public class Gooball : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && !IsTower && !GameManager.instance.isDragging)
         {
-            RaycastHit2D[] hits = Physics2D.GetRayIntersectionAll(Camera.main.ScreenPointToRay(Input.mousePosition), Mathf.Infinity);
+            RaycastHit2D[] hits = Physics2D.GetRayIntersectionAll(UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition), Mathf.Infinity);
             if (hits.Length > 0)
             {
                 for (int i = 0; i < hits.Length; i++)
                 {
                     RaycastHit2D hit = hits[i];
-                    Debug.DrawLine(Camera.main.transform.position, hit.point, Color.red);
+                    Debug.DrawLine(UnityEngine.Camera.main.transform.position, hit.point, UnityEngine.Color.red);
 
 
                     if (hit.transform == transform)
@@ -166,7 +166,7 @@ public class Gooball : MonoBehaviour
             // positioning
             gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
             Vector3 mousePosition = Input.mousePosition;
-            Vector2 point = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 3600f));
+            Vector2 point = UnityEngine.Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 3600f));
             transform.position = new Vector3(point.x, point.y, 0);
 
             // changing the layer
@@ -289,7 +289,7 @@ public class Gooball : MonoBehaviour
             // the vector for the ray
             euler = new Vector3(i / (rays * 1f) * 360f, 90f, 0f);
             // show the ray
-            Debug.DrawRay(transform.position, (Quaternion.Euler(euler) * Vector3.forward) * strandLengthMax, Color.blue);
+            Debug.DrawRay(transform.position, (Quaternion.Euler(euler) * Vector3.forward) * strandLengthMax, UnityEngine.Color.blue);
             // cast the ray
             hit = Physics2D.Raycast(transform.position, Quaternion.Euler(euler) * Vector3.forward, strandLengthMax, LayerMask.GetMask(ballLayerMask));
             // if it hit something
@@ -316,9 +316,9 @@ public class Gooball : MonoBehaviour
         for (int i = 0; i < attachable.Count; i++)
         {
             if(i < strandCount)
-                Debug.DrawLine(transform.position, attachable[i].point, Color.magenta);
+                Debug.DrawLine(transform.position, attachable[i].point, UnityEngine.Color.magenta);
             else
-                Debug.DrawLine(transform.position, attachable[i].point, Color.green);
+                Debug.DrawLine(transform.position, attachable[i].point, UnityEngine.Color.green);
 
         }
 #endif

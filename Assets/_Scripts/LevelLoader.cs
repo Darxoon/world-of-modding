@@ -16,7 +16,7 @@ public class LevelLoader : MonoBehaviour
         public float minY;
         public float maxX;
         public float maxY;
-        public Color backgroundColor;
+        public UnityEngine.Color backgroundColor;
 
         public SceneInfo(string minX, string minY, string maxX, string maxY, string bgColor)
         {
@@ -25,7 +25,7 @@ public class LevelLoader : MonoBehaviour
             this.maxX = float.Parse(maxX);
             this.maxY = float.Parse(maxY);
             string[] colors = bgColor.Split(',');
-            backgroundColor = new Color(
+            backgroundColor = new UnityEngine.Color(
                 float.Parse(colors[0]) / 255,
                 float.Parse(colors[1]) / 255,
                 float.Parse(colors[2]) / 255);
@@ -38,7 +38,7 @@ public class LevelLoader : MonoBehaviour
         public Vector2 pos; 
         public Vector2 scale;
         public float rotation;
-        public Color colorize;
+        public UnityEngine.Color colorize;
         public string image;
         public string name;
 
@@ -48,7 +48,7 @@ public class LevelLoader : MonoBehaviour
             pos = new Vector2(float.Parse(x), float.Parse(y));
             scale = new Vector2(float.Parse(scaleX), float.Parse(scaleY));
             string[] colors = colorize.Split(',');
-            this.colorize = new Color(
+            this.colorize = new UnityEngine.Color(
                 float.Parse(colors[0]) / 255,
                 float.Parse(colors[1]) / 255,
                 float.Parse(colors[2]) / 255, 
@@ -87,7 +87,7 @@ public class LevelLoader : MonoBehaviour
 
     // references that can be guessed automatically 
 
-    private Camera mainCam;
+    private UnityEngine.Camera mainCam;
 
     // resources 
 
@@ -99,7 +99,7 @@ public class LevelLoader : MonoBehaviour
     {
         // references 
 
-        mainCam = Camera.main;
+        mainCam = UnityEngine.Camera.main;
 
         // load the files
         try
@@ -216,7 +216,7 @@ public class LevelLoader : MonoBehaviour
                 pos = new Vector2(float.Parse(item.Attributes["x"].Value), float.Parse(item.Attributes["y"].Value)),
                 scale = new Vector2(float.Parse(item.Attributes["scalex"].Value), float.Parse(item.Attributes["scaley"].Value)),
                 rotation = float.Parse(item.Attributes["rotation"].Value),
-                colorize = new Color(
+                colorize = new UnityEngine.Color(
                     float.Parse(colors[0]) / 255,
                     float.Parse(colors[1]) / 255,
                     float.Parse(colors[2]) / 255,

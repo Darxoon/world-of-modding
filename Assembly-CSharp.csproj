@@ -78,16 +78,6 @@
     <Compile Include="Assets\_Scripts\Ingame\WalkOnStrand.cs" />
     <Compile Include="Assets\_Scripts\JSONLevel.cs" />
     <Compile Include="Assets\_Scripts\JSONLevelLoader.cs" />
-    <Compile Include="Assets\_Scripts\Legacy\ForceFields\LinearForceField.cs" />
-    <Compile Include="Assets\_Scripts\Legacy\ForceFields\RadialForceField.cs" />
-    <Compile Include="Assets\_Scripts\Legacy\GooBallController.cs" />
-    <Compile Include="Assets\_Scripts\Legacy\levelExitController.cs" />
-    <Compile Include="Assets\_Scripts\Legacy\Loader.cs" />
-    <Compile Include="Assets\_Scripts\Legacy\PanController.cs" />
-    <Compile Include="Assets\_Scripts\Legacy\pipeParts.cs" />
-    <Compile Include="Assets\_Scripts\Legacy\RestoreValues.cs" />
-    <Compile Include="Assets\_Scripts\Legacy\StrandController.cs" />
-    <Compile Include="Assets\_Scripts\Legacy\sTransformController.cs" />
     <Compile Include="Assets\_Scripts\LevelLoader.cs" />
     <Compile Include="Assets\_Scripts\SceneLayerParallax.cs" />
     <Compile Include="Assets\_Scripts\StaticData.cs" />

@@ -10,29 +10,29 @@ public class JSONLevelLoader : MonoBehaviour
     void Start()
     {
         JSONLevel level = new JSONLevel();
-        pipe pyp = new pipe();
+        Pipe pyp = new Pipe();
         pyp.depth = 0;
         level.level.pipe = pyp;
         level.level.pipe.id = "no_u";
-        List<vertex> vertices = new List<vertex>();
-        vertex vertex1 = new vertex();
+        List<Vertex> vertices = new List<Vertex>();
+        Vertex vertex1 = new Vertex();
         vertex1.x = 5;
         vertex1.y = 5;
         vertices.Add(vertex1);
         level.level.pipe.Vertex = vertices.ToArray();
 
-        poi poid = new poi();
-        poid.pos = new position(5, 5);
+        Poi poid = new Poi();
+        poid.pos = new Position(5, 5);
         poid.pause = 0;
-        poi[] pois = { poid };
-        camera cam = new camera();
+        Poi[] pois = { poid };
+        Camera cam = new Camera();
         cam.aspect = "widescreen";
         cam.poi = pois;
         level.level.camera = cam;
 
-        linearforcefield gravity = new linearforcefield();
-        gravity.force = new position(0,-10);
-        linearforcefield[] ff = { gravity };
+        LinearForceField gravity = new LinearForceField();
+        gravity.force = new Position(0,-10);
+        LinearForceField[] ff = { gravity };
         level.scene.ForceFields.linearforcefields = ff;
 
         JsonSerializerSettings settings = new JsonSerializerSettings();

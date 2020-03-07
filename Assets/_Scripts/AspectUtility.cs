@@ -5,8 +5,8 @@ public class AspectUtility : MonoBehaviour
 
     public float _wantedAspectRatio = 16f / 9f;
     static float wantedAspectRatio;
-    static Camera cam;
-    static Camera backgroundCam;
+    static UnityEngine.Camera cam;
+    static UnityEngine.Camera backgroundCam;
 
     // on window resize 
     public float currentRatio;
@@ -15,10 +15,10 @@ public class AspectUtility : MonoBehaviour
     void Awake()
     {
         currentRatio = (float)Screen.width / Screen.height;
-        cam = GetComponent<Camera>();
+        cam = GetComponent<UnityEngine.Camera>();
         if (!cam)
         {
-            cam = Camera.main;
+            cam = UnityEngine.Camera.main;
         }
         if (!cam)
         {
@@ -69,10 +69,10 @@ public class AspectUtility : MonoBehaviour
         if (!backgroundCam)
         {
             // Make a new camera behind the normal camera which displays black; otherwise the unused space is undefined
-            backgroundCam = new GameObject("BackgroundCam", typeof(Camera)).GetComponent<Camera>();
+            backgroundCam = new GameObject("BackgroundCam", typeof(UnityEngine.Camera)).GetComponent<UnityEngine.Camera>();
             backgroundCam.depth = int.MinValue;
             backgroundCam.clearFlags = CameraClearFlags.SolidColor;
-            backgroundCam.backgroundColor = Color.black;
+            backgroundCam.backgroundColor = UnityEngine.Color.black;
             backgroundCam.cullingMask = 0;
         }
     }
