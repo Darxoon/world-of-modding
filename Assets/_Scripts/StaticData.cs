@@ -10,5 +10,5 @@ public static class StaticData
     public static GameObject geometry = null;
     public static GameObject strands = null;
     public static GameManager gameManager = null;
-
+    public static string resFolder = Application.dataPath + "/res/";
 }
