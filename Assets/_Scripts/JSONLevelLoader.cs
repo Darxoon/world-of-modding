@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using UnityEngine;
-
+using Newtonsoft.Json;
 public class JSONLevelLoader : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -22,7 +22,7 @@ public class JSONLevelLoader : MonoBehaviour
         level.pipe.Vertex = vertices.ToArray();
 
         poi poid = new poi();
-        poid.pos = new Vector2(5, 5);
+        poid.pos = new position(5, 5);
         poid.pause = 0;
         poi[] pois = { poid };
         camera cam = new camera();
@@ -30,8 +30,10 @@ public class JSONLevelLoader : MonoBehaviour
         cam.poi = pois;
         level.camera = cam;
 
-        string json = JsonUtility.ToJson(level, true);
+        JsonSerializerSettings settings = new JsonSerializerSettings();
+        settings.NullValueHandling = NullValueHandling.Ignore;
 
+        string json = JsonConvert.SerializeObject(level, Formatting.Indented, settings);
         using (StreamWriter sw = File.CreateText("E:/text.json"))
         {
             sw.Write(json);

@@ -3,17 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 [Serializable]
 public class JSONLevel
 {
     public bool allowskip = true;
     public bool autobounds = false;
     public int ballsrequired = 1;
-    public Color cursorcolor;
+    public color cursorcolor;
     public bool letterboxed = false;
     public bool retrytime = false;
     public bool strandgeom = false;
-    public Color textcolor = new Color(255, 255, 255);
+    public color textcolor = new color();
     public bool texteffects = true;
     public float timebugprobability = 0.5f;
     public bool visualdebug = false;
@@ -35,16 +36,28 @@ public class JSONLevel
 public class camera
 {
     public string aspect = "widescreen";
-    public Vector2 endpos = Vector2.zero;
+    public position endpos = new position();
     public float endzoom = 0;
     public poi[] poi;
+}
+
+[Serializable]
+public class position
+{
+    public position(float posX = 0, float posY = 0)
+    {
+        x = posX;
+        y = posY;
+    }
+    public float x;
+    public float y;
 }
 
 [Serializable]
 public class poi
 {
     public float pause = 0;
-    public Vector2 pos = Vector2.one;
+    public position pos = new position();
     public float traveltime = 0;
     public float zoom = 0; 
 }
@@ -62,10 +75,18 @@ public class loopsound
 }
 
 [Serializable]
+public class color
+{
+    public float x = 255;
+    public float y = 255;
+    public float z = 255;
+}
+
+[Serializable]
 public class signpost
 {
     public float alpha;
-    public Color colorize = new Color(255, 255, 255);
+    public color colorize = new color();
     public float depth;
     public string image = "";
     public string name = "";
@@ -116,7 +137,7 @@ public class levelexit
 {
     public string filter = "";
     public string id = "";
-    public Vector2 pos = Vector2.zero;
+    public position pos = new position();
     public float radius = 0;
 }
 
