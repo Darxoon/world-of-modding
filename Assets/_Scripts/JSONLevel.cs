@@ -194,6 +194,7 @@ public class scene
     public ForceFields ForceFields = new ForceFields();
     public particle[] particles;
     public scenelayer[] scenelayers;
+    buttongroup[] buttongroups;
 }
 
 public class ForceFields
@@ -274,5 +275,10 @@ public class button
     public string onclick = "";
     public string onmouseenter = "";
     public string onmouseexit = "";
+}
+
+public class label
+{
+
 }
 #endregion
