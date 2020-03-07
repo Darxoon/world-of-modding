@@ -42,16 +42,16 @@ public class Gooball : MonoBehaviour
     [Header("Strand physics")]
 
     [SerializeField] public float dampingRatio;
-    [FormerlySerializedAs("frequency")] [SerializeField] public float jointFrequency;
+    [SerializeField] public float jointFrequency;
 
     public Vector2 strandDistanceRange = new Vector2(1f, 4f);
-    [FormerlySerializedAs("strandMulitplier")] public float strandMultiplier = 1.01f;
-    [FormerlySerializedAs("StrandThickness")] public float strandThickness = 0.5f;
+    public float strandMultiplier = 1.01f;
+    public float strandThickness = 0.5f;
     public int strandCount = 2;
     public float strandLengthMax = 1.9f;
     public float strandLengthMin = 0; // TODO: Implement strandLengthMin (Polishing)
     public float strandLengthShrink = 1.8f; // TODO: Implement strandLengthShrink (Polishing)
-    [FormerlySerializedAs("strandLenghtShrinkSpeed")] public float strandLengthShrinkSpeed = 1f;
+    public float strandLengthShrinkSpeed = 1f;
     
     [Header("Attaching")]
 
@@ -75,15 +75,6 @@ public class Gooball : MonoBehaviour
     public bool IsTower => isTower;
 
     #endregion
-
-    public Gooball()
-    {
-        isDragged = false;
-    }
-
-
-
-    //public Vector3 euler = new Vector3(90f, 0f, 1f);
 
 
 
