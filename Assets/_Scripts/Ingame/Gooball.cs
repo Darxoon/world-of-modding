@@ -5,6 +5,7 @@ using UnityEngine.Serialization;
 
 [SuppressMessage("ReSharper", "ConvertToAutoPropertyWhenPossible")]
 [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+[SuppressMessage("ReSharper", "ConvertToAutoProperty")]
 public class Gooball : MonoBehaviour
 {
     // Layer mask
@@ -26,9 +27,8 @@ public class Gooball : MonoBehaviour
     [SerializeField] private float originalMass = 3.23f;
     public float OriginalMass => originalMass;
 
-    // ReSharper disable once NotAccessedField.Local
-    [SerializeField] private float towerMass = 3f; // TODO: Use tower mass
-    public float TowerMass => originalMass;
+    [SerializeField] private float towerMass = 3f;
+    public float TowerMass => towerMass;
     
     public Vector3 originalScale;
     #endregion
