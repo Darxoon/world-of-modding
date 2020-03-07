@@ -8,3 +8,4 @@ ProjectSettings/XRSettings.asset
 obj/*
 Assets/Plugins/JetBrains/*
 .gitignore.swp
+Assembly-CSharp.csproj 
