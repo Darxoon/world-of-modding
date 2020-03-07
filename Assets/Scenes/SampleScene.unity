@@ -132,11 +132,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ball (5)
       objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310465, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
     - target: {fileID: 4248019372008310464, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -192,32 +187,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: strandSprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 900f2c3fc2b937946ab6397388692da8,
-        type: 3}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: dampingRatio
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: frequency
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: StrandThickness
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: strandLength
-      value: 1.5
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41e5a7be0025e254e84e48277ba91b86, type: 3}
 --- !u!1001 &133814933
@@ -231,11 +200,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ball (7)
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310465, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4248019372008310464, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
@@ -292,32 +256,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: strandSprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 900f2c3fc2b937946ab6397388692da8,
-        type: 3}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: dampingRatio
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: frequency
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: StrandThickness
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: strandLength
-      value: 1.5
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41e5a7be0025e254e84e48277ba91b86, type: 3}
 --- !u!1001 &154695915
@@ -331,11 +269,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ball (11)
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310465, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4248019372008310464, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
@@ -391,32 +324,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: strandSprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 900f2c3fc2b937946ab6397388692da8,
-        type: 3}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: dampingRatio
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: frequency
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: StrandThickness
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: strandLength
-      value: 1.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41e5a7be0025e254e84e48277ba91b86, type: 3}
@@ -489,12 +396,12 @@ PrefabInstance:
     - target: {fileID: 4248019372008310464, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.2
+      value: -3.01
       objectReference: {fileID: 0}
     - target: {fileID: 4248019372008310464, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.19
+      value: 1.29
       objectReference: {fileID: 0}
     - target: {fileID: 4248019372008310464, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
@@ -541,28 +448,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: dampingRatio
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: frequency
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: StrandThickness
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: strandLength
-      value: 1.5
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 0}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41e5a7be0025e254e84e48277ba91b86, type: 3}
 --- !u!1001 &381155647
 PrefabInstance:
@@ -575,11 +461,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ball (15)
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310465, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4248019372008310464, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
@@ -636,32 +517,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: strandSprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 900f2c3fc2b937946ab6397388692da8,
-        type: 3}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: dampingRatio
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: frequency
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: StrandThickness
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: strandLength
-      value: 1.5
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41e5a7be0025e254e84e48277ba91b86, type: 3}
 --- !u!1001 &434256659
@@ -676,20 +531,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: ball (4)
       objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310465, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
     - target: {fileID: 4248019372008310464, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.63
+      value: -2.81
       objectReference: {fileID: 0}
     - target: {fileID: 4248019372008310464, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.22
+      value: 0.07
       objectReference: {fileID: 0}
     - target: {fileID: 4248019372008310464, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
@@ -738,15 +588,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
-      propertyPath: strandSprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 900f2c3fc2b937946ab6397388692da8,
-        type: 3}
+      propertyPath: initialStrands.Array.size
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
-      propertyPath: strandLength
-      value: 1.5
-      objectReference: {fileID: 0}
+      propertyPath: initialStrands.Array.data[0]
+      value: 
+      objectReference: {fileID: 1289516707}
+    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
+        type: 3}
+      propertyPath: initialStrands.Array.data[1]
+      value: 
+      objectReference: {fileID: 1583932765}
+    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
+        type: 3}
+      propertyPath: initialStrands.Array.data[2]
+      value: 
+      objectReference: {fileID: 189612998}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41e5a7be0025e254e84e48277ba91b86, type: 3}
 --- !u!1001 &454845514
@@ -760,11 +619,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ball (8)
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310465, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4248019372008310464, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
@@ -820,32 +674,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: strandSprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 900f2c3fc2b937946ab6397388692da8,
-        type: 3}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: dampingRatio
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: frequency
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: StrandThickness
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: strandLength
-      value: 1.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41e5a7be0025e254e84e48277ba91b86, type: 3}
@@ -1006,11 +834,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ball (13)
       objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310465, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
     - target: {fileID: 4248019372008310464, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1065,32 +888,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: strandSprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 900f2c3fc2b937946ab6397388692da8,
-        type: 3}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: dampingRatio
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: frequency
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: StrandThickness
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: strandLength
-      value: 1.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41e5a7be0025e254e84e48277ba91b86, type: 3}
@@ -1226,11 +1023,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ball (9)
       objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310465, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
     - target: {fileID: 4248019372008310464, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1285,32 +1077,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: strandSprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 900f2c3fc2b937946ab6397388692da8,
-        type: 3}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: dampingRatio
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: frequency
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: StrandThickness
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: strandLength
-      value: 1.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41e5a7be0025e254e84e48277ba91b86, type: 3}
@@ -1440,11 +1206,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ball (10)
       objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310465, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
     - target: {fileID: 4248019372008310464, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1500,32 +1261,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: strandSprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 900f2c3fc2b937946ab6397388692da8,
-        type: 3}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: dampingRatio
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: frequency
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: StrandThickness
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: strandLength
-      value: 1.5
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41e5a7be0025e254e84e48277ba91b86, type: 3}
 --- !u!1001 &1381797517
@@ -1539,11 +1274,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ball (2)
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310465, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4248019372008310464, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
@@ -1603,46 +1333,14 @@ PrefabInstance:
     - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
       propertyPath: initialStrands.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: strandSprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 900f2c3fc2b937946ab6397388692da8,
-        type: 3}
     - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
       propertyPath: initialStrands.Array.data[0]
       value: 
       objectReference: {fileID: 189612998}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: initialStrands.Array.data[1]
-      value: 
-      objectReference: {fileID: 1289516707}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: dampingRatio
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: frequency
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: StrandThickness
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: strandLength
-      value: 1.5
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 0}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41e5a7be0025e254e84e48277ba91b86, type: 3}
 --- !u!4 &1394381481 stripped
 Transform:
@@ -1867,25 +1565,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: ball (6)
       objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310465, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310465, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: m_StaticEditorFlags
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4248019372008310464, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.03
+      value: -1.21
       objectReference: {fileID: 0}
     - target: {fileID: 4248019372008310464, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.53
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4248019372008310464, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
@@ -1932,49 +1620,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: initialStrands.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: strandSprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 900f2c3fc2b937946ab6397388692da8,
-        type: 3}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: initialStrands.Array.data[0]
-      value: 
-      objectReference: {fileID: 1289516707}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: initialStrands.Array.data[1]
-      value: 
-      objectReference: {fileID: 1583932765}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: dampingRatio
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: frequency
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: StrandThickness
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: strandLength
-      value: 1.5
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 0}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41e5a7be0025e254e84e48277ba91b86, type: 3}
 --- !u!1 &1717194635
 GameObject:
@@ -2082,11 +1728,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: ball (14)
       objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310465, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
-      objectReference: {fileID: 0}
     - target: {fileID: 4248019372008310464, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2141,32 +1782,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: strandSprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 900f2c3fc2b937946ab6397388692da8,
-        type: 3}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: dampingRatio
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: frequency
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: StrandThickness
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: strandLength
-      value: 1.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41e5a7be0025e254e84e48277ba91b86, type: 3}
@@ -2337,49 +1952,13 @@ PrefabInstance:
         type: 3}
       propertyPath: initialStrands.Array.data[0]
       value: 
-      objectReference: {fileID: 189612998}
+      objectReference: {fileID: 1583932765}
     - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
         type: 3}
       propertyPath: initialStrands.Array.data[1]
       value: 
-      objectReference: {fileID: 1583932765}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: initialStrands.Array.data[2]
-      value: 
-      objectReference: {fileID: 1583932765}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: initialStrands.Array.data[3]
-      value: 
-      objectReference: {fileID: 1583932765}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: initialStrands.Array.data[4]
-      value: 
       objectReference: {fileID: 189612998}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: dampingRatio
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: frequency
-      value: 9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: StrandThickness
-      value: 0.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 4248019372008310468, guid: 41e5a7be0025e254e84e48277ba91b86,
-        type: 3}
-      propertyPath: strandLength
-      value: 1.5
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 0}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41e5a7be0025e254e84e48277ba91b86, type: 3}
 --- !u!4 &2029587207 stripped
 Transform:
