@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Walk : MonoBehaviour
 {
@@ -12,19 +13,20 @@ public class Walk : MonoBehaviour
 
     [SerializeField] private bool isRotating = false;
 
-    public int walkcounter = 0;
+    [FormerlySerializedAs("walkcounter")] public int walkCounter = 0;
+    private float strandCheckCounter = 0;
 
     // Scripts and Components
-    [SerializeField] private Gooball dragScript;
-    [SerializeField] private BallSensor sensorScript;
+    [FormerlySerializedAs("dragScript")] [SerializeField] private Gooball gooball;
+    [FormerlySerializedAs("sensorScript")] [SerializeField] private BallSensor ballSensor;
 
-    private Rigidbody2D rigid;
+    private new Rigidbody2D rigidbody;
 
     private Vector2 appliedForce;
 
     private void Start()
     {
-        rigid = GetComponent<Rigidbody2D>();
+        rigidbody = GetComponent<Rigidbody2D>();
         dynamicDirection = direction;
         // facing left or right?
         if(Random.value > 0.5f)
@@ -38,13 +40,13 @@ public class Walk : MonoBehaviour
     private void Update()
     {
         
-        // is it a lying unattached goo
-        if(!dragScript.IsTower && !dragScript.IsDragged && sensorScript.isGrounded)
+        // is it a walking goo
+        if(!gooball.IsTower && !gooball.IsDragged && ballSensor.isGrounded)
         {
             //random direction change
-            if (walkcounter == 50)
+            if (walkCounter == 50)
             {
-                walkcounter = 0;
+                walkCounter = 0;
                 System.Random check = new System.Random();
                 int probability = check.Next(1, 3);
                 if (probability == 1)
@@ -54,16 +56,24 @@ public class Walk : MonoBehaviour
                     isRotating = true;
                 }
             }
-            walkcounter = walkcounter + 1;
-            //
+            walkCounter += 1;
+            
+            // jumping on strands
+            if (strandCheckCounter >= 0)
+            {
+                strandCheckCounter = 2f;
+                Debug.Log($"Checking for strands lol | { gameObject }", this);
+            }
+            else
+                strandCheckCounter -= Time.deltaTime;
 
             // is rotating? 
             if (isRotating)
             {
-                if (sensorScript.isTouchingWall)
+                if (ballSensor.isTouchingWall)
                 {
                     appliedForce = dynamicDirection.normalized * walkSpeed;
-                    rigid.velocity += appliedForce;
+                    rigidbody.velocity += appliedForce;
                 }
                 else
                 {
@@ -81,7 +91,7 @@ public class Walk : MonoBehaviour
     public void WalkUpdate()
     {
         // touching a wall?
-        if (sensorScript.isTouchingWall)
+        if (ballSensor.isTouchingWall)
         {
             dynamicDirection = -dynamicDirection;
             isRotating = true;
@@ -90,7 +100,7 @@ public class Walk : MonoBehaviour
         {
 
             appliedForce = dynamicDirection.normalized * walkSpeed;
-            rigid.velocity += appliedForce;
+            rigidbody.velocity += appliedForce;
 
         }
     }
