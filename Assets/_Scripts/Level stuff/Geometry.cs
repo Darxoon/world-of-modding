@@ -40,7 +40,7 @@ public class Geometry : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z + data.rotspeed);
+        transform.localRotation = Quaternion.Euler(0, 0, transform.localRotation.eulerAngles.z + data.rotspeed);
 
 #if DEBUG
         if (StaticData.levelLoader.DebugDraw)
@@ -58,6 +58,5 @@ public class Geometry : MonoBehaviour
             }
         }
 #endif
-
     }
 }

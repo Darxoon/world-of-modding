@@ -78,6 +78,7 @@
     <Compile Include="Assets\_Scripts\Ingame\WalkOnStrand.cs" />
     <Compile Include="Assets\_Scripts\JSONLevel.cs" />
     <Compile Include="Assets\_Scripts\JSONLevelLoader.cs" />
+    <Compile Include="Assets\_Scripts\Level stuff\CompositeGeom.cs" />
     <Compile Include="Assets\_Scripts\Level stuff\Geometry.cs" />
     <Compile Include="Assets\_Scripts\Level stuff\SceneLayer.cs" />
     <Compile Include="Assets\_Scripts\LevelLoader.cs" />

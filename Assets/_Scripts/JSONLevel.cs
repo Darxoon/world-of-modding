@@ -195,7 +195,7 @@ public class Scene
     public Scenelayer[] scenelayers = null;
     public Buttongroup[] buttongroups = null;
     public Label[] labels = null;
-    public CompositeGeom[] compositegeoms = null;
+    public Compositegeom[] compositegeoms = null;
     public LevelGeometry[] geometries = null;
     public Line[] lines = null;
     public Motor[] motors = null;
@@ -295,8 +295,9 @@ public class Label
     public string font = "";
 }
 
-public class CompositeGeom
+public class Compositegeom
 {
+    public string name = "";
     public Position position = new Position();
     public bool dynamic = false;
     public LevelGeometry[] geometries;

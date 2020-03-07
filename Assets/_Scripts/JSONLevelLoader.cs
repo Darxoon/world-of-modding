@@ -42,6 +42,36 @@ public class JSONLevelLoader : MonoBehaviour
             //imagescale = new Position(2,2),
             type = LevelGeometry.Type.Rectangle
         }};
+
+
+            LevelGeometry[] cgeoms = { new LevelGeometry
+        {
+            center = new Position(0, 0),
+            id = "bottomL",
+            size = new Position(10, 1),
+            type = LevelGeometry.Type.Rectangle
+            },
+            new LevelGeometry
+        {
+            center = new Position(0, 0),
+            id = "topL",
+            size = new Position(10, 1),
+            type = LevelGeometry.Type.Rectangle,
+            rotation = 90
+            }};
+
+
+            Compositegeom[] compositegeoms =
+            {
+                new Compositegeom
+                {
+                    geometries = cgeoms,
+                    name = "hi",
+                    position = new Position(1,1)
+                }
+            };
+
+            levelL.scene.compositegeoms = compositegeoms;
             levelL.scene.geometries = geoms;
             levelL.scene.scenelayers = layers;
 
@@ -52,6 +82,8 @@ public class JSONLevelLoader : MonoBehaviour
                 Directory.CreateDirectory(StaticData.levelFolder + "demoLevel/");
             using (StreamWriter sw = File.CreateText(StaticData.levelFolder + "demoLevel/demoLevel.json"))
                 sw.Write(JsonConvert.SerializeObject(levelL, settings));
+
+            Debug.Break();
 
 
             #endregion
@@ -83,6 +115,13 @@ public class JSONLevelLoader : MonoBehaviour
             {
                 GameObject geom = new GameObject(geometry.id);
                 geom.AddComponent<Geometry>().data = geometry;
+                geom.transform.SetParent(StaticData.geometry.transform);
+            }
+
+            foreach (var compositegeom in level.scene.compositegeoms)
+            {
+                GameObject geom = new GameObject(compositegeom.name);
+                geom.AddComponent<CompositeGeom>().data = compositegeom;
                 geom.transform.SetParent(StaticData.geometry.transform);
             }
         }
