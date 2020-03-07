@@ -45,6 +45,11 @@ public class JSONLevelLoader : MonoBehaviour
             sw.Write(json);
         }
         */
+
+        string json = File.ReadAllText("E:/text.json");
+
+        JSONLevel deserialized = JsonConvert.DeserializeObject<JSONLevel>(json);
+        Debug.Log(deserialized.level);
     }
 
     // Update is called once per frame
