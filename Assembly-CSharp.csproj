@@ -73,6 +73,7 @@
     <Compile Include="Assets\_Scripts\GameManager.cs" />
     <Compile Include="Assets\_Scripts\Ingame\BallSensor.cs" />
     <Compile Include="Assets\_Scripts\Ingame\Gooball.cs" />
+    <Compile Include="Assets\_Scripts\Ingame\SceneLayer.cs" />
     <Compile Include="Assets\_Scripts\Ingame\Strand.cs" />
     <Compile Include="Assets\_Scripts\Ingame\Walk.cs" />
     <Compile Include="Assets\_Scripts\Ingame\WalkOnStrand.cs" />

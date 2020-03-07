@@ -7,53 +7,64 @@ using Newtonsoft.Json;
 public class JSONLevelLoader : MonoBehaviour
 {
     // Start is called before the first frame update
+    bool saveMode = false;
     void Start()
     {
-        JSONLevel level = new JSONLevel();
-        Pipe pyp = new Pipe
-        {
-            depth = 0
-        };
-        level.level.pipe = pyp;
-        level.level.pipe.id = "no_u";
-        List<Vertex> vertices = new List<Vertex>();
-        Vertex vertex1 = new Vertex
-        {
-            x = 5,
-            y = 5
-        };
-        vertices.Add(vertex1);
-        level.level.pipe.Vertex = vertices.ToArray();
 
-        Poi poid = new Poi
-        {
-            pos = new Position(5, 5),
-            pause = 0
-        };
-        Poi[] pois = { poid };
-        Camera cam = new Camera
-        {
-            aspect = "widescreen",
-            poi = pois
-        };
-        level.level.camera = cam;
-
-        LinearForceField gravity = new LinearForceField
-        {
-            force = new Position(0, -10)
-        };
-
-        LinearForceField[] ff = { gravity };
-        level.scene.ForceFields.linearforcefields = ff;
-        /*
-        _ = new JsonSerializerSettings
+        JsonSerializerSettings settings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore
         };
-        */
+
+        JSONLevel level = JsonConvert.DeserializeObject<JSONLevel>(File.ReadAllText(StaticData.levelFolder + "demoLevel/demoLevel.json"), settings);
+
+        Camera.main.backgroundColor = level.scene.backgroundcolor.ToUnityColor();
+
+        foreach(var resource in level.resrc.resources)
+        {
+            StaticData.Resources.Add(resource.Key, resource.Value);
+        }
+
+        foreach (var scenelayer in level.scene.scenelayers)
+        {
+            GameObject sl = new GameObject(scenelayer.name);
+            sl.AddComponent<SceneLayer>().data = scenelayer;
+            sl.transform.SetParent(StaticData.sceneLayers.transform);
+        }
+
+        if (saveMode)
+        {
+            #region serialize
+
+            JSONLevel levelL = new JSONLevel();
+
+            Scenelayer[] layers = { new Scenelayer
+        {
+            image = "IMAGE_BACKGROUND",
+            alpha = 1,
+        }};
+
+            Geometry[] geoms = { new Geometry
+        {
+            center = new Position(0, 0),
+            id = "ground",
+            size = new Position(1, 1),
+            image = "IMAGE_BLACK",
+            imagescale = new Position(2,2)
+        }};
+            levelL.scene.geometries = geoms;
+            levelL.scene.scenelayers = layers;
+
+            levelL.resrc.resources.Add("IMAGE_BACKGROUND", "levels/demoLevel/bg.png");
+            levelL.resrc.resources.Add("IMAGE_BLACK", "levels/demoLevel/black.png");
+
+            if (!Directory.Exists(StaticData.levelFolder + "demoLevel/"))
+                Directory.CreateDirectory(StaticData.levelFolder + "demoLevel/");
+            using (StreamWriter sw = File.CreateText(StaticData.levelFolder + "demoLevel/demoLevel.json"))
+                sw.Write(JsonConvert.SerializeObject(levelL, settings));
 
 
-
-
+            #endregion
+        }
     }
 }

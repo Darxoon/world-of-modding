@@ -22,16 +22,16 @@ public class Level
     public bool allowskip = true;
     public bool autobounds = false;
     public int ballsrequired = 1;
-    public Color cursorcolor;
+    public ColorData cursorcolor;
     public bool letterboxed = false;
     public bool retrytime = false;
     public bool strandgeom = false;
-    public Color textcolor = new Color();
+    public ColorData textcolor = new ColorData();
     public bool texteffects = true;
     public float timebugprobability = 0.5f;
     public bool visualdebug = false;
     public float zoomoutlimit = 0;
-    public Camera camera = null;
+    public CameraData camera = null;
     public Music music = null;
     public Loopsound loopsound = null;
     public Signpost signpost = null;
@@ -44,7 +44,7 @@ public class Level
     public Targetheight targetheight = null;
 }
 
-public class Camera
+public class CameraData
 {
     public string aspect = "widescreen";
     public Position endpos = new Position();
@@ -61,6 +61,11 @@ public class Position
     }
     public float x;
     public float y;
+
+    public Vector2 ToVector2()
+    {
+        return new Vector2(x, y);
+    }
 }
 
 public class Poi
@@ -81,9 +86,9 @@ public class Loopsound
     public string id = "";
 }
 
-public class Color
+public class ColorData
 {
-    public Color(float colorR = 255, float colorG = 255, float colorB = 255)
+    public ColorData(float colorR = 255, float colorG = 255, float colorB = 255)
     {
         r = colorR;
         g = colorG;
@@ -92,12 +97,17 @@ public class Color
     public float r = 255;
     public float g = 255;
     public float b = 255;
+
+    public Color ToUnityColor()
+    {
+        return new Color(r, g, b);
+    }
 }
 
 public class Signpost
 {
     public float alpha;
-    public Color colorize = new Color();
+    public ColorData colorize = new ColorData();
     public float depth;
     public string image = "";
     public string name = "";
@@ -173,21 +183,21 @@ public class Targetheight
 #region scene
 public class Scene
 {
-    public Color backgroundcolor = new Color();
+    public ColorData backgroundcolor = new ColorData();
     public float minX;
     public float minY;
     public float maxX;
     public float maxY;
     public ForceFields ForceFields = new ForceFields();
-    public Particle[] particles;
-    public Scenelayer[] scenelayers;
-    public Buttongroup[] buttongroups;
-    public Label[] labels;
-    public CompositeGeom[] compositegeoms;
-    public Geometry[] geometries;
-    public Line[] lines;
-    public Motor[] motors;
-    public Hinge[] hinges;
+    public Particle[] particles = null;
+    public Scenelayer[] scenelayers = null;
+    public Buttongroup[] buttongroups = null;
+    public Label[] labels = null;
+    public CompositeGeom[] compositegeoms = null;
+    public Geometry[] geometries = null;
+    public Line[] lines = null;
+    public Motor[] motors = null;
+    public Hinge[] hinges = null;
 }
 
 public class ForceFields
@@ -241,7 +251,7 @@ public class Scenelayer
     public float scaleY = 1;
     public float rotation = 0;
     public float alpha = 1;
-    public Color colorize = new Color(255, 255, 255);
+    public ColorData colorize = new ColorData(255, 255, 255);
     public string image = "";
     public bool tileX = false;
     public bool tileY = false;
@@ -263,7 +273,7 @@ public class Button
     public float scaleY = 0;
     public float rotation = 0;
     public float alpha = 1;
-    public Color colorize = new Color();
+    public ColorData colorize = new ColorData();
     public string up = "";
     public string over = "";
     public string onclick = "";
@@ -346,18 +356,8 @@ public class Hinge
 public class Resrc
 {
     public string id = "";
-    public string[] prefixes;
-    public Resource[] resources;
-}
-
-public class Resource
-{
-    public enum Type
-    {
-        Image,
-        Sound
-    }
-    public string path = "";
+    public Dictionary<string, string> prefixes = new Dictionary<string, string>();
+    public Dictionary<string, string> resources = new Dictionary<string, string>();
 }
 
 #endregion
