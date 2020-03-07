@@ -251,4 +251,28 @@ public class scenelayer
     public bool tileX = false;
     public bool tileY = false;
 }
+
+public class buttongroup
+{
+    public string id = "";
+    public position osx = new position(); //what is osx i dont know
+    public button[] buttons;
+}
+
+public class button
+{
+    public string id = "";
+    public float depth = 0;
+    public position pos = new position();
+    public float scaleX = 0;
+    public float scaleY = 0;
+    public float rotation = 0;
+    public float alpha = 1;
+    public color colorize = new color();
+    public string up = "";
+    public string over = "";
+    public string onclick = "";
+    public string onmouseenter = "";
+    public string onmouseexit = "";
+}
 #endregion
