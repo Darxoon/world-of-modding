@@ -26,7 +26,8 @@ public class Gooball : MonoBehaviour
     [SerializeField] private float originalMass = 3.23f;
     public float OriginalMass => originalMass;
 
-    [SerializeField] private float towerMass = 3f;
+    // ReSharper disable once NotAccessedField.Local
+    [SerializeField] private float towerMass = 3f; // TODO: Use tower mass
     public float TowerMass => originalMass;
     
     public Vector3 originalScale;
