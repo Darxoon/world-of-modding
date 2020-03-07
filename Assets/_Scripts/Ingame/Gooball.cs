@@ -8,32 +8,29 @@ using UnityEngine.Serialization;
 [SuppressMessage("ReSharper", "ConvertToAutoProperty")]
 public class Gooball : MonoBehaviour
 {
-    // Layer mask
-    [SerializeField] private string ballLayerMask = "Attached Balls";
 
-    // goo properties
+    // TODO: TEMPORARY
+    [SerializeField] public Sprite strandSprite;
     
-    // initial strands 
+    
+    [Header("Inspector Initialization")]
     public GameObject[] initialStrands;
 
-    // the balls it is connected during the game
+
+    [Header("Ingame Strands")]
     public List<GameObject> attachedBalls;
     public Dictionary<int, Gooball> gooStrands = new Dictionary<int, Gooball>();
-    // TEMPORARY
-    [SerializeField] public Sprite strandSprite;
 
-    #region Gooball properties
+    
     [Header("Gooball properties")]
+    [SerializeField] private string ballLayerMask = "Attached Balls";
     [SerializeField] private float originalMass = 3.23f;
     public float OriginalMass => originalMass;
 
     [SerializeField] private float towerMass = 3f;
     public float TowerMass => towerMass;
     
-    public Vector3 originalScale;
-    #endregion
-
-    #region Strand Settings
+    
     [Header("Strand Settings")]
 
     [SerializeField] public float dampingRatio;
@@ -47,7 +44,7 @@ public class Gooball : MonoBehaviour
     public float strandLengthMin = 0;
     public float strandLengthShrink = 1.8f;
     [FormerlySerializedAs("strandLenghtShrinkSpeed")] public float strandLengthShrinkSpeed = 1f;
-    #endregion
+    
     #region Attatchment system
     [Header("Attachment system")]
 
@@ -98,7 +95,6 @@ public class Gooball : MonoBehaviour
         mainCam = Camera.main;
         rigid = GetComponent<Rigidbody2D>();
         rigid.mass = OriginalMass + extraMass;
-        originalScale = transform.lossyScale;
         randomID = GameManager.GenerateRandomID(10);
         attachable = new List<RaycastHit2D>();
 
