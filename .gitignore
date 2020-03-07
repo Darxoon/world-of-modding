@@ -9,4 +9,4 @@ obj/*
 Assets/Plugins/JetBrains/*
 .gitignore.swp
 Assembly-CSharp.csproj 
-world-of-modding.sln
+*.sln
