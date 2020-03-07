@@ -57,6 +57,9 @@ public class GameManager : MonoBehaviour
     /// </summary>
     /// <param name="b1">The gooball that invokes MakeStrand</param>
     /// <param name="b2">The gooball that we connect the strand to</param>
+    /// <param name="dampingRatio">The damping ratio</param>
+    /// <param name="frequency">The frequency? </param> TODO: find out what frequency is
+    /// <param name="strandThickness">How thick the strands should be</param>
     public Strand MakeStrand(Transform b1, Transform b2, float dampingRatio, float frequency, float strandThickness)
     {
         //check if we already have a strand that is connected to the same gooballs
@@ -86,7 +89,7 @@ public class GameManager : MonoBehaviour
         joint.dampingRatio = b1.GetComponent<Gooball>().dampingRatio;
         joint.frequency = b1.GetComponent<Gooball>().frequency;
         Gooball b1Drag = b1.GetComponent<Gooball>();
-        joint.distance = Mathf.Clamp(joint.distance, b1Drag.strandDistanceRange.x, b1Drag.strandDistanceRange.y) * b1Drag.strandMulitplier;
+        joint.distance = Mathf.Clamp(joint.distance, b1Drag.strandDistanceRange.x, b1Drag.strandDistanceRange.y) * b1Drag.strandMultiplier;
 
         //physical
         GameObject child = new GameObject($"Strand ({GenerateRandomID(5)})");
