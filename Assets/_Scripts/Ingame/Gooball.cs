@@ -9,80 +9,78 @@ using UnityEngine.Serialization;
 public class Gooball : MonoBehaviour
 {
 
-    // TODO: TEMPORARY
+    // TODO: TEMPORARY (replaced with level loading)
     [SerializeField] public Sprite strandSprite;
     
+    [SerializeField] public string randomID;
+    
+    #region Components
+    
+    private new Rigidbody2D rigidbody;
+    private Camera mainCam;
+    
+    #endregion
     
     [Header("Inspector Initialization")]
     public GameObject[] initialStrands;
 
 
-    [Header("Ingame Strands")]
+    [Header("In game Strands")]
     public List<GameObject> attachedBalls;
+    public List<Strand> strands = new List<Strand>();
     public Dictionary<int, Gooball> gooStrands = new Dictionary<int, Gooball>();
-
+    
     
     [Header("Gooball properties")]
     [SerializeField] private string ballLayerMask = "Attached Balls";
     [SerializeField] private float originalMass = 3.23f;
-    public float OriginalMass => originalMass;
 
     [SerializeField] private float towerMass = 3f;
-    public float TowerMass => towerMass;
+    public float extraMass;
     
     
-    [Header("Strand Settings")]
+    [Header("Strand physics")]
 
     [SerializeField] public float dampingRatio;
-    [SerializeField] public float frequency;
+    [FormerlySerializedAs("frequency")] [SerializeField] public float jointFrequency;
 
     public Vector2 strandDistanceRange = new Vector2(1f, 4f);
     [FormerlySerializedAs("strandMulitplier")] public float strandMultiplier = 1.01f;
     [FormerlySerializedAs("StrandThickness")] public float strandThickness = 0.5f;
     public int strandCount = 2;
     public float strandLengthMax = 1.9f;
-    public float strandLengthMin = 0;
-    public float strandLengthShrink = 1.8f;
+    public float strandLengthMin = 0; // TODO: Implement strandLengthMin (Polishing)
+    public float strandLengthShrink = 1.8f; // TODO: Implement strandLengthShrink (Polishing)
     [FormerlySerializedAs("strandLenghtShrinkSpeed")] public float strandLengthShrinkSpeed = 1f;
     
-    #region Attatchment system
-    [Header("Attachment system")]
+    [Header("Attaching")]
 
     public int rays = 50;
     [SerializeField] private bool isTower;
     [SerializeField] private bool isDragged;
-    //[SerializeField] private GameObject drag;
 
-    [FormerlySerializedAs("attachable_arr")] public float[] attachableArr;
     [SerializeField] private List<RaycastHit2D> attachable;
 
-    public Rigidbody2D rigid;
 
-    private Vector3 euler;
+    private Vector3 euler; // TODO replace euler with float rotation
     private RaycastHit2D hit;
-    #endregion
-
-    public float extraMass;
-    public List<Strand> strands = new List<Strand>();
 
 
-    [SerializeField]public string randomID;
 
     #region Getters
-
+    
+    public float OriginalMass => originalMass;
+    public float TowerMass => towerMass;
     public bool IsDragged => isDragged;
     public bool IsTower => isTower;
 
-    private bool hasShrunkToSize = false;
-    private Camera mainCam;
-    private new Rigidbody2D rigidbody2D;
+    #endregion
 
     public Gooball()
     {
         isDragged = false;
     }
 
-    #endregion
 
 
     //public Vector3 euler = new Vector3(90f, 0f, 1f);
@@ -91,10 +89,9 @@ public class Gooball : MonoBehaviour
 
     private void Start()
     {
-        rigidbody2D = gameObject.GetComponent<Rigidbody2D>();
+        rigidbody = gameObject.GetComponent<Rigidbody2D>();
+        rigidbody.mass = OriginalMass + extraMass;
         mainCam = Camera.main;
-        rigid = GetComponent<Rigidbody2D>();
-        rigid.mass = OriginalMass + extraMass;
         randomID = GameManager.GenerateRandomID(10);
         attachable = new List<RaycastHit2D>();
 
@@ -159,7 +156,7 @@ public class Gooball : MonoBehaviour
         {
             transform.SetParent(StaticData.balls.transform, true);
             // positioning
-            rigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
+            rigidbody.constraints = RigidbodyConstraints2D.FreezeAll;
             Vector3 mousePosition = Input.mousePosition;
             Vector2 point = mainCam.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 3600f));
             transform.position = new Vector3(point.x, point.y, 0);
@@ -178,7 +175,7 @@ public class Gooball : MonoBehaviour
                 GameManager.instance.isDragging = false;
                 AttachRaycast();
 
-                if (GameManager.instance.hoverStrand != null)
+                if (GameManager.instance.hoverStrand)
                 {
                     isDragged = false;
                     GameManager.instance.drag = null;
@@ -188,7 +185,7 @@ public class Gooball : MonoBehaviour
                 }
 
                 // remove constraints
-                if (GameManager.instance.drag != null) { rigid.constraints = RigidbodyConstraints2D.None; }
+                if (GameManager.instance.drag != null) { rigidbody.constraints = RigidbodyConstraints2D.None; }
                 // update fields
                 isDragged = false;
                 GameManager.instance.drag = null;
@@ -244,7 +241,7 @@ public class Gooball : MonoBehaviour
         if (isTower)
         {
             StrandMass();
-            rigid.mass = originalMass + extraMass;
+            rigidbody.mass = originalMass + extraMass;
         }
     }
 
@@ -253,7 +250,7 @@ public class Gooball : MonoBehaviour
 
     public void MakeStrand(Gooball other)
     {
-        Strand strand = StaticData.gameManager.MakeStrand(transform, other.transform, dampingRatio, frequency, strandThickness);
+        Strand strand = StaticData.gameManager.MakeStrand(transform, other.transform, dampingRatio, jointFrequency, strandThickness);
         if(strand)
         {
             strands.Add(strand);
@@ -263,7 +260,7 @@ public class Gooball : MonoBehaviour
             }
         }
             
-        rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
+        rigidbody.constraints = RigidbodyConstraints2D.FreezeRotation;
         // add the other goo ball to attached list
         if(!attachedBalls.Contains(other.gameObject))
             attachedBalls.Add(other.gameObject);

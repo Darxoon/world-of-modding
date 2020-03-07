@@ -9,6 +9,9 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     public GameObject drag;
+    /// <summary>
+    /// The strand you are hovering over
+    /// </summary>
     public GameObject hoverStrand;
     private void Awake()
     {
@@ -58,7 +61,7 @@ public class GameManager : MonoBehaviour
     /// <param name="b1">The gooball that invokes MakeStrand</param>
     /// <param name="b2">The gooball that we connect the strand to</param>
     /// <param name="dampingRatio">The damping ratio</param>
-    /// <param name="frequency">The frequency? </param> TODO: find out what frequency is
+    /// <param name="frequency">The frequency? </param>
     /// <param name="strandThickness">How thick the strands should be</param>
     public Strand MakeStrand(Transform b1, Transform b2, float dampingRatio, float frequency, float strandThickness)
     {
@@ -87,7 +90,7 @@ public class GameManager : MonoBehaviour
         joint.connectedBody = b2.gameObject.GetComponent<Rigidbody2D>();
         joint.autoConfigureDistance = false;
         joint.dampingRatio = b1.GetComponent<Gooball>().dampingRatio;
-        joint.frequency = b1.GetComponent<Gooball>().frequency;
+        joint.frequency = b1.GetComponent<Gooball>().jointFrequency;
         Gooball b1Drag = b1.GetComponent<Gooball>();
         joint.distance = Mathf.Clamp(joint.distance, b1Drag.strandDistanceRange.x, b1Drag.strandDistanceRange.y) * b1Drag.strandMultiplier;
 
