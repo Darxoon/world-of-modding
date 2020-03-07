@@ -7,6 +7,16 @@ using UnityEngine;
 [Serializable]
 public class JSONLevel
 {
+    public level level = new level();
+
+    public scene scene = new scene();
+}
+
+
+
+#region level
+public class level
+{
     public bool allowskip = true;
     public bool autobounds = false;
     public int ballsrequired = 1;
@@ -77,9 +87,15 @@ public class loopsound
 [Serializable]
 public class color
 {
-    public float x = 255;
-    public float y = 255;
-    public float z = 255;
+    public color(float colorR = 255, float colorG = 255, float colorB = 255)
+    {
+        r = colorR;
+        g = colorG;
+        b = colorB;
+    }
+    public float r = 255;
+    public float g = 255;
+    public float b = 255;
 }
 
 [Serializable]
@@ -164,3 +180,75 @@ public class targetheight
 {
     public float y = 0;
 }
+
+#endregion
+
+#region scene
+public class scene
+{
+    public color backgroundcolor = new color();
+    public float minX;
+    public float minY;
+    public float maxX;
+    public float maxY;
+    public ForceFields ForceFields = new ForceFields();
+    public particle[] particles;
+    public scenelayer[] scenelayers;
+}
+
+public class ForceFields
+{
+    public linearforcefield[] linearforcefields = null;
+    public radialforcefield[] radialforcefields = null;
+}
+public class linearforcefield
+{
+    public string type = "";
+    public position force = new position();
+    public float dampeningfactor = 0;
+    public bool antigrav = true;
+    public bool geomonly = false;
+    public bool? water = null;
+    public position center = null;
+    public float? size = null;
+}
+
+public class radialforcefield
+{
+    public string type = "";
+    public position force = new position();
+    public float dampeningfactor = 0;
+    public bool antigrav = true;
+    //public bool geomonly = false;
+    public float forceatcenter;
+    public float forceatedge;
+    public position center = new position(0, 0);
+}
+
+public class particle
+{
+    public enum type : int
+    {
+        Ambient,
+        PointSource
+    }
+    public float depth;
+    public position pos;
+    public float pretick;
+}
+
+public class scenelayer
+{
+    public string name = "";
+    public float depth = 0;
+    public position pos = new position(0,0);
+    public float scaleX = 1;
+    public float scaleY = 1;
+    public float rotation = 0;
+    public float alpha = 1;
+    public color colorize = new color(255, 255, 255);
+    public string image = "";
+    public bool tileX = false;
+    public bool tileY = false;
+}
+#endregion
