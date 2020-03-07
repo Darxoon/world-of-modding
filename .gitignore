@@ -1,12 +1,9 @@
 Temp/*
 Library/*
 .vs/*
-*.meta
-*.meta
 ProjectSettings/XRSettings.asset
 .idea/*
 obj/*
 Assets/Plugins/JetBrains/*
-.gitignore.swp
-Assembly-CSharp.csproj 
+*.swp
 *.sln
