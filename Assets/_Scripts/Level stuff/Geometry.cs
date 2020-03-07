@@ -57,7 +57,6 @@ public class Geometry : MonoBehaviour
                 Debug.DrawLine(bottomLeft, bottomRight, Color.green, 0, false); //bottom    
             }
         }
-
 #endif
 
     }
