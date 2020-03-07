@@ -5,7 +5,7 @@ using UnityEngine.Serialization;
 
 public class Walk : MonoBehaviour
 {
-    public Vector3 direction;
+    [SerializeField] private Vector3 direction;
     public float walkSpeed;
     public Vector2 randomSpeedScale;
 

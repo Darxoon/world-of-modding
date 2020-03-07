@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 4248019372008310467}
   - component: {fileID: 4248019372008310469}
   - component: {fileID: 4248019372008310466}
-  - component: {fileID: 4248019372008310468}
   - component: {fileID: 7965299730503043453}
+  - component: {fileID: 4248019372008310468}
   m_Layer: 9
   m_Name: ball
   m_TagString: Ball
@@ -121,42 +121,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 2.35
---- !u!114 &4248019372008310468
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4248019372008310465}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88f6d2805b4babf47a9491faf59631e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ballLayerMask: Attached Balls
-  initialStrands: []
-  attachedBalls: []
-  strandSprite: {fileID: 21300000, guid: 900f2c3fc2b937946ab6397388692da8, type: 3}
-  _originalMass: 3.23
-  originalScale: {x: 0, y: 0, z: 0}
-  dampingRatio: 0.9
-  frequency: 9
-  strandDistanceRange: {x: 1, y: 4}
-  strandMulitplier: 1.01
-  StrandThickness: 0.9
-  strandCount: 2
-  strandLengthMax: 1.9
-  strandLengthMin: 0
-  strandLengthShrink: 1.8
-  strandLenghtShrinkSpeed: 1
-  rays: 50
-  isTower: 0
-  isDragged: 0
-  attachable_arr: []
-  rigid: {fileID: 4248019372008310469}
-  extraMass: 0
-  strands: []
-  randomID: 
 --- !u!114 &7965299730503043453
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -174,9 +138,43 @@ MonoBehaviour:
   randomSpeedScale: {x: 90, y: 110}
   dynamicDirection: {x: 0, y: 0, z: 0}
   isRotating: 0
-  walkcounter: 0
-  dragScript: {fileID: 4248019372008310468}
-  sensorScript: {fileID: 71050027965101542}
+  walkCounter: 0
+  gooball: {fileID: 4248019372008310468}
+  ballSensor: {fileID: 71050027965101542}
+--- !u!114 &4248019372008310468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4248019372008310465}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88f6d2805b4babf47a9491faf59631e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  strandSprite: {fileID: 21300000, guid: 900f2c3fc2b937946ab6397388692da8, type: 3}
+  randomID: 
+  initialStrands: []
+  attachedBalls: []
+  strands: []
+  ballLayerMask: Attached Balls
+  originalMass: 3.23
+  towerMass: 3
+  extraMass: 0
+  dampingRatio: 0.9
+  jointFrequency: 0
+  strandDistanceRange: {x: 1, y: 4}
+  strandMultiplier: 1.01
+  strandThickness: 0.5
+  strandCount: 2
+  strandLengthMax: 1.9
+  strandLengthMin: 0
+  strandLengthShrink: 1.8
+  strandLengthShrinkSpeed: 1
+  rays: 50
+  isTower: 0
+  isDragged: 0
 --- !u!1 &4896520077090206015
 GameObject:
   m_ObjectHideFlags: 0
