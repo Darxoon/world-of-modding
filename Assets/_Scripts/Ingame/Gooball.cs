@@ -62,7 +62,7 @@ public class Gooball : MonoBehaviour
     [SerializeField] private List<RaycastHit2D> attachable;
 
 
-    private Vector3 euler; // TODO replace euler with float rotation
+    private Vector3 euler;
     private RaycastHit2D hit;
 
 
