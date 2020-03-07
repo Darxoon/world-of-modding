@@ -38,11 +38,13 @@ public class JSONLevelLoader : MonoBehaviour
         JsonSerializerSettings settings = new JsonSerializerSettings();
         settings.NullValueHandling = NullValueHandling.Ignore;
 
+        /*
         string json = JsonConvert.SerializeObject(level, Formatting.Indented, settings);
         using (StreamWriter sw = File.CreateText("E:/text.json"))
         {
             sw.Write(json);
         }
+        */
     }
 
     // Update is called once per frame
