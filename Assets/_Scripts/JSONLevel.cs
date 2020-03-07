@@ -12,6 +12,8 @@ public class JSONLevel
     public Scene scene = new Scene();
 
     public Resrc resrc = new Resrc();
+
+    public bool DebugDraw;
 }
 
 
@@ -194,7 +196,7 @@ public class Scene
     public Buttongroup[] buttongroups = null;
     public Label[] labels = null;
     public CompositeGeom[] compositegeoms = null;
-    public Geometry[] geometries = null;
+    public LevelGeometry[] geometries = null;
     public Line[] lines = null;
     public Motor[] motors = null;
     public Hinge[] hinges = null;
@@ -237,6 +239,7 @@ public class Particle
         Ambient,
         PointSource
     }
+    public Type type;
     public float depth;
     public Position pos;
     public float pretick;
@@ -296,7 +299,7 @@ public class CompositeGeom
 {
     public Position position = new Position();
     public bool dynamic = false;
-    public Geometry[] geometries;
+    public LevelGeometry[] geometries;
     public string image;
     public Position imagepos;
     public float imagerot;
@@ -304,7 +307,7 @@ public class CompositeGeom
     public float rotspeed;
 }
 
-public class Geometry
+public class LevelGeometry
 {
     public string id = "";
     public string tag = "";
@@ -314,18 +317,15 @@ public class Geometry
     public float rotation;
     public bool dynamic = false;
     public float mass;
-    public string image;
-    public Position imagepos;
-    public float imagerot;
-    public Position imagescale;
-
     public enum Type
     {
         Circle,
         Rectangle
     }
+    public Type type;
     public Position size;
     public float rotspeed;
+    public Scenelayer image;
 }
 
 public class Line

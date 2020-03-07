@@ -7,30 +7,15 @@ using Newtonsoft.Json;
 public class JSONLevelLoader : MonoBehaviour
 {
     // Start is called before the first frame update
-    bool saveMode = false;
+    public bool saveMode = false;
+    public bool DebugDraw;
     void Start()
     {
-
+        StaticData.levelLoader = this;
         JsonSerializerSettings settings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore
         };
-
-        JSONLevel level = JsonConvert.DeserializeObject<JSONLevel>(File.ReadAllText(StaticData.levelFolder + "demoLevel/demoLevel.json"), settings);
-
-        Camera.main.backgroundColor = level.scene.backgroundcolor.ToUnityColor();
-
-        foreach(var resource in level.resrc.resources)
-        {
-            StaticData.Resources.Add(resource.Key, resource.Value);
-        }
-
-        foreach (var scenelayer in level.scene.scenelayers)
-        {
-            GameObject sl = new GameObject(scenelayer.name);
-            sl.AddComponent<SceneLayer>().data = scenelayer;
-            sl.transform.SetParent(StaticData.sceneLayers.transform);
-        }
 
         if (saveMode)
         {
@@ -44,13 +29,18 @@ public class JSONLevelLoader : MonoBehaviour
             alpha = 1,
         }};
 
-            Geometry[] geoms = { new Geometry
+            LevelGeometry[] geoms = { new LevelGeometry
         {
-            center = new Position(0, 0),
+            center = new Position(-3, 0),
             id = "ground",
-            size = new Position(1, 1),
-            image = "IMAGE_BLACK",
-            imagescale = new Position(2,2)
+            size = new Position(10, 1),
+            image = new Scenelayer{ 
+                image = "IMAGE_BLOCK",
+                scaleX = 2,
+                scaleY = 2,
+            },
+            //imagescale = new Position(2,2),
+            type = LevelGeometry.Type.Rectangle
         }};
             levelL.scene.geometries = geoms;
             levelL.scene.scenelayers = layers;
@@ -65,6 +55,36 @@ public class JSONLevelLoader : MonoBehaviour
 
 
             #endregion
+        }
+        else
+        {
+
+
+            JSONLevel level = JsonConvert.DeserializeObject<JSONLevel>(File.ReadAllText(StaticData.levelFolder + "demoLevel/demoLevel.json"), settings);
+
+            if (level.DebugDraw)
+                DebugDraw = true;
+
+            Camera.main.backgroundColor = level.scene.backgroundcolor.ToUnityColor();
+
+            foreach (var resource in level.resrc.resources)
+            {
+                StaticData.Resources.Add(resource.Key, resource.Value);
+            }
+
+            foreach (var scenelayer in level.scene.scenelayers)
+            {
+                GameObject sl = new GameObject(scenelayer.name);
+                sl.AddComponent<SceneLayer>().data = scenelayer;
+                sl.transform.SetParent(StaticData.sceneLayers.transform);
+            }
+
+            foreach (var geometry in level.scene.geometries)
+            {
+                GameObject geom = new GameObject(geometry.id);
+                geom.AddComponent<Geometry>().data = geometry;
+                geom.transform.SetParent(StaticData.geometry.transform);
+            }
         }
     }
 }

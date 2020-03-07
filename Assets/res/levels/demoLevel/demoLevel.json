@@ -1,4 +1,5 @@
 {
+	"DebugDraw":true,
     "level": {
         "allowskip": true,
         "autobounds": false,
@@ -29,7 +30,7 @@
         "ForceFields": {},
         "scenelayers": [{
                 "name": "",
-                "depth": -100,
+                "depth": 0.0,
                 "pos": {
                     "x": 0.0,
                     "y": 0.0
@@ -54,23 +55,38 @@
                 "material": "",
                 "center": {
                     "x": 0.0,
-                    "y": 0.0
+                    "y": -3.0
                 },
                 "radius": 0.0,
                 "rotation": 0.0,
                 "dynamic": false,
                 "mass": 0.0,
-                "image": "IMAGE_BLACK",
-                "imagerot": 0.0,
-                "imagescale": {
-                    "x": 2.0,
-                    "y": 2.0
-                },
+                "type": 1,
                 "size": {
-                    "x": 1.0,
+                    "x": 10.0,
                     "y": 1.0
                 },
-                "rotspeed": 0.0
+                "rotspeed": 0.0,
+                "image": {
+                    "name": "",
+                    "depth": 0.0,
+                    "pos": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "scaleX": 2.0,
+                    "scaleY": 2.0,
+                    "rotation": 0.0,
+                    "alpha": 1.0,
+                    "colorize": {
+                        "r": 255.0,
+                        "g": 255.0,
+                        "b": 255.0
+                    },
+                    "image": "IMAGE_BLACK",
+                    "tileX": false,
+                    "tileY": false
+                }
             }
         ]
     },

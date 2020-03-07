@@ -73,12 +73,13 @@
     <Compile Include="Assets\_Scripts\GameManager.cs" />
     <Compile Include="Assets\_Scripts\Ingame\BallSensor.cs" />
     <Compile Include="Assets\_Scripts\Ingame\Gooball.cs" />
-    <Compile Include="Assets\_Scripts\Ingame\SceneLayer.cs" />
     <Compile Include="Assets\_Scripts\Ingame\Strand.cs" />
     <Compile Include="Assets\_Scripts\Ingame\Walk.cs" />
     <Compile Include="Assets\_Scripts\Ingame\WalkOnStrand.cs" />
     <Compile Include="Assets\_Scripts\JSONLevel.cs" />
     <Compile Include="Assets\_Scripts\JSONLevelLoader.cs" />
+    <Compile Include="Assets\_Scripts\Level stuff\Geometry.cs" />
+    <Compile Include="Assets\_Scripts\Level stuff\SceneLayer.cs" />
     <Compile Include="Assets\_Scripts\LevelLoader.cs" />
     <Compile Include="Assets\_Scripts\SceneLayerParallax.cs" />
     <Compile Include="Assets\_Scripts\StaticData.cs" />

@@ -14,18 +14,25 @@ public static class StaticData
     public static string levelFolder = resFolder + "levels/";
     public static string ballsFolder = resFolder + "balls/";
     public static string imagesFolder = resFolder + "images/";
+    public static JSONLevelLoader levelLoader;
 
     public static Dictionary<string, string> Resources = new Dictionary<string, string>();
     public static Sprite RetrieveImage(string textureID)
     {
         string RelativePath;
         Resources.TryGetValue(textureID, out RelativePath);
-        string fullPath = resFolder + RelativePath;
-        byte[] imageData = File.ReadAllBytes(fullPath);
-        Texture2D tex = new Texture2D(2,2);
-        tex.LoadImage(imageData);
-        Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
-        return sprite;
+        if (RelativePath != null)
+        {
+            string fullPath = resFolder + RelativePath;
+            byte[] imageData = File.ReadAllBytes(fullPath);
+            Texture2D tex = new Texture2D(2, 2);
+            tex.LoadImage(imageData);
+            Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+            return sprite;
+        }
+        else
+            return null;
     }
 
 }
+    
