@@ -67,7 +67,7 @@ public class Walk : MonoBehaviour
             walkCounter += 1;
             
             // jumping on strands
-            if (doesCheckForStrands)
+            if (doesCheckForStrands && !gooball.isOnStrand)
             {
                 Vector3 position = transform.position;
                 
@@ -79,10 +79,11 @@ public class Walk : MonoBehaviour
                 Debug.Log(raycastHit.transform);
                 if (raycastHit.transform)
                 {
+                    rigidbody.constraints = RigidbodyConstraints2D.FreezeAll;
                     WalkOnStrand walkOnStrand = gameObject.AddComponent<WalkOnStrand>();
-                    walkOnStrand.currentStrand = raycastHit.transform.gameObject;
+                    walkOnStrand.currentStrand = raycastHit.transform.parent.gameObject;
                     walkOnStrand.Initialize();
-                    transform.SetParent(raycastHit.transform, true);
+                    transform.SetParent(raycastHit.transform.parent, true);
                 }
                 
                 Debug.DrawRay(position, rigidbody.velocity.normalized * raycastHit.distance, Color.yellow);

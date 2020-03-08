@@ -58,6 +58,7 @@ public class Gooball : MonoBehaviour
     public int rays = 50;
     [SerializeField] private bool isTower;
     [SerializeField] private bool isDragged;
+    public bool isOnStrand = false;
 
     [SerializeField] private List<RaycastHit2D> attachable;
 
@@ -146,6 +147,7 @@ public class Gooball : MonoBehaviour
         if (isDragged)
         {
             transform.SetParent(StaticData.balls.transform, true);
+            isOnStrand = false;
             // positioning
             rigidbody.constraints = RigidbodyConstraints2D.FreezeAll;
             Vector3 mousePosition = Input.mousePosition;
@@ -168,6 +170,7 @@ public class Gooball : MonoBehaviour
 
                 if (GameManager.instance.hoverStrand)
                 {
+                    gameObject.layer = LayerMask.NameToLayer("Detached Balls");
                     isDragged = false;
                     GameManager.instance.drag = null;
                     WalkOnStrand walkOnStrand = gameObject.AddComponent<WalkOnStrand>();

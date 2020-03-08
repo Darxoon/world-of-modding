@@ -16,6 +16,8 @@ public class WalkOnStrand : MonoBehaviour
     {
         if(initialized)
             return;
+        thisGooballObject = GetComponent<Gooball>();
+        thisGooballObject.isOnStrand = true;
         Debug.LogWarning("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         initialized = true;
         //find out which ball are we gonna go to
@@ -23,7 +25,7 @@ public class WalkOnStrand : MonoBehaviour
         int gooball = rand.Next(0, 1);
         Debug.LogWarning("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
         //get stuff into an array
-        Strand strand = currentStrand.transform.parent.gameObject.GetComponent<Strand>();
+        Strand strand = currentStrand.GetComponent<Strand>();
         Debug.Log(currentStrand, currentStrand);
         Debug.Log(strand, strand);
         
