@@ -11,7 +11,6 @@ public class Walk : MonoBehaviour
     [Header("Jumping Properties")] 
     
     [SerializeField] private bool doesCheckForStrands;
-    [SerializeField] private Vector2 strandCheckIntervalRange;
 
     [Header("Components")]
     
@@ -69,23 +68,6 @@ public class Walk : MonoBehaviour
             // jumping on strands
             if (doesCheckForStrands)
             {
-                if (strandCheckCounter <= 0)
-                {
-                    strandCheckCounter = Random.Range(strandCheckIntervalRange.x, strandCheckIntervalRange.y);
-                    Debug.Log($"Checking for strands lol | {gameObject}", this);
-                    Collider2D strandCollider = CheckForStrand();
-                    if (strandCollider)
-                    {
-                        Debug.Log(strandCollider.gameObject, this);
-                        bool jumpsOnStrand = Random.Range(0, 2) == 0;
-                        if (jumpsOnStrand)
-                        {
-                            Debug.Log("Jumping on the strand now", this);
-                        }
-                    }
-                }
-                else
-                    strandCheckCounter -= Time.deltaTime;
             }
 
             // direction change
@@ -104,25 +86,6 @@ public class Walk : MonoBehaviour
             if(!isChangingDirection)
                 WalkUpdate();
         }
-    }
-
-    private Collider2D CheckForStrand()
-    {
-        Transform transform1 = transform;
-        Vector2 position = transform1.position;
-        
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(position + collider.offset, 
-            collider.radius * transform1.localScale.x, LayerMask.GetMask("Strands"));
-        
-        // Log all contacts
-//        Debug.LogWarning($"Contacts by {gameObject}", this);
-//        foreach (Collider2D otherCollider in colliders)
-//        {
-//            Debug.Log(otherCollider.gameObject, otherCollider.gameObject);
-//        }
-        
-        // return random one of that list
-        return colliders.Length != 0 ? colliders[Random.Range(0, colliders.Length - 1)] : null;
     }
 
     private void WalkUpdate()
