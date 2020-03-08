@@ -170,7 +170,9 @@ public class Gooball : MonoBehaviour
                 {
                     isDragged = false;
                     GameManager.instance.drag = null;
-                    gameObject.AddComponent<WalkOnStrand>().currentStrand = GameManager.instance.hoverStrand;
+                    WalkOnStrand walkOnStrand = gameObject.AddComponent<WalkOnStrand>();
+                    walkOnStrand.currentStrand = GameManager.instance.hoverStrand;
+                    walkOnStrand.Initialize();
                     transform.SetParent(GameManager.instance.hoverStrand.transform, true);
                     return;
                 }

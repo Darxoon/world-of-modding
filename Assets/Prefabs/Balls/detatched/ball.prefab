@@ -133,13 +133,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7757491c07aabd942a760b3639a8531b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  direction: {x: 1, y: 0, z: 0}
+  startingDirection: {x: 1, y: 0, z: 0}
   walkSpeed: 0.1
   randomSpeedScale: {x: 90, y: 110}
-  dynamicDirection: {x: 0, y: 0, z: 0}
-  isRotating: 0
-  walkCounter: 0
-  gooball: {fileID: 4248019372008310468}
+  doesCheckForStrands: 0
+  raycastLength: 1
   ballSensor: {fileID: 71050027965101542}
 --- !u!114 &4248019372008310468
 MonoBehaviour:

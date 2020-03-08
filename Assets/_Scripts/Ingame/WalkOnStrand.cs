@@ -4,26 +4,42 @@ using UnityEngine;
 
 public class WalkOnStrand : MonoBehaviour
 {
-    // Start is called before the first frame update
+    private bool initialized = false;
     void Start()
     {
         currentStrandObject = currentStrand.GetComponent<Strand>();
         thisGooballObject = GetComponent<Gooball>();
+        
+    }
+
+    public void Initialize()
+    {
+        if(initialized)
+            return;
+        Debug.LogWarning("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+        initialized = true;
         //find out which ball are we gonna go to
         System.Random rand = new System.Random();
         int gooball = rand.Next(0, 1);
+        Debug.LogWarning("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
         //get stuff into an array
-        Strand strand = currentStrand.GetComponent<Strand>();
-        List<Gooball> gballs = new List<Gooball>();
-        gballs.Add(strand.connectedBall1Class);
-        gballs.Add(strand.connectedBall2Class);
-        //Debug.Log($"next gooball index is {gooball}, the size of list is {gballs.Count}");
+        Strand strand = currentStrand.transform.parent.gameObject.GetComponent<Strand>();
+        Debug.Log(currentStrand, currentStrand);
+        Debug.Log(strand, strand);
+        
+        Debug.LogWarning("cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc");
         //set the next ball and make it go to it
-        nextBall = gballs[gooball];
-        //nextPos = nextBall.transform.position;
+        Debug.Log(gooball);
+        Debug.Log(strand, strand);
+        Debug.Log(strand.connectedBall1Class);
+        Debug.Log(strand.connectedBall2Class);
+        nextBall = gooball == 0 ? strand.connectedBall1Class : strand.connectedBall2Class;
+        Debug.Log("#############################################################################");
+        Debug.Log(nextBall);
+        
         isMoving = true;
     }
-
+    
     public List<Gooball> gooballs = new List<Gooball>();
 
 
@@ -54,9 +70,13 @@ public class WalkOnStrand : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        transform.localScale = transform.localScale;
+        Debug.Log(initialized);
+        if(!initialized)
+            return;
+        
         if (isMoving == false)
         {
+            Debug.LogWarning(nextBall);
             GetGooballs(nextBall);
             TowardsWhichGooball();
         }

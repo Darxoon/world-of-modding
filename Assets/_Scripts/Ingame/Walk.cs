@@ -79,7 +79,9 @@ public class Walk : MonoBehaviour
                 Debug.Log(raycastHit.transform);
                 if (raycastHit.transform)
                 {
-                    gameObject.AddComponent<WalkOnStrand>().currentStrand = raycastHit.transform.gameObject;
+                    WalkOnStrand walkOnStrand = gameObject.AddComponent<WalkOnStrand>();
+                    walkOnStrand.currentStrand = raycastHit.transform.gameObject;
+                    walkOnStrand.Initialize();
                     transform.SetParent(raycastHit.transform, true);
                 }
                 
