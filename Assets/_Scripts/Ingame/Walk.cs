@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Serialization;
+﻿using UnityEngine;
 
 public class Walk : MonoBehaviour
 {
@@ -10,16 +7,21 @@ public class Walk : MonoBehaviour
     [SerializeField] private Vector3 startingDirection;
     [SerializeField] private float walkSpeed;
     [SerializeField] private Vector2 randomSpeedScale;
+
+    [Header("Jumping Properties")] 
     
+    [SerializeField] private bool doesCheckForStrands;
+    [SerializeField] private Vector2 strandCheckIntervalRange;
 
     [Header("Components")]
+    
     [SerializeField] private BallSensor ballSensor;
     private Gooball gooball;
     private new Rigidbody2D rigidbody;
 
     // Runtime AI
-    private int walkCounter = 0;
-    private float strandCheckCounter = 0;
+    private int walkCounter;
+    private float strandCheckCounter;
 
     private Vector3 dynamicDirection;
     private bool isChangingDirection;
@@ -61,13 +63,16 @@ public class Walk : MonoBehaviour
             walkCounter += 1;
             
             // jumping on strands
-            if (strandCheckCounter >= 0)
+            if (doesCheckForStrands)
             {
-                strandCheckCounter = 2f;
-                Debug.Log($"Checking for strands lol | { gameObject }", this);
+                if (strandCheckCounter <= 0)
+                {
+                    strandCheckCounter = Random.Range(strandCheckIntervalRange.x, strandCheckIntervalRange.y);
+                    Debug.Log($"Checking for strands lol | {gameObject}", this);
+                }
+                else
+                    strandCheckCounter -= Time.deltaTime;
             }
-            else
-                strandCheckCounter -= Time.deltaTime;
 
             // direction change
             if (isChangingDirection)
