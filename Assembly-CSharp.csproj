@@ -76,10 +76,11 @@
     <Compile Include="Assets\_Scripts\Ingame\Strand.cs" />
     <Compile Include="Assets\_Scripts\Ingame\Walk.cs" />
     <Compile Include="Assets\_Scripts\Ingame\WalkOnStrand.cs" />
-    <Compile Include="Assets\_Scripts\JSONLevel.cs" />
-    <Compile Include="Assets\_Scripts\JSONLevelLoader.cs" />
     <Compile Include="Assets\_Scripts\Level stuff\CompositeGeom.cs" />
     <Compile Include="Assets\_Scripts\Level stuff\Geometry.cs" />
+    <Compile Include="Assets\_Scripts\Level stuff\JSONGooball.cs" />
+    <Compile Include="Assets\_Scripts\Level stuff\JSONLevel.cs" />
+    <Compile Include="Assets\_Scripts\Level stuff\JSONLevelLoader.cs" />
     <Compile Include="Assets\_Scripts\Level stuff\SceneLayer.cs" />
     <Compile Include="Assets\_Scripts\LevelLoader.cs" />
     <Compile Include="Assets\_Scripts\SceneLayerParallax.cs" />

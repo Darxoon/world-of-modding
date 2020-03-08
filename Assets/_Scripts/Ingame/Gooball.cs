@@ -21,6 +21,7 @@ public class Gooball : MonoBehaviour
 
     #region Gooball properties
     [Header("Gooball properties")]
+    public string type;
     [SerializeField] private float _originalMass = 3.23f;
     public float originalMass
     {

@@ -70,7 +70,40 @@ public class JSONLevelLoader : MonoBehaviour
                     position = new Position(1,1)
                 }
             };
+                
+            Ballinstance[] instances =
+            {
+                new Ballinstance
+                {
+                    discovered = true,
+                    type = "common",
+                    id = "1",
+                    pos = new Position(5,5)
+                },
+                new Ballinstance
+                {
+                    discovered = true,
+                    type = "common",
+                    id = "1",
+                    pos = new Position(5,5)
+                },
+                new Ballinstance
+                {
+                    discovered = true,
+                    type = "common",
+                    id = "1",
+                    pos = new Position(5,5)
+                },
+                new Ballinstance
+                {
+                    discovered = true,
+                    type = "common",
+                    id = "1",
+                    pos = new Position(5,5)
+                }
+            };
 
+            levelL.level.BallInstance = instances;
             levelL.scene.compositegeoms = compositegeoms;
             levelL.scene.geometries = geoms;
             levelL.scene.scenelayers = layers;
@@ -85,6 +118,7 @@ public class JSONLevelLoader : MonoBehaviour
 
             Debug.Break();
 
+            
 
             #endregion
         }
@@ -123,6 +157,12 @@ public class JSONLevelLoader : MonoBehaviour
                 GameObject geom = new GameObject(compositegeom.name);
                 geom.AddComponent<CompositeGeom>().data = compositegeom;
                 geom.transform.SetParent(StaticData.geometry.transform);
+            }
+            foreach(var gball in level.level.BallInstance)
+            {
+                GameObject ball = new GameObject(gball.id);
+                ball.transform.SetParent(StaticData.balls.transform);
+                var goo = ball.AddComponent<Gooball>();
             }
         }
     }

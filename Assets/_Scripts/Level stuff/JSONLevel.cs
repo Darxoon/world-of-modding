@@ -141,8 +141,7 @@ public class Ballinstance
     public bool discovered = true;
     public string id = "";
     public string type = "";
-    public float x = 0;
-    public float y = 0;
+    public Position pos = new Position();
 }
 
 public class LStrand

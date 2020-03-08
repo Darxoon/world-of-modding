@@ -37,7 +37,6 @@ public class SceneLayer : MonoBehaviour
             Debug.DrawLine(topLeft, bottomLeft, Color.red, 0, false); //left
             Debug.DrawLine(bottomLeft, bottomRight, Color.red, 0, false); //bottom    
         }
-            
 #endif
     }
 }
