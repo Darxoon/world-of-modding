@@ -4,11 +4,61 @@ using UnityEngine;
 
 public class JSONGooball
 {
-    public ball ball = new ball();
-    public part[] parts;
+    public Ball ball = new Ball();
+    public Part[] parts;
+    public Marker marker;
+    public Shadow shadow;
+    public Particles[] particles;
+    public StrandJSON strand;
+    public DetachStrand detachstrand;
+    public Splat splat;
+    public Sound[] sounds;
+    public SinVariance[] anims;
 }
 
-public class ball
+public enum States
+{
+    attached,
+    climbing,
+    detaching,
+    dragging,
+    falling,
+    pipe,
+    sleeping,
+    standing,
+    stuck,
+    stuck_attached,
+    stuck_detaching,
+    tank,
+    walking,
+    all
+}
+
+public enum Events
+{
+    Attach,
+    AttachCloser,
+    Bounce,
+    CollideDiff,
+    CollideGeom,
+    CollideSame,
+    Death,
+    Detached,
+    Detaching,
+    Detonate,
+    Drop,
+    Exit,
+    Ignite,
+    Marker,
+    Pickup,
+    Snap,
+    Suction,
+    Throw,
+    All
+}
+
+#region Ball tag
+public class Ball
 {
     #region Core attributes
     public string name = "";
@@ -124,8 +174,10 @@ public class StateScale
     public States statename;
     public float stateFactor;
 }
+#endregion
 
-public class part
+#region Part tag
+public class Part
 {
     public string name = "";
     public string[] image = { };
@@ -136,12 +188,12 @@ public class part
     public float scale;
     public float rotate;
     public Stretch stretch;
-    public eye eye;
+    public Eye eye;
     public Position xRange;
     public Position yRange;
 }
 
-public class eye
+public class Eye
 {
     public string pupil = "";
     public int pupilInset;
@@ -152,20 +204,99 @@ public class Stretch
     public float directionScale;
     public float acrossScale;
 }
-public enum States
+
+#endregion
+public class Marker
 {
-    attached,
-    climbing,
-    detaching,
-    dragging,
-    falling,
-    pipe,
-    sleeping,
-    standing,
-    stuck,
-    stuck_attached,
-    stuck_detaching,
-    tank,
-    walking,
-    all
+    public string drag = "";
+    public string detach = "";
+    public float rotspeed = 0;
+} //tag
+
+public class Shadow
+{
+    public string image = "";
+    public bool additive;
+} //tag
+
+public class Particles //tag
+{
+    public string effect = "";
+    public States[] state = { };
+    public bool overBall;
 }
+
+public class StrandJSON //tag
+{
+    public enum Type
+    {
+        Spring,
+        Rope,
+        Rigid
+    }
+    public Type type = Type.Rigid;
+    public string image = "";
+    public string inactiveImage = "";
+    public float minLen;
+    public float maxLen2;
+    public float maxLen1;
+    public float shrinkLen;
+    public float thickness;
+    public Position springConst = new Position(0, 20);
+    public bool walkable;
+    public float dampFac;
+    public float maxForce;
+    public float burnSpeed;
+    public float igniteDelay;
+    public string burntImage;
+    public string fireParticles;
+}
+
+public class DetachStrand //tag
+{
+    public string image;
+    public float maxLen;
+}
+
+public class Splat //tag
+{
+    public string image;
+}
+
+public class Sound
+{
+    public Events soundEvent;
+    public string[] sounds;
+} //tag
+
+#region Animation
+public class SinAnim
+{
+    public string part;
+    public States[] states = { States.all };
+    public enum Type
+    {
+        scale,
+        translate
+    }
+    public Type type = Type.scale;
+    public enum Axis
+    {
+        x,
+        y
+    }
+    public Axis axis = Axis.x;
+    public float freq;
+    public float shift;
+}
+
+public class SinVariance
+{
+    public float amp = 1;
+    public float freq = 1;
+    public float shift = 0;
+    
+    public SinAnim[] anims = { };
+
+}
+#endregion
