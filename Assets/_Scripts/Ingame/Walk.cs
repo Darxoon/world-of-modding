@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -7,26 +7,24 @@ public class Walk : MonoBehaviour
 {
     [Header("Walking Properties")]
     
-    [FormerlySerializedAs("direction")] [SerializeField] private Vector3 startingDirection;
-    public float walkSpeed;
-    public Vector2 randomSpeedScale;
-
-    [Header("Runtime AI")]
-    [SerializeField] private Vector3 dynamicDirection;
-    [FormerlySerializedAs("isRotating")] [SerializeField] private bool isChangingDirection;
-
+    [SerializeField] private Vector3 startingDirection;
+    [SerializeField] private float walkSpeed;
+    [SerializeField] private Vector2 randomSpeedScale;
     
     [Header("Walk Counters")]
-    [FormerlySerializedAs("walkcounter")] [SerializeField] private int walkCounter = 0;
+    private int walkCounter = 0;
     private float strandCheckCounter = 0;
 
     [Header("Components")]
-    [FormerlySerializedAs("sensorScript")] [SerializeField] private BallSensor ballSensor;
-
+    [SerializeField] private BallSensor ballSensor;
     private Gooball gooball;
     private new Rigidbody2D rigidbody;
 
+    // Runtime AI
     private Vector2 appliedForce;
+
+    private Vector3 dynamicDirection;
+    private bool isChangingDirection;
 
     private void Start()
     {
