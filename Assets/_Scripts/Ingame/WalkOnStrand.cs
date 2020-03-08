@@ -14,9 +14,9 @@ public class WalkOnStrand : MonoBehaviour
         int gooball = rand.Next(0, 1);
         //get stuff into an array
         Strand strand = currentStrand.GetComponent<Strand>();
-        List<GameObject> gballs = new List<GameObject>();
-        gballs.Add(strand.connectedBall1);
-        gballs.Add(strand.connectedBall2);
+        List<Gooball> gballs = new List<Gooball>();
+        gballs.Add(strand.connectedBall1Class);
+        gballs.Add(strand.connectedBall2Class);
         //Debug.Log($"next gooball index is {gooball}, the size of list is {gballs.Count}");
         //set the next ball and make it go to it
         nextBall = gballs[gooball];
@@ -24,15 +24,17 @@ public class WalkOnStrand : MonoBehaviour
         isMoving = true;
     }
 
-    public List<GameObject> gooballs = new List<GameObject>();
+    public List<Gooball> gooballs = new List<Gooball>();
 
 
 
-    void GetGooballs(GameObject gooball) {
+    void GetGooballs(Gooball gooball) {
         gooballs.Clear();
-        foreach (GameObject ball in gooball.GetComponent<Gooball>().attachedBalls)
+        Debug.Log(gooball);
+        Debug.Log(gooball.attachedBalls);
+        foreach (GameObject ball in gooball.attachedBalls)
         {
-            gooballs.Add(ball);
+            gooballs.Add(ball.GetComponent<Gooball>());
         }
     }
 
@@ -41,7 +43,7 @@ public class WalkOnStrand : MonoBehaviour
 
     public Gooball thisGooballObject;
     //Vector3 nextPos;
-    public GameObject nextBall;
+    public Gooball nextBall;
     public Gooball nextGooballObject;
 
     bool isMoving = false;
@@ -73,7 +75,7 @@ public class WalkOnStrand : MonoBehaviour
         if (nextBall != null)
         {
             currentStrandObject.ExitStrand(transform);
-            currentGooball = nextBall;
+            currentGooball = nextBall.gameObject;
             currentGooballObject = currentGooball.GetComponent<Gooball>();
         }
         System.Random check = new System.Random();
@@ -83,7 +85,7 @@ public class WalkOnStrand : MonoBehaviour
         isMoving = true;
         if (nextBall != null)
         {
-            currentStrand = GameManager.instance.getStrandBetweenBalls(currentGooball, nextBall).gameObject;
+            currentStrand = GameManager.instance.getStrandBetweenBalls(currentGooball, nextBall.gameObject).gameObject;
             currentStrandObject = currentStrand.GetComponent<Strand>();
             currentStrandObject.EnterStrand(transform);
             transform.SetParent(currentStrand.transform, true);
