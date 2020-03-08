@@ -5,21 +5,25 @@ using UnityEngine.Serialization;
 
 public class Walk : MonoBehaviour
 {
-    [SerializeField] private Vector3 direction;
+    [Header("Walking Properties")]
+    
+    [FormerlySerializedAs("direction")] [SerializeField] private Vector3 startingDirection;
     public float walkSpeed;
     public Vector2 randomSpeedScale;
 
+    [Header("Runtime AI")]
     [SerializeField] private Vector3 dynamicDirection;
+    [FormerlySerializedAs("isRotating")] [SerializeField] private bool isChangingDirection;
 
-    [SerializeField] private bool isRotating = false;
-
-    [FormerlySerializedAs("walkcounter")] public int walkCounter = 0;
+    
+    [Header("Walk Counters")]
+    [FormerlySerializedAs("walkcounter")] [SerializeField] private int walkCounter = 0;
     private float strandCheckCounter = 0;
 
-    // Scripts and Components
-    [FormerlySerializedAs("dragScript")] [SerializeField] private Gooball gooball;
+    [Header("Components")]
     [FormerlySerializedAs("sensorScript")] [SerializeField] private BallSensor ballSensor;
 
+    private Gooball gooball;
     private new Rigidbody2D rigidbody;
 
     private Vector2 appliedForce;
@@ -27,7 +31,8 @@ public class Walk : MonoBehaviour
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody2D>();
-        dynamicDirection = direction;
+        gooball = GetComponent<Gooball>();
+        dynamicDirection = startingDirection;
         // facing left or right?
         if(Random.value > 0.5f)
         {
@@ -53,7 +58,7 @@ public class Walk : MonoBehaviour
                 {
                     
                     dynamicDirection = -dynamicDirection;
-                    isRotating = true;
+                    isChangingDirection = true;
                 }
             }
             walkCounter += 1;
@@ -68,7 +73,7 @@ public class Walk : MonoBehaviour
                 strandCheckCounter -= Time.deltaTime;
 
             // is rotating? 
-            if (isRotating)
+            if (isChangingDirection)
             {
                 if (ballSensor.isTouchingWall)
                 {
@@ -77,7 +82,7 @@ public class Walk : MonoBehaviour
                 }
                 else
                 {
-                    isRotating = false;
+                    isChangingDirection = false;
                     WalkUpdate();
                 }
             }
@@ -88,13 +93,13 @@ public class Walk : MonoBehaviour
     }
 
 
-    public void WalkUpdate()
+    private void WalkUpdate()
     {
         // touching a wall?
         if (ballSensor.isTouchingWall)
         {
             dynamicDirection = -dynamicDirection;
-            isRotating = true;
+            isChangingDirection = true;
         }
         else
         {
