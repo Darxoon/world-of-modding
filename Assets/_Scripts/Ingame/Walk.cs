@@ -16,6 +16,8 @@ public class Walk : MonoBehaviour
     [Header("Components")]
     
     [SerializeField] private BallSensor ballSensor;
+
+    private new CircleCollider2D collider;
     private Gooball gooball;
     private new Rigidbody2D rigidbody;
 
@@ -32,6 +34,8 @@ public class Walk : MonoBehaviour
     {
         rigidbody = GetComponent<Rigidbody2D>();
         gooball = GetComponent<Gooball>();
+        collider = GetComponent<CircleCollider2D>();
+        
         dynamicDirection = startingDirection;
         // facing left or right?
         if(Random.value > 0.5f)
@@ -69,6 +73,8 @@ public class Walk : MonoBehaviour
                 {
                     strandCheckCounter = Random.Range(strandCheckIntervalRange.x, strandCheckIntervalRange.y);
                     Debug.Log($"Checking for strands lol | {gameObject}", this);
+                    Collider2D strandCollider = CheckForStrand();
+                    Debug.Log(strandCollider.gameObject, this);
                 }
                 else
                     strandCheckCounter -= Time.deltaTime;
@@ -92,6 +98,24 @@ public class Walk : MonoBehaviour
         }
     }
 
+    private Collider2D CheckForStrand()
+    {
+        Transform transform1 = transform;
+        Vector2 position = transform1.position;
+        
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(position + collider.offset, 
+            collider.radius * transform1.localScale.x, LayerMask.GetMask("Strands"));
+        
+        // Log all contacts
+//        Debug.LogWarning($"Contacts by {gameObject}", this);
+//        foreach (Collider2D otherCollider in colliders)
+//        {
+//            Debug.Log(otherCollider.gameObject, otherCollider.gameObject);
+//        }
+        
+        // return random one of that list
+        return colliders[Random.Range(0, colliders.Length - 1)];
+    }
 
     private void WalkUpdate()
     {
