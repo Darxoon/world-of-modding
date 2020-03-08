@@ -11,6 +11,7 @@ public class Walk : MonoBehaviour
     [Header("Jumping Properties")] 
     
     [SerializeField] private bool doesCheckForStrands;
+    [SerializeField] private float raycastLength = 1f;
 
     [Header("Components")]
     
@@ -68,6 +69,21 @@ public class Walk : MonoBehaviour
             // jumping on strands
             if (doesCheckForStrands)
             {
+                Vector3 position = transform.position;
+                
+                Debug.DrawRay(position, rigidbody.velocity.normalized * raycastLength,       Color.magenta);
+                
+                RaycastHit2D raycastHit = Physics2D.Raycast(position, rigidbody.velocity.normalized, raycastLength,
+                    LayerMask.GetMask("Strands"));
+                
+                Debug.Log(raycastHit.transform);
+                if (raycastHit.transform)
+                {
+                    gameObject.AddComponent<WalkOnStrand>().currentStrand = GameManager.instance.hoverStrand;
+                    transform.SetParent(GameManager.instance.hoverStrand.transform, true);
+                }
+                
+                Debug.DrawRay(position, rigidbody.velocity.normalized * raycastHit.distance, Color.yellow);
             }
 
             // direction change
