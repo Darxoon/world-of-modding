@@ -1,31 +1,42 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Walk : MonoBehaviour
 {
-    public Vector3 direction;
-    public float walkSpeed;
-    public Vector2 randomSpeedScale;
+    [Header("Walking Properties")]
+    
+    [SerializeField] private Vector3 startingDirection;
+    [SerializeField] private float walkSpeed;
+    [SerializeField] private Vector2 randomSpeedScale;
 
-    [SerializeField] private Vector3 dynamicDirection;
+    [Header("Jumping Properties")] 
+    
+    [SerializeField] private bool doesCheckForStrands;
+    [SerializeField] private float raycastLength = 1f;
 
-    [SerializeField] private bool isRotating = false;
+    [Header("Components")]
+    
+    [SerializeField] private BallSensor ballSensor;
 
-    public int walkcounter = 0;
+    private new CircleCollider2D collider;
+    private Gooball gooball;
+    private new Rigidbody2D rigidbody;
 
-    // Scripts and Components
-    [SerializeField] private Gooball dragScript;
-    [SerializeField] private BallSensor sensorScript;
+    // Runtime AI
+    private int walkCounter;
+    private float strandCheckCounter;
 
-    private Rigidbody2D rigid;
-
+    private Vector3 dynamicDirection;
+    private bool isChangingDirection;
+    
     private Vector2 appliedForce;
 
     private void Start()
     {
-        rigid = GetComponent<Rigidbody2D>();
-        dynamicDirection = direction;
+        rigidbody = GetComponent<Rigidbody2D>();
+        gooball = GetComponent<Gooball>();
+        collider = GetComponent<CircleCollider2D>();
+        
+        dynamicDirection = startingDirection;
         // facing left or right?
         if(Random.value > 0.5f)
         {
@@ -37,61 +48,75 @@ public class Walk : MonoBehaviour
 
     private void Update()
     {
-        
-        // is it a lying unattached goo
-        if(!dragScript.IsTower && !dragScript.IsDragged && sensorScript.isGrounded)
+        bool isWalking = !gooball.IsTower && !gooball.IsDragged && ballSensor.isGrounded;
+        if(isWalking)
         {
             //random direction change
-            if (walkcounter == 50)
+            if (walkCounter == 50)
             {
-                walkcounter = 0;
+                walkCounter = 0;
                 System.Random check = new System.Random();
                 int probability = check.Next(1, 3);
                 if (probability == 1)
                 {
                     
                     dynamicDirection = -dynamicDirection;
-                    isRotating = true;
+                    isChangingDirection = true;
                 }
             }
-            walkcounter = walkcounter + 1;
-            //
-
-            // is rotating? 
-            if (isRotating)
+            walkCounter += 1;
+            
+            // jumping on strands
+            if (doesCheckForStrands && !gooball.isOnStrand)
             {
-                if (sensorScript.isTouchingWall)
+                Vector3 position = transform.position;
+                
+                Debug.DrawRay(position, rigidbody.velocity.normalized * raycastLength,       Color.magenta);
+                
+                RaycastHit2D raycastHit = Physics2D.Raycast(position, rigidbody.velocity.normalized, raycastLength,
+                    LayerMask.GetMask("Strands"));
+                
+                if (raycastHit.transform)
+                {
+                    rigidbody.constraints = RigidbodyConstraints2D.FreezeAll;
+                    WalkOnStrand walkOnStrand = gameObject.AddComponent<WalkOnStrand>();
+                    walkOnStrand.currentStrand = raycastHit.transform.parent.gameObject;
+                    walkOnStrand.Initialize();
+                    transform.SetParent(raycastHit.transform.parent, true);
+                }
+                
+                Debug.DrawRay(position, rigidbody.velocity.normalized * raycastHit.distance, Color.yellow);
+            }
+
+            // direction change
+            if (isChangingDirection)
+            {
+                if (ballSensor.isTouchingWall)
                 {
                     appliedForce = dynamicDirection.normalized * walkSpeed;
-                    rigid.velocity += appliedForce;
+                    rigidbody.velocity += appliedForce;
                 }
                 else
-                {
-                    isRotating = false;
-                    WalkUpdate();
-                }
+                    isChangingDirection = false;
             }
-            else
-                // do this function
+            
+            // walk update
+            if(!isChangingDirection)
                 WalkUpdate();
         }
     }
 
-
-    public void WalkUpdate()
+    private void WalkUpdate()
     {
-        // touching a wall?
-        if (sensorScript.isTouchingWall)
+        if (ballSensor.isTouchingWall)
         {
             dynamicDirection = -dynamicDirection;
-            isRotating = true;
+            isChangingDirection = true;
         }
         else
         {
-
             appliedForce = dynamicDirection.normalized * walkSpeed;
-            rigid.velocity += appliedForce;
-
+            rigidbody.velocity += appliedForce;
         }
     }
 

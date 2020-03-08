@@ -1,112 +1,99 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
+using UnityEngine.Serialization;
 
+[SuppressMessage("ReSharper", "ConvertToAutoPropertyWhenPossible")]
+[SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+[SuppressMessage("ReSharper", "ConvertToAutoProperty")]
 public class Gooball : MonoBehaviour
 {
-    // Layer mask
-    [SerializeField] private string ballLayerMask = "Attached Balls";
+
+    // TODO: TEMPORARY (replaced with level loading)
+    [SerializeField] public Sprite strandSprite;
     
-    // initial strands 
+    [SerializeField] public string randomID;
+    
+    #region Components
+    
+    private new Rigidbody2D rigidbody;
+    private Camera mainCam;
+    
+    #endregion
+    
+    [Header("Inspector Initialization")]
     public GameObject[] initialStrands;
 
-    // the balls it is connected during the game
+
+    [Header("In game Strands")]
     public List<GameObject> attachedBalls;
+    public List<Strand> strands = new List<Strand>();
     public Dictionary<int, Gooball> gooStrands = new Dictionary<int, Gooball>();
-    // TEMPORARY
-    [SerializeField] public Sprite strandSprite;
-
-    #region Gooball properties
+    
+    
     [Header("Gooball properties")]
-    public string type;
-    public JSONGooball externalData;
-    [SerializeField] private float _originalMass = 3.23f;
-    public float originalMass
-    {
-        get
-        {
-            return _originalMass;
-        }
-    }
+    [SerializeField] private string ballLayerMask = "Attached Balls";
+    [SerializeField] private float originalMass = 3.23f;
 
-    private float _towerMass = 3f;
-    public float towerMass
-    {
-        get
-        {
-            return _originalMass;
-        }
-    }
-    public Vector3 originalScale;
-    #endregion
-
-    #region Strand Settings
-    [Header("Strand Settings")]
+    [SerializeField] private float towerMass = 3f;
+    public float extraMass;
+    
+    
+    [Header("Strand physics")]
 
     [SerializeField] public float dampingRatio;
-    [SerializeField] public float frequency;
+    [SerializeField] public float jointFrequency;
 
     public Vector2 strandDistanceRange = new Vector2(1f, 4f);
-    public float strandMulitplier = 1.01f;
-    public float StrandThickness = 0.5f;
+    public float strandMultiplier = 1.01f;
+    public float strandThickness = 0.5f;
     public int strandCount = 2;
     public float strandLengthMax = 1.9f;
-    public float strandLengthMin = 0;
-    public float strandLengthShrink = 1.8f;
-    public float strandLenghtShrinkSpeed = 1f;
-    #endregion
-    #region Attatchment system
-    [Header("Attatchment system")]
+    public float strandLengthMin = 0; // TODO: Implement strandLengthMin (Polishing)
+    public float strandLengthShrink = 1.8f; // TODO: Implement strandLengthShrink (Polishing)
+    public float strandLengthShrinkSpeed = 1f;
+    
+    [Header("Attaching")]
 
     public int rays = 50;
-    [SerializeField] private bool isTower = false;
-    [SerializeField] private bool isDragged = false;
-    //[SerializeField] private GameObject drag;
+    [SerializeField] private bool isTower;
+    [SerializeField] private bool isDragged;
+    public bool isOnStrand = false;
 
-    public float[] attachable_arr;
     [SerializeField] private List<RaycastHit2D> attachable;
 
-    public Rigidbody2D rigid;
 
     private Vector3 euler;
     private RaycastHit2D hit;
-    #endregion
-
-    public float extraMass = 0;
-    public List<Strand> strands = new List<Strand>();
 
 
-    [SerializeField]public string randomID;
 
     #region Getters
-
+    
+    public float OriginalMass => originalMass;
+    public float TowerMass => towerMass;
     public bool IsDragged => isDragged;
     public bool IsTower => isTower;
 
-    private bool hasShrunkToSize = false;
     #endregion
-
-
-    //public Vector3 euler = new Vector3(90f, 0f, 1f);
 
 
 
     private void Start()
     {
-        rigid = GetComponent<Rigidbody2D>();
-        rigid.mass = originalMass + extraMass;
-        originalScale = transform.lossyScale;
+        rigidbody = gameObject.GetComponent<Rigidbody2D>();
+        rigidbody.mass = OriginalMass + extraMass;
+        mainCam = Camera.main;
         randomID = GameManager.GenerateRandomID(10);
         attachable = new List<RaycastHit2D>();
 
         if(initialStrands.Length > 0)
         {
             SetTowered();
-            for (int i = 0; i < initialStrands.Length; i++)
+            foreach (GameObject other in initialStrands)
             {
-                MakeStrand(initialStrands[i].transform);
-                initialStrands[i].GetComponent<Gooball>().SetTowered();
+                MakeStrand(other.GetComponent<Gooball>());
+                other.GetComponent<Gooball>().SetTowered();
             }
             attachedBalls = new List<GameObject>(initialStrands);
         } else
@@ -115,19 +102,19 @@ public class Gooball : MonoBehaviour
         }
     }
 
-    private void strandMass()
+    private void StrandMass()
     {
         extraMass = 0;
-        float distancePercent = 0;
         foreach (Strand strand in strands)
         {
             if(strand.gooballs.Count > 0)
-            foreach (Gooball gooball in strand.gooballs)
-            {
-                distancePercent = Vector3.Distance(transform.position, gooball.transform.position) / Vector3.Distance(transform.position, strand.otherBall(this).transform.position);
-                distancePercent = 1 - distancePercent;
-                extraMass += gooball.towerMass * distancePercent;
-            }
+                foreach (Gooball gooball in strand.gooballs)
+                {
+                    Vector3 position = transform.position;
+                    float distancePercent = Vector3.Distance(position, gooball.transform.position) / Vector3.Distance(position, strand.otherBall(this).transform.position);
+                    distancePercent = 1 - distancePercent;
+                    extraMass += gooball.TowerMass * distancePercent;
+                }
         }
     }
 
@@ -137,22 +124,21 @@ public class Gooball : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0) && !IsTower && !GameManager.instance.isDragging)
         {
-            RaycastHit2D[] hits = Physics2D.GetRayIntersectionAll(UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition), Mathf.Infinity);
-            if (hits.Length > 0)
+            RaycastHit2D[] hits = new RaycastHit2D[500];
+            int size = Physics2D.GetRayIntersectionNonAlloc(mainCam.ScreenPointToRay(Input.mousePosition), hits, Mathf.Infinity);
+            if (size > 0)
             {
-                for (int i = 0; i < hits.Length; i++)
+                foreach (RaycastHit2D raycastHit2D in hits)
                 {
-                    RaycastHit2D hit = hits[i];
-                    Debug.DrawLine(UnityEngine.Camera.main.transform.position, hit.point, UnityEngine.Color.red);
+                    Debug.DrawLine(mainCam.transform.position, raycastHit2D.point, Color.red);
 
 
-                    if (hit.transform == transform)
+                    if (raycastHit2D.transform == transform)
                     {
                         isDragged = true;
                         GameManager.instance.isDragging = true;
-                        GameManager.instance.drag = hit.transform.gameObject;
+                        GameManager.instance.drag = raycastHit2D.transform.gameObject;
                     }
-
                 }
             }
         }
@@ -160,13 +146,12 @@ public class Gooball : MonoBehaviour
 
         if (isDragged)
         {
-            if(GetComponent<Gooball>() != null)
-                Destroy(GetComponent<WalkOnStrand>());
             transform.SetParent(StaticData.balls.transform, true);
+            isOnStrand = false;
             // positioning
-            gameObject.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll;
+            rigidbody.constraints = RigidbodyConstraints2D.FreezeAll;
             Vector3 mousePosition = Input.mousePosition;
-            Vector2 point = UnityEngine.Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 3600f));
+            Vector2 point = mainCam.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 3600f));
             transform.position = new Vector3(point.x, point.y, 0);
 
             // changing the layer
@@ -174,26 +159,29 @@ public class Gooball : MonoBehaviour
 
             // attaching 
 
-            AttachRaycast(rays, ballLayerMask);
+            AttachRaycast();
 
 
             // stop dragging
             if (Input.GetMouseButtonUp(0))
             {
                 GameManager.instance.isDragging = false;
-                AttachRaycast(rays, ballLayerMask);
+                AttachRaycast();
 
-                if (GameManager.instance.hoverStrand != null)
+                if (GameManager.instance.hoverStrand)
                 {
+                    gameObject.layer = LayerMask.NameToLayer("Detached Balls");
                     isDragged = false;
                     GameManager.instance.drag = null;
-                    gameObject.AddComponent<WalkOnStrand>().currentStrand = GameManager.instance.hoverStrand;
+                    WalkOnStrand walkOnStrand = gameObject.AddComponent<WalkOnStrand>();
+                    walkOnStrand.currentStrand = GameManager.instance.hoverStrand;
+                    walkOnStrand.Initialize();
                     transform.SetParent(GameManager.instance.hoverStrand.transform, true);
                     return;
                 }
 
                 // remove constraints
-                if (GameManager.instance.drag != null) { rigid.constraints = RigidbodyConstraints2D.None; }
+                if (GameManager.instance.drag != null) { rigidbody.constraints = RigidbodyConstraints2D.None; }
                 // update fields
                 isDragged = false;
                 GameManager.instance.drag = null;
@@ -205,7 +193,7 @@ public class Gooball : MonoBehaviour
                 // are the strands 1?
                 if (strandCount == 1)
                 {
-                    MakeStrand(attachable[0].transform);
+                    MakeStrand(attachable[0].transform.gameObject.GetComponent<Gooball>());
                     SetTowered();
                 }
                 else if (attachable.Count > 1)
@@ -220,7 +208,7 @@ public class Gooball : MonoBehaviour
                             // attach to them normally
                             for (int i = 0; i < strandCount; i++)
                             {
-                                MakeStrand(attachable[i].transform);
+                                MakeStrand(attachable[i].transform.GetComponent<Gooball>());
                             }
                             SetTowered();
                         }
@@ -233,7 +221,7 @@ public class Gooball : MonoBehaviour
 
                         Gooball other1 = attachable[0].transform.gameObject.GetComponent<Gooball>();
                         other1.gooStrands.Add(other1.attachedBalls.Count, this);
-                        other1.MakeStrand(attachable[1].transform);
+                        other1.MakeStrand(attachable[1].transform.GetComponent<Gooball>());
                         gameObject.SetActive(false);
                     }
                 }
@@ -248,39 +236,40 @@ public class Gooball : MonoBehaviour
 
         if (isTower)
         {
-            strandMass();
-            rigid.mass = _originalMass + extraMass;
+            StrandMass();
+            rigidbody.mass = originalMass + extraMass;
         }
     }
 
 
 
 
-    public void MakeStrand(Transform other)
+    public void MakeStrand(Gooball other)
     {
-        Strand strand = StaticData.gameManager.MakeStrand(transform, other, dampingRatio, frequency, StrandThickness);
-        if(strand != null)
+        Strand strand = StaticData.gameManager.MakeStrand(transform, other.transform, dampingRatio, jointFrequency, strandThickness);
+        if(strand)
         {
             strands.Add(strand);
-            if (!other.GetComponent<Gooball>().strands.Contains(strand))
+            if (!other.strands.Contains(strand))
             {
-                other.GetComponent<Gooball>().strands.Add(strand);
+                other.strands.Add(strand);
             }
         }
             
-        rigid.constraints = RigidbodyConstraints2D.FreezeRotation;
+        rigidbody.constraints = RigidbodyConstraints2D.FreezeRotation;
         // add the other goo ball to attached list
         if(!attachedBalls.Contains(other.gameObject))
             attachedBalls.Add(other.gameObject);
-        if(!other.GetComponent<Gooball>().attachedBalls.Contains(gameObject))
-            other.GetComponent<Gooball>().attachedBalls.Add(gameObject);
+        if(!other.attachedBalls.Contains(gameObject))
+            other.attachedBalls.Add(gameObject);
         isTower = true;
     }
 
 
 
-    public void AttachRaycast(int rays, string ballLayerMask)
+    public void AttachRaycast()
     {
+        Vector3 position = transform.position;
         // make the empty list
         attachable.Clear();
         // cast the rays
@@ -289,16 +278,17 @@ public class Gooball : MonoBehaviour
             // the vector for the ray
             euler = new Vector3(i / (rays * 1f) * 360f, 90f, 0f);
             // show the ray
-            Debug.DrawRay(transform.position, (Quaternion.Euler(euler) * Vector3.forward) * strandLengthMax, UnityEngine.Color.blue);
+            // ReSharper disable once Unity.InefficientMultiplicationOrder
+            Debug.DrawRay(position, Quaternion.Euler(euler) * Vector3.forward * strandLengthMax, Color.blue);
             // cast the ray
-            hit = Physics2D.Raycast(transform.position, Quaternion.Euler(euler) * Vector3.forward, strandLengthMax, LayerMask.GetMask(ballLayerMask));
+            hit = Physics2D.Raycast(position, Quaternion.Euler(euler) * Vector3.forward, strandLengthMax, LayerMask.GetMask(ballLayerMask));
             // if it hit something
             if (hit)
                 attachable.Add(hit);
         }
         
         // sort the array
-        attachable.Sort((a, b) => Vector3.Distance(transform.position, a.transform.position).CompareTo(Vector3.Distance(transform.position, b.transform.position)));
+        attachable.Sort((a, b) => Vector3.Distance(position, a.transform.position).CompareTo(Vector3.Distance(transform.position, b.transform.position)));
 
         // look for duplicate gooballs
         List<Transform> transformsUsed = new List<Transform>();
@@ -315,11 +305,7 @@ public class Gooball : MonoBehaviour
 #if DEBUG
         for (int i = 0; i < attachable.Count; i++)
         {
-            if(i < strandCount)
-                Debug.DrawLine(transform.position, attachable[i].point, UnityEngine.Color.magenta);
-            else
-                Debug.DrawLine(transform.position, attachable[i].point, UnityEngine.Color.green);
-
+            Debug.DrawLine(transform.position, attachable[i].point, i < strandCount ? Color.magenta : Color.green);
         }
 #endif
 

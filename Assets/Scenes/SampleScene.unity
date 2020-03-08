@@ -1078,6 +1078,31 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7965299730503043453, guid: 41e5a7be0025e254e84e48277ba91b86,
+        type: 3}
+      propertyPath: doesCheckForStrands
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7965299730503043453, guid: 41e5a7be0025e254e84e48277ba91b86,
+        type: 3}
+      propertyPath: jumpingIntervalRange.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7965299730503043453, guid: 41e5a7be0025e254e84e48277ba91b86,
+        type: 3}
+      propertyPath: jumpingIntervalRange.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7965299730503043453, guid: 41e5a7be0025e254e84e48277ba91b86,
+        type: 3}
+      propertyPath: strandCheckIntervalRange.x
+      value: 0.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 7965299730503043453, guid: 41e5a7be0025e254e84e48277ba91b86,
+        type: 3}
+      propertyPath: strandCheckIntervalRange.y
+      value: 1.06
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41e5a7be0025e254e84e48277ba91b86, type: 3}
 --- !u!1001 &1047404773
