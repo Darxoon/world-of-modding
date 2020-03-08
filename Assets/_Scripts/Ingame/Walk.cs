@@ -11,9 +11,6 @@ public class Walk : MonoBehaviour
     [SerializeField] private float walkSpeed;
     [SerializeField] private Vector2 randomSpeedScale;
     
-    [Header("Walk Counters")]
-    private int walkCounter = 0;
-    private float strandCheckCounter = 0;
 
     [Header("Components")]
     [SerializeField] private BallSensor ballSensor;
@@ -21,10 +18,13 @@ public class Walk : MonoBehaviour
     private new Rigidbody2D rigidbody;
 
     // Runtime AI
-    private Vector2 appliedForce;
+    private int walkCounter = 0;
+    private float strandCheckCounter = 0;
 
     private Vector3 dynamicDirection;
     private bool isChangingDirection;
+    
+    private Vector2 appliedForce;
 
     private void Start()
     {
