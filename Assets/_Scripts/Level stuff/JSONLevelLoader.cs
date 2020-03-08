@@ -135,7 +135,7 @@ public class JSONLevelLoader : MonoBehaviour
 
             foreach (var resource in level.resrc.resources)
             {
-                StaticData.Resources.Add(resource.Key, resource.Value);
+                StaticData.ResourcePaths.Add(resource.Key, resource.Value);
             }
 
             foreach (var scenelayer in level.scene.scenelayers)
@@ -160,9 +160,7 @@ public class JSONLevelLoader : MonoBehaviour
             }
             foreach(var gball in level.level.BallInstance)
             {
-                GameObject ball = new GameObject(gball.id);
-                ball.transform.SetParent(StaticData.balls.transform);
-                var goo = ball.AddComponent<Gooball>();
+                
             }
         }
     }

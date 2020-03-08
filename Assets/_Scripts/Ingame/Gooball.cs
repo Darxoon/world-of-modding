@@ -7,8 +7,6 @@ public class Gooball : MonoBehaviour
 {
     // Layer mask
     [SerializeField] private string ballLayerMask = "Attached Balls";
-
-    // goo properties
     
     // initial strands 
     public GameObject[] initialStrands;
@@ -22,6 +20,7 @@ public class Gooball : MonoBehaviour
     #region Gooball properties
     [Header("Gooball properties")]
     public string type;
+    public JSONGooball externalData;
     [SerializeField] private float _originalMass = 3.23f;
     public float originalMass
     {

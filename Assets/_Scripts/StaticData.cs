@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using Newtonsoft.Json;
 public static class StaticData
 {
     
@@ -16,11 +17,25 @@ public static class StaticData
     public static string imagesFolder = resFolder + "images/";
     public static JSONLevelLoader levelLoader;
 
-    public static Dictionary<string, string> Resources = new Dictionary<string, string>();
+    public static Dictionary<string, string> ResourcePaths = new Dictionary<string, string>();
+
+    public static Dictionary<string, AudioClip> audioFiles = new Dictionary<string, AudioClip>();
+    public static Dictionary<string, Sprite> imageFiles = new Dictionary<string, Sprite>();
+
+    public static void PopulateAllResources()
+    {
+        foreach(var Path in ResourcePaths)
+        {
+            if (Path.Value.EndsWith(".ogg"))
+            {
+
+            }
+        }
+    }
     public static Sprite RetrieveImage(string textureID)
     {
         string RelativePath;
-        Resources.TryGetValue(textureID, out RelativePath);
+        ResourcePaths.TryGetValue(textureID, out RelativePath);
         if (RelativePath != null)
         {
             string fullPath = resFolder + RelativePath;
@@ -32,6 +47,16 @@ public static class StaticData
         }
         else
             return null;
+    }
+
+    public static JSONGooball RetrieveGooballDataFromID(string id)
+    {
+        if(Directory.Exists(ballsFolder + id))
+        {
+            string json = File.ReadAllText(ballsFolder + id + "/" + id + ".json");
+            return JsonConvert.DeserializeObject<JSONGooball>(json);
+        }
+        return null;
     }
 
 }

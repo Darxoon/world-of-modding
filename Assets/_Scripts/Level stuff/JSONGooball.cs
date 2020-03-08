@@ -5,7 +5,7 @@ using UnityEngine;
 public class JSONGooball
 {
     public Ball ball = new Ball();
-    public Part[] parts;
+    public Part[] parts = { };
     public Marker marker;
     public Shadow shadow;
     public Particles[] particles;
@@ -14,6 +14,7 @@ public class JSONGooball
     public Splat splat;
     public Sound[] sounds;
     public SinVariance[] anims;
+    public Resrc resrc = new Resrc();
 }
 
 public enum States
