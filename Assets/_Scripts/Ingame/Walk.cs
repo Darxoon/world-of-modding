@@ -76,7 +76,6 @@ public class Walk : MonoBehaviour
                 RaycastHit2D raycastHit = Physics2D.Raycast(position, rigidbody.velocity.normalized, raycastLength,
                     LayerMask.GetMask("Strands"));
                 
-                Debug.Log(raycastHit.transform);
                 if (raycastHit.transform)
                 {
                     rigidbody.constraints = RigidbodyConstraints2D.FreezeAll;

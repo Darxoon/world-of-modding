@@ -18,26 +18,15 @@ public class WalkOnStrand : MonoBehaviour
             return;
         thisGooballObject = GetComponent<Gooball>();
         thisGooballObject.isOnStrand = true;
-        Debug.LogWarning("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
         initialized = true;
         //find out which ball are we gonna go to
         System.Random rand = new System.Random();
         int gooball = rand.Next(0, 1);
-        Debug.LogWarning("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
         //get stuff into an array
         Strand strand = currentStrand.GetComponent<Strand>();
-        Debug.Log(currentStrand, currentStrand);
-        Debug.Log(strand, strand);
         
-        Debug.LogWarning("cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc");
         //set the next ball and make it go to it
-        Debug.Log(gooball);
-        Debug.Log(strand, strand);
-        Debug.Log(strand.connectedBall1Class);
-        Debug.Log(strand.connectedBall2Class);
         nextBall = gooball == 0 ? strand.connectedBall1Class : strand.connectedBall2Class;
-        Debug.Log("#############################################################################");
-        Debug.Log(nextBall);
         
         isMoving = true;
     }
@@ -48,8 +37,6 @@ public class WalkOnStrand : MonoBehaviour
 
     void GetGooballs(Gooball gooball) {
         gooballs.Clear();
-        Debug.Log(gooball);
-        Debug.Log(gooball.attachedBalls);
         foreach (GameObject ball in gooball.attachedBalls)
         {
             gooballs.Add(ball.GetComponent<Gooball>());
@@ -72,13 +59,11 @@ public class WalkOnStrand : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        Debug.Log(initialized);
         if(!initialized)
             return;
         
         if (isMoving == false)
         {
-            Debug.LogWarning(nextBall);
             GetGooballs(nextBall);
             TowardsWhichGooball();
         }
