@@ -74,8 +74,15 @@ public class Walk : MonoBehaviour
                     strandCheckCounter = Random.Range(strandCheckIntervalRange.x, strandCheckIntervalRange.y);
                     Debug.Log($"Checking for strands lol | {gameObject}", this);
                     Collider2D strandCollider = CheckForStrand();
-                    if(strandCollider)
+                    if (strandCollider)
+                    {
                         Debug.Log(strandCollider.gameObject, this);
+                        bool jumpsOnStrand = Random.Range(0, 2) == 0;
+                        if (jumpsOnStrand)
+                        {
+                            Debug.Log("Jumping on the strand now", this);
+                        }
+                    }
                 }
                 else
                     strandCheckCounter -= Time.deltaTime;
