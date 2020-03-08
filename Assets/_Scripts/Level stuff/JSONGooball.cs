@@ -5,6 +5,7 @@ using UnityEngine;
 public class JSONGooball
 {
     public ball ball = new ball();
+    public part[] parts;
 }
 
 public class ball
@@ -120,6 +121,51 @@ public class Attenuation
 
 public class StateScale
 {
-    public string statename;
+    public States statename;
     public float stateFactor;
+}
+
+public class part
+{
+    public string name = "";
+    public string[] image = { };
+    public Position x = new Position(0,0);
+    public Position y = new Position(0, 0);
+    public int layer;
+    public States[] state = { States.all };
+    public float scale;
+    public float rotate;
+    public Stretch stretch;
+    public eye eye;
+    public Position xRange;
+    public Position yRange;
+}
+
+public class eye
+{
+    public string pupil = "";
+    public int pupilInset;
+}
+public class Stretch
+{
+    public float speed;
+    public float directionScale;
+    public float acrossScale;
+}
+public enum States
+{
+    attached,
+    climbing,
+    detaching,
+    dragging,
+    falling,
+    pipe,
+    sleeping,
+    standing,
+    stuck,
+    stuck_attached,
+    stuck_detaching,
+    tank,
+    walking,
+    all
 }
