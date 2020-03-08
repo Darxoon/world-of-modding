@@ -8,7 +8,9 @@ public class SceneLayer : MonoBehaviour
     void Start()
     {
         sprite = gameObject.AddComponent<SpriteRenderer>();
-        sprite.sprite = StaticData.RetrieveImage(data.image);
+        Sprite thing = null;
+        GameManager.imageFiles.TryGetValue(data.image, out thing);
+        sprite.sprite = thing;
         sprite.color = new Color(data.colorize.r, data.colorize.g, data.colorize.b, data.alpha);
         gameObject.name = data.image;
         transform.localPosition = data.pos.ToVector2();

@@ -14,7 +14,45 @@
         "texteffects": true,
         "timebugprobability": 0.5,
         "visualdebug": false,
-        "zoomoutlimit": 0.0
+        "zoomoutlimit": 0.0,
+        "BallInstance": [{
+                "angle": 0.0,
+                "discovered": true,
+                "id": "1",
+                "type": "common",
+                "pos": {
+                    "x": 5.0,
+                    "y": 5.0
+                }
+            }, {
+                "angle": 0.0,
+                "discovered": true,
+                "id": "1",
+                "type": "common",
+                "pos": {
+                    "x": 5.0,
+                    "y": 5.0
+                }
+            }, {
+                "angle": 0.0,
+                "discovered": true,
+                "id": "1",
+                "type": "common",
+                "pos": {
+                    "x": 5.0,
+                    "y": 5.0
+                }
+            }, {
+                "angle": 0.0,
+                "discovered": true,
+                "id": "1",
+                "type": "common",
+                "pos": {
+                    "x": 5.0,
+                    "y": 5.0
+                }
+            }
+        ]
     },
     "scene": {
         "backgroundcolor": {
@@ -131,7 +169,7 @@
                         "g": 255.0,
                         "b": 255.0
                     },
-                    "image": "IMAGE_BLOCK",
+                    "image": "IMAGE_BLACK",
                     "tileX": false,
                     "tileY": false
                 }

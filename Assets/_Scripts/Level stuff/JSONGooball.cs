@@ -186,7 +186,7 @@ public class Part
     public Position y = new Position(0, 0);
     public int layer;
     public States[] state = { States.all };
-    public float scale;
+    public Position scale = new Position(1,1);
     public float rotate;
     public Stretch stretch;
     public Eye eye;

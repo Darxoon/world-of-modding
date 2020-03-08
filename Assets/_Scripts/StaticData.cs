@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using Newtonsoft.Json;
+using UnityEngine.Networking;
+
 public static class StaticData
 {
     
@@ -17,43 +19,52 @@ public static class StaticData
     public static string imagesFolder = resFolder + "images/";
     public static JSONLevelLoader levelLoader;
 
-    public static Dictionary<string, string> ResourcePaths = new Dictionary<string, string>();
 
-    public static Dictionary<string, AudioClip> audioFiles = new Dictionary<string, AudioClip>();
-    public static Dictionary<string, Sprite> imageFiles = new Dictionary<string, Sprite>();
 
     public static void PopulateAllResources()
     {
-        foreach(var Path in ResourcePaths)
+        foreach(var Path in GameManager.ResourcePaths)
         {
-            if (Path.Value.EndsWith(".ogg"))
+            if (Path.Value.EndsWith(".ogg") || !GameManager.audioFiles.ContainsKey(Path.Key))
             {
-
+                string fullPath = "file:///" + resFolder + Path.Value;
+                AudioClip audio = null;
+                getAudioClip(fullPath, audio);
+                GameManager.audioFiles.Add(Path.Key, audio);
+            }
+            else if(!GameManager.imageFiles.ContainsKey(Path.Key))
+            {
+                string fullpath = resFolder + Path.Value;
+                byte[] imageData = File.ReadAllBytes(fullpath);
+                Texture2D tex = new Texture2D(2,2);
+                tex.LoadImage(imageData);
+                Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+                GameManager.imageFiles.Add(Path.Key, sprite);
             }
         }
     }
-    public static Sprite RetrieveImage(string textureID)
+
+    static IEnumerator getAudioClip(string url, AudioClip clip)
     {
-        string RelativePath;
-        ResourcePaths.TryGetValue(textureID, out RelativePath);
-        if (RelativePath != null)
+        using(UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(url, AudioType.OGGVORBIS))
         {
-            string fullPath = resFolder + RelativePath;
-            byte[] imageData = File.ReadAllBytes(fullPath);
-            Texture2D tex = new Texture2D(2, 2);
-            tex.LoadImage(imageData);
-            Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
-            return sprite;
+            yield return www.Send();
+            if (www.isNetworkError)
+            {
+                Debug.LogError(www.error);
+            }
+            else
+            {
+                clip = DownloadHandlerAudioClip.GetContent(www);
+            }
         }
-        else
-            return null;
     }
 
-    public static JSONGooball RetrieveGooballDataFromID(string id)
+    public static JSONGooball RetrieveGooballDataFromType(string type)
     {
-        if(Directory.Exists(ballsFolder + id))
+        if(Directory.Exists(ballsFolder + type))
         {
-            string json = File.ReadAllText(ballsFolder + id + "/" + id + ".json");
+            string json = File.ReadAllText(ballsFolder + type + "/" + type + ".json");
             return JsonConvert.DeserializeObject<JSONGooball>(json);
         }
         return null;

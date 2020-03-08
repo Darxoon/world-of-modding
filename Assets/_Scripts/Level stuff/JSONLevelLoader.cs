@@ -7,7 +7,11 @@ using Newtonsoft.Json;
 public class JSONLevelLoader : MonoBehaviour
 {
     // Start is called before the first frame update
-    public bool saveMode = false;
+    public enum SaveMode
+    {
+        Level,Gooball,None
+    }
+    public SaveMode saveMode = SaveMode.None;
     public bool DebugDraw;
     void Start()
     {
@@ -17,7 +21,7 @@ public class JSONLevelLoader : MonoBehaviour
             NullValueHandling = NullValueHandling.Ignore
         };
 
-        if (saveMode)
+        if (saveMode == SaveMode.Level)
         {
             #region serialize
 
@@ -35,7 +39,7 @@ public class JSONLevelLoader : MonoBehaviour
             id = "ground",
             size = new Position(10, 1),
             image = new Scenelayer{ 
-                image = "IMAGE_BLOCK",
+                image = "IMAGE_BLACK",
                 scaleX = 2,
                 scaleY = 2,
             },
@@ -122,7 +126,33 @@ public class JSONLevelLoader : MonoBehaviour
 
             #endregion
         }
-        else
+        else if(saveMode == SaveMode.Gooball)
+        {
+            JSONGooball gooball = new JSONGooball();
+            gooball.ball.name = "common";
+            gooball.ball.diameter = 1f;
+            gooball.resrc.resources.Add("body", "balls/common/body.png");
+            gooball.resrc.resources.Add("strand", "balls/common/strand.png");
+            Part[] pts =
+            {
+                new Part
+                {
+                    image = new string[]{"body"},
+                    name = "body",
+                }
+            };
+            gooball.parts = pts;
+            gooball.strand = new StrandJSON
+            {
+                image = "strand",
+            };
+            if (!Directory.Exists(StaticData.ballsFolder + "common/"))
+                Directory.CreateDirectory(StaticData.ballsFolder+ "common/");
+            using (StreamWriter sw = File.CreateText(StaticData.ballsFolder + "common/common.json"))
+                sw.Write(JsonConvert.SerializeObject(gooball, settings));
+            Debug.Break();
+        }
+        else if(saveMode == SaveMode.None)
         {
 
 
@@ -135,9 +165,21 @@ public class JSONLevelLoader : MonoBehaviour
 
             foreach (var resource in level.resrc.resources)
             {
-                StaticData.ResourcePaths.Add(resource.Key, resource.Value);
+                GameManager.ResourcePaths.Add(resource.Key, resource.Value);
+                
             }
-
+            foreach (var gball in level.level.BallInstance)
+            {
+                if (!GameManager.loadedGooballs.ContainsKey(gball.type))
+                {
+                    JSONGooball ball = StaticData.RetrieveGooballDataFromType(gball.type);
+                    GameManager.loadedGooballs.Add(gball.type, ball);
+                    foreach (var path in ball.resrc.resources)
+                        if (!ball.resrc.resources.ContainsKey(path.Key))
+                            GameManager.ResourcePaths.Add(path.Key, path.Value);
+                }
+            }
+            StaticData.PopulateAllResources();
             foreach (var scenelayer in level.scene.scenelayers)
             {
                 GameObject sl = new GameObject(scenelayer.name);
@@ -158,10 +200,12 @@ public class JSONLevelLoader : MonoBehaviour
                 geom.AddComponent<CompositeGeom>().data = compositegeom;
                 geom.transform.SetParent(StaticData.geometry.transform);
             }
-            foreach(var gball in level.level.BallInstance)
+            foreach (var gball in level.level.BallInstance)
             {
-                
+                JSONGooball ball = null;
+                GameManager.loadedGooballs.TryGetValue(gball.type, out ball);
             }
+
         }
     }
 }
