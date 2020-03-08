@@ -131,6 +131,9 @@ public class JSONLevelLoader : MonoBehaviour
             JSONGooball gooball = new JSONGooball();
             gooball.ball.name = "common";
             gooball.ball.diameter = 1f;
+            gooball.ball.walkSpeed = 1;
+            gooball.ball.mass = 3.23f;
+            gooball.ball.towerMass = 3;
             gooball.resrc.resources.Add("body", "balls/common/body.png");
             gooball.resrc.resources.Add("strand", "balls/common/strand.png");
             Part[] pts =
@@ -204,6 +207,12 @@ public class JSONLevelLoader : MonoBehaviour
             {
                 JSONGooball ball = null;
                 GameManager.loadedGooballs.TryGetValue(gball.type, out ball);
+                GameObject gooball = new GameObject(gball.id);
+
+                gooball.transform.SetParent(StaticData.balls.transform);
+                //gooball.AddComponent<Rigidbody2D>();
+                //gooball.AddComponent<Walk>();
+                gooball.AddComponent<Gooball>().data = ball;
             }
 
         }

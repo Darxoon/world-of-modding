@@ -5,12 +5,12 @@ public class Walk : MonoBehaviour
     [Header("Walking Properties")]
     
     [SerializeField] private Vector3 startingDirection;
-    [SerializeField] private float walkSpeed;
-    [SerializeField] private Vector2 randomSpeedScale;
+    [SerializeField] public float walkSpeed;
+    [SerializeField] public Vector2 randomSpeedScale;
 
     [Header("Jumping Properties")] 
     
-    [SerializeField] private bool doesCheckForStrands;
+    [SerializeField] public bool doesCheckForStrands;
     [SerializeField] private float raycastLength = 1f;
 
     [Header("Components")]
@@ -32,6 +32,7 @@ public class Walk : MonoBehaviour
 
     private void Start()
     {
+        ballSensor = transform.GetChild(0).GetComponent<BallSensor>();
         rigidbody = GetComponent<Rigidbody2D>();
         gooball = GetComponent<Gooball>();
         collider = GetComponent<CircleCollider2D>();

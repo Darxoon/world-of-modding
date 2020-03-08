@@ -37,8 +37,8 @@ public class Gooball : MonoBehaviour
 
     [SerializeField] private float towerMass = 3f;
     public float extraMass;
-    
-    
+
+    public JSONGooball data = null;
     [Header("Strand physics")]
 
     [SerializeField] public float dampingRatio;
@@ -66,7 +66,7 @@ public class Gooball : MonoBehaviour
     private Vector3 euler;
     private RaycastHit2D hit;
 
-
+    private float randomSpeedMultiplier;
 
     #region Getters
     
@@ -81,8 +81,37 @@ public class Gooball : MonoBehaviour
 
     private void Start()
     {
-        rigidbody = gameObject.GetComponent<Rigidbody2D>();
-        rigidbody.mass = OriginalMass + extraMass;
+        //do the loading move
+        initialStrands = new GameObject[] { };
+        rigidbody = gameObject.AddComponent<Rigidbody2D>();
+        GameObject Sensor = new GameObject("Sensor");
+        Sensor.transform.SetParent(transform);
+        var ccol = Sensor.AddComponent<CapsuleCollider2D>();
+
+        //TODO: ADD A WAY TO DEFINE THOSE TWO VARIABLES AUTOMAGICALLY
+        ccol.size = new Vector2(3.257942f, 0.9263445f);
+        ccol.offset = new Vector2(0, -2.43f);
+        ccol.direction = CapsuleDirection2D.Horizontal;
+
+        GameObject WallCol = new GameObject("WallCollider");
+        WallCol.transform.SetParent(Sensor.transform);
+        var wcol = WallCol.AddComponent<CapsuleCollider2D>();
+        wcol.offset = new Vector2(-0.02958627f, -0.09866164f);
+        wcol.size = new Vector2(5.809811f, 1.444782f);
+        wcol.direction = CapsuleDirection2D.Horizontal;
+        Sensor.AddComponent<BallSensor>();
+        Walk walkscript = gameObject.AddComponent<Walk>();
+        
+        walkscript.walkSpeed = data.ball.walkSpeed;
+        walkscript.randomSpeedScale = data.ball.speedDifference.ToVector2();
+        walkscript.doesCheckForStrands = data.ball.climber;
+        randomSpeedMultiplier = Random.Range(data.ball.speedDifference.x, data.ball.speedDifference.y);
+        rigidbody.mass = data.ball.mass;
+        towerMass = data.ball.towerMass;
+        strandCount = data.ball.strands;
+
+        //rigidbody.mass = OriginalMass + extraMass;
+
         mainCam = Camera.main;
         randomID = GameManager.GenerateRandomID(10);
         attachable = new List<RaycastHit2D>();
@@ -175,6 +204,7 @@ public class Gooball : MonoBehaviour
                     GameManager.instance.drag = null;
                     WalkOnStrand walkOnStrand = gameObject.AddComponent<WalkOnStrand>();
                     walkOnStrand.currentStrand = GameManager.instance.hoverStrand;
+                    walkOnStrand.speed = data.ball.climbspeed * randomSpeedMultiplier;
                     walkOnStrand.Initialize();
                     transform.SetParent(GameManager.instance.hoverStrand.transform, true);
                     return;

@@ -23,11 +23,13 @@ public class Geometry : MonoBehaviour
             boxCollider = gameObject.AddComponent<BoxCollider2D>();
             boxCollider.size = data.size.ToVector2();
             boxCollider.transform.rotation = Quaternion.Euler(0, 0, data.rotation);
+            boxCollider.usedByComposite = true;
         }
         else if(data.type == LevelGeometry.Type.Circle)
         {
             circleCollider = gameObject.AddComponent<CircleCollider2D>();
             circleCollider.radius = data.radius;
+            circleCollider.usedByComposite = true;
         }
         if(data.image != null)
         {
