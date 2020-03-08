@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -42,9 +42,8 @@ public class Walk : MonoBehaviour
 
     private void Update()
     {
-        
-        // is it a walking goo
-        if(!gooball.IsTower && !gooball.IsDragged && ballSensor.isGrounded)
+        bool isWalking = !gooball.IsTower && !gooball.IsDragged && ballSensor.isGrounded;
+        if(isWalking)
         {
             //random direction change
             if (walkCounter == 50)
@@ -70,7 +69,7 @@ public class Walk : MonoBehaviour
             else
                 strandCheckCounter -= Time.deltaTime;
 
-            // is rotating? 
+            // direction change
             if (isChangingDirection)
             {
                 if (ballSensor.isTouchingWall)
@@ -79,13 +78,11 @@ public class Walk : MonoBehaviour
                     rigidbody.velocity += appliedForce;
                 }
                 else
-                {
                     isChangingDirection = false;
-                    WalkUpdate();
-                }
             }
-            else
-                // do this function
+            
+            // walk update
+            if(!isChangingDirection)
                 WalkUpdate();
         }
     }
@@ -93,7 +90,6 @@ public class Walk : MonoBehaviour
 
     private void WalkUpdate()
     {
-        // touching a wall?
         if (ballSensor.isTouchingWall)
         {
             dynamicDirection = -dynamicDirection;
@@ -101,10 +97,8 @@ public class Walk : MonoBehaviour
         }
         else
         {
-
             appliedForce = dynamicDirection.normalized * walkSpeed;
             rigidbody.velocity += appliedForce;
-
         }
     }
 
