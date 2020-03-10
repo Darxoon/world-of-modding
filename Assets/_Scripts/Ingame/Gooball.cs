@@ -77,7 +77,7 @@ public class Gooball : MonoBehaviour
 
     #endregion
 
-
+    public Vector3 position = new Vector3(); //i had to add this because for some reason unity decides to do weird shit and just make everything offset
 
     private void Start()
     {
@@ -109,7 +109,20 @@ public class Gooball : MonoBehaviour
         rigidbody.mass = data.ball.mass;
         towerMass = data.ball.towerMass;
         strandCount = data.ball.strands;
+        
+        //ayy graphics
+        foreach(var part in data.parts)
+        {
+            GameObject tada = new GameObject(part.name);
+            SpriteRenderer spr = tada.AddComponent<SpriteRenderer>();
+            Sprite sprait = null;
+            GameManager.imageFiles.TryGetValue(part.image[Random.Range(0, part.image.Length-1)], out sprait);
+            spr.sprite = sprait;
+            tada.transform.SetParent(transform);
+        }
 
+        transform.localScale = new Vector3(0.1f, 0.1f);
+        transform.localPosition = position;
         //rigidbody.mass = OriginalMass + extraMass;
 
         mainCam = Camera.main;

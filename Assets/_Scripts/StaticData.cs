@@ -25,7 +25,7 @@ public static class StaticData
     {
         foreach(var Path in GameManager.ResourcePaths)
         {
-            if (Path.Value.EndsWith(".ogg") || !GameManager.audioFiles.ContainsKey(Path.Key))
+            if (Path.Value.EndsWith(".ogg") && !GameManager.audioFiles.ContainsKey(Path.Key))
             {
                 string fullPath = "file:///" + resFolder + Path.Value;
                 AudioClip audio = null;

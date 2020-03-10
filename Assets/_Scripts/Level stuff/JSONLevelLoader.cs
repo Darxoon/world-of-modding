@@ -82,28 +82,28 @@ public class JSONLevelLoader : MonoBehaviour
                     discovered = true,
                     type = "common",
                     id = "1",
-                    pos = new Position(5,5)
+                    pos = new Position(5,10)
                 },
                 new Ballinstance
                 {
                     discovered = true,
                     type = "common",
                     id = "1",
-                    pos = new Position(5,5)
+                    pos = new Position(5,10)
                 },
                 new Ballinstance
                 {
                     discovered = true,
                     type = "common",
                     id = "1",
-                    pos = new Position(5,5)
+                    pos = new Position(5,10)
                 },
                 new Ballinstance
                 {
                     discovered = true,
                     type = "common",
                     id = "1",
-                    pos = new Position(5,5)
+                    pos = new Position(5,10)
                 }
             };
 
@@ -178,7 +178,7 @@ public class JSONLevelLoader : MonoBehaviour
                     JSONGooball ball = StaticData.RetrieveGooballDataFromType(gball.type);
                     GameManager.loadedGooballs.Add(gball.type, ball);
                     foreach (var path in ball.resrc.resources)
-                        if (!ball.resrc.resources.ContainsKey(path.Key))
+                        if (!GameManager.ResourcePaths.ContainsKey(path.Key))
                             GameManager.ResourcePaths.Add(path.Key, path.Value);
                 }
             }
@@ -210,9 +210,12 @@ public class JSONLevelLoader : MonoBehaviour
                 GameObject gooball = new GameObject(gball.id);
 
                 gooball.transform.SetParent(StaticData.balls.transform);
+                //gooball.transform.position   = new Vector3(gball.pos.x, gball.pos.y, 0);
                 //gooball.AddComponent<Rigidbody2D>();
                 //gooball.AddComponent<Walk>();
-                gooball.AddComponent<Gooball>().data = ball;
+                var g = gooball.AddComponent<Gooball>();
+                g.data = ball;
+                g.position = new Vector3(gball.pos.x, gball.pos.y, 0);
             }
 
         }
