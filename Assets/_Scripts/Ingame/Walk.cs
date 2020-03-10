@@ -12,6 +12,7 @@ public class Walk : MonoBehaviour
     
     [SerializeField] private bool doesCheckForStrands;
     [SerializeField] private float raycastLength = 1f;
+    [SerializeField] private float jumpAnimationSpeed = 1f;
 
     [Header("Components")]
     
@@ -29,7 +30,13 @@ public class Walk : MonoBehaviour
     private bool isChangingDirection;
     
     private Vector2 appliedForce;
-
+    
+    // Animation
+    private bool inJumpingAnimation = false;
+    private float jumpAnimationCounter = 0f;
+    private Vector3 originalJumpPosition;
+    private Vector3 newJumpPosition;
+    
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody2D>();
@@ -48,6 +55,22 @@ public class Walk : MonoBehaviour
 
     private void Update()
     {
+        if (inJumpingAnimation)
+        {
+            jumpAnimationCounter += Time.deltaTime;
+            float scaledCounter = Mathf.Sqrt(jumpAnimationCounter * jumpAnimationSpeed);
+            if (scaledCounter >= 1f)
+            {
+                GetComponent<WalkOnStrand>().enabled = true;
+                inJumpingAnimation = false;
+            }
+            else
+            {
+                transform.position = Vector3.Lerp(originalJumpPosition, newJumpPosition, scaledCounter);
+            }
+            return;
+        }
+        
         bool isWalking = !gooball.IsTower && !gooball.IsDragged && ballSensor.isGrounded;
         if(isWalking)
         {
@@ -82,6 +105,10 @@ public class Walk : MonoBehaviour
                     WalkOnStrand walkOnStrand = gameObject.AddComponent<WalkOnStrand>();
                     walkOnStrand.currentStrand = raycastHit.transform.parent.gameObject;
                     walkOnStrand.Initialize();
+                    walkOnStrand.enabled = false;
+                    inJumpingAnimation = true;
+                    originalJumpPosition = position;
+                    newJumpPosition = new Vector3(raycastHit.point.x, raycastHit.point.y, position.z);
                     transform.SetParent(raycastHit.transform.parent, true);
                 }
                 

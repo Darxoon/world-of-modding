@@ -136,8 +136,9 @@ MonoBehaviour:
   startingDirection: {x: 1, y: 0, z: 0}
   walkSpeed: 0.1
   randomSpeedScale: {x: 90, y: 110}
-  doesCheckForStrands: 0
+  doesCheckForStrands: 1
   raycastLength: 1
+  jumpAnimationSpeed: 2.2
   ballSensor: {fileID: 71050027965101542}
 --- !u!114 &4248019372008310468
 MonoBehaviour:
@@ -173,6 +174,7 @@ MonoBehaviour:
   rays: 50
   isTower: 0
   isDragged: 0
+  isOnStrand: 0
 --- !u!1 &4896520077090206015
 GameObject:
   m_ObjectHideFlags: 0
