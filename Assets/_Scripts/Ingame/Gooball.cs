@@ -22,11 +22,11 @@ public class Gooball : MonoBehaviour
     #endregion
     
     [Header("Inspector Initialization")]
-    public GameObject[] initialStrands;
+    public Gooball[] initialStrands;
 
 
     [Header("In game Strands")]
-    public List<GameObject> attachedBalls;
+    public List<Gooball> attachedBalls;
     public List<Strand> strands = new List<Strand>();
     public Dictionary<int, Gooball> gooStrands = new Dictionary<int, Gooball>();
     
@@ -58,9 +58,10 @@ public class Gooball : MonoBehaviour
     public int rays = 50;
     [SerializeField] private bool isTower;
     [SerializeField] private bool isDragged;
-    public bool isOnStrand = false;
+    public bool isOnStrand;
 
-    [SerializeField] private List<RaycastHit2D> attachable;
+    [SerializeField] private List<Gooball> attachable;
+    [SerializeField] private List<Vector2> attachablePoint;
 
 
     private Vector3 euler;
@@ -85,20 +86,21 @@ public class Gooball : MonoBehaviour
         rigidbody.mass = OriginalMass + extraMass;
         mainCam = Camera.main;
         randomID = GameManager.GenerateRandomID(10);
-        attachable = new List<RaycastHit2D>();
+        attachable = new List<Gooball>();
+        attachablePoint = new List<Vector2>();
 
         if(initialStrands.Length > 0)
         {
             SetTowered();
-            foreach (GameObject other in initialStrands)
+            foreach (Gooball other in initialStrands)
             {
-                MakeStrand(other.GetComponent<Gooball>());
-                other.GetComponent<Gooball>().SetTowered();
+                MakeStrand(other);
+                other.SetTowered();
             }
-            attachedBalls = new List<GameObject>(initialStrands);
+            attachedBalls = new List<Gooball>(initialStrands);
         } else
         {
-            attachedBalls = new List<GameObject>();
+            attachedBalls = new List<Gooball>();
         }
     }
 
@@ -193,14 +195,14 @@ public class Gooball : MonoBehaviour
                 // are the strands 1?
                 if (strandCount == 1)
                 {
-                    MakeStrand(attachable[0].transform.gameObject.GetComponent<Gooball>());
+                    MakeStrand(attachable[0]);
                     SetTowered();
                 }
                 else if (attachable.Count > 1)
                 {
                     // are they connected?
-                    if (attachable[0].transform.gameObject.GetComponent<Gooball>().attachedBalls.Contains(attachable[1].transform.gameObject)
-                        || attachable[1].transform.gameObject.GetComponent<Gooball>().attachedBalls.Contains(attachable[0].transform.gameObject))
+                    if (attachable[0].attachedBalls.Contains(attachable[1])
+                        || attachable[1].attachedBalls.Contains(attachable[0]))
                     {
                         // if there are enough balls to attach to
                         if (attachable.Count >= strandCount)
@@ -208,7 +210,7 @@ public class Gooball : MonoBehaviour
                             // attach to them normally
                             for (int i = 0; i < strandCount; i++)
                             {
-                                MakeStrand(attachable[i].transform.GetComponent<Gooball>());
+                                MakeStrand(attachable[i]);
                             }
                             SetTowered();
                         }
@@ -219,9 +221,9 @@ public class Gooball : MonoBehaviour
                         // act as a strand
                         //Debug.Log("I'm a strand!", gameObject);
 
-                        Gooball other1 = attachable[0].transform.gameObject.GetComponent<Gooball>();
+                        Gooball other1 = attachable[0];
                         other1.gooStrands.Add(other1.attachedBalls.Count, this);
-                        other1.MakeStrand(attachable[1].transform.GetComponent<Gooball>());
+                        other1.MakeStrand(attachable[1]);
                         gameObject.SetActive(false);
                     }
                 }
@@ -258,10 +260,10 @@ public class Gooball : MonoBehaviour
             
         rigidbody.constraints = RigidbodyConstraints2D.FreezeRotation;
         // add the other goo ball to attached list
-        if(!attachedBalls.Contains(other.gameObject))
-            attachedBalls.Add(other.gameObject);
-        if(!other.attachedBalls.Contains(gameObject))
-            other.attachedBalls.Add(gameObject);
+        if(!attachedBalls.Contains(other))
+            attachedBalls.Add(other);
+        if(!other.attachedBalls.Contains(this))
+            other.attachedBalls.Add(this);
         isTower = true;
     }
 
@@ -272,6 +274,7 @@ public class Gooball : MonoBehaviour
         Vector3 position = transform.position;
         // make the empty list
         attachable.Clear();
+        attachablePoint.Clear();
         // cast the rays
         for (int i = 0; i < rays; i++)
         {
@@ -284,7 +287,10 @@ public class Gooball : MonoBehaviour
             hit = Physics2D.Raycast(position, Quaternion.Euler(euler) * Vector3.forward, strandLengthMax, LayerMask.GetMask(ballLayerMask));
             // if it hit something
             if (hit)
-                attachable.Add(hit);
+            {
+                attachable.Add(hit.transform.gameObject.GetComponent<Gooball>());
+                attachablePoint.Add(hit.point);
+            }
         }
         
         // sort the array
@@ -305,7 +311,7 @@ public class Gooball : MonoBehaviour
 #if DEBUG
         for (int i = 0; i < attachable.Count; i++)
         {
-            Debug.DrawLine(transform.position, attachable[i].point, i < strandCount ? Color.magenta : Color.green);
+            Debug.DrawLine(transform.position, attachablePoint[i], i < strandCount ? Color.magenta : Color.green);
         }
 #endif
 
