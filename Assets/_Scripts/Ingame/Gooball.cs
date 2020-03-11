@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Collections;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 [SuppressMessage("ReSharper", "ConvertToAutoPropertyWhenPossible")]
 [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
@@ -13,7 +13,7 @@ public class Gooball : MonoBehaviour
     [SerializeField] public Sprite strandSprite;
     
     [SerializeField] public string randomID;
-    
+    public bool finishedLoading = false;
     #region Components
     
     private new Rigidbody2D rigidbody;
@@ -84,6 +84,9 @@ public class Gooball : MonoBehaviour
         //do the loading move
         initialStrands = new GameObject[] { };
         rigidbody = gameObject.AddComponent<Rigidbody2D>();
+
+        CircleCollider2D mainCol = gameObject.AddComponent<CircleCollider2D>();
+        mainCol.radius = data.ball.radius;
         GameObject Sensor = new GameObject("Sensor");
         Sensor.transform.SetParent(transform);
         var ccol = Sensor.AddComponent<CapsuleCollider2D>();
@@ -92,6 +95,7 @@ public class Gooball : MonoBehaviour
         ccol.size = new Vector2(3.257942f, 0.9263445f);
         ccol.offset = new Vector2(0, -2.43f);
         ccol.direction = CapsuleDirection2D.Horizontal;
+        ccol.isTrigger = true;
 
         GameObject WallCol = new GameObject("WallCollider");
         WallCol.transform.SetParent(Sensor.transform);
@@ -99,9 +103,20 @@ public class Gooball : MonoBehaviour
         wcol.offset = new Vector2(-0.02958627f, -0.09866164f);
         wcol.size = new Vector2(5.809811f, 1.444782f);
         wcol.direction = CapsuleDirection2D.Horizontal;
+        wcol.isTrigger = true;
         Sensor.AddComponent<BallSensor>();
         Walk walkscript = gameObject.AddComponent<Walk>();
+
         
+
+        //if 1 its going left, if 0 its right or the other way around idk
+        if(Random.Range(0,1) == 1)
+        {
+            walkscript.startingDirection = new Vector3(1, 0, 0);
+        }
+        else
+            walkscript.startingDirection = new Vector3(-1, 0, 0);
+
         walkscript.walkSpeed = data.ball.walkSpeed;
         walkscript.randomSpeedScale = data.ball.speedDifference.ToVector2();
         walkscript.doesCheckForStrands = data.ball.climber;
@@ -110,7 +125,7 @@ public class Gooball : MonoBehaviour
         towerMass = data.ball.towerMass;
         strandCount = data.ball.strands;
         
-        //ayy graphics
+        //ayy graphics  
         foreach(var part in data.parts)
         {
             GameObject tada = new GameObject(part.name);
@@ -120,7 +135,9 @@ public class Gooball : MonoBehaviour
             spr.sprite = sprait;
             tada.transform.SetParent(transform);
         }
-
+        //Sprite sprait = null;
+        GameManager.imageFiles.TryGetValue(data.strand.image, out strandSprite);
+        //strand
         transform.localScale = new Vector3(0.1f, 0.1f);
         transform.localPosition = position;
         //rigidbody.mass = OriginalMass + extraMass;
@@ -142,6 +159,8 @@ public class Gooball : MonoBehaviour
         {
             attachedBalls = new List<GameObject>();
         }
+
+        finishedLoading = true;
     }
 
     private void StrandMass()
@@ -290,7 +309,7 @@ public class Gooball : MonoBehaviour
     public void MakeStrand(Gooball other)
     {
         Strand strand = StaticData.gameManager.MakeStrand(transform, other.transform, dampingRatio, jointFrequency, strandThickness);
-        if(strand)
+        if(strand)  
         {
             strands.Add(strand);
             if (!other.strands.Contains(strand))

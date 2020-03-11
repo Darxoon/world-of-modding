@@ -4,6 +4,8 @@ using System.Text;
 using System.IO;
 using UnityEngine;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
+
 public class JSONLevelLoader : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -82,28 +84,28 @@ public class JSONLevelLoader : MonoBehaviour
                     discovered = true,
                     type = "common",
                     id = "1",
-                    pos = new Position(5,10)
+                    pos = new Position(4,5)
                 },
                 new Ballinstance
                 {
                     discovered = true,
                     type = "common",
-                    id = "1",
-                    pos = new Position(5,10)
+                    id = "2",
+                    pos = new Position(5,5)
                 },
                 new Ballinstance
                 {
                     discovered = true,
                     type = "common",
-                    id = "1",
-                    pos = new Position(5,10)
+                    id = "3",
+                    pos = new Position(6,5)
                 },
                 new Ballinstance
                 {
                     discovered = true,
                     type = "common",
-                    id = "1",
-                    pos = new Position(5,10)
+                    id = "4",
+                    pos = new Position(7,5)
                 }
             };
 
@@ -111,7 +113,15 @@ public class JSONLevelLoader : MonoBehaviour
             levelL.scene.compositegeoms = compositegeoms;
             levelL.scene.geometries = geoms;
             levelL.scene.scenelayers = layers;
-
+            levelL.level.Strand = new LStrand[]
+            {
+                new LStrand
+                {
+                    gb1 = "1",
+                    gb2 = "2"
+                }
+            };
+            
             levelL.resrc.resources.Add("IMAGE_BACKGROUND", "levels/demoLevel/bg.png");
             levelL.resrc.resources.Add("IMAGE_BLACK", "levels/demoLevel/black.png");
 
@@ -130,9 +140,13 @@ public class JSONLevelLoader : MonoBehaviour
         {
             JSONGooball gooball = new JSONGooball();
             gooball.ball.name = "common";
-            gooball.ball.diameter = 1f;
+            gooball.ball.radius = 2.2f;
             gooball.ball.walkSpeed = 1;
             gooball.ball.mass = 3.23f;
+            gooball.ball.strands = 2;
+            gooball.ball.climber = true;
+            gooball.ball.dynamic = true;
+            gooball.ball.draggable = true;
             gooball.ball.towerMass = 3;
             gooball.resrc.resources.Add("body", "balls/common/body.png");
             gooball.resrc.resources.Add("strand", "balls/common/strand.png");
@@ -173,10 +187,10 @@ public class JSONLevelLoader : MonoBehaviour
             }
             foreach (var gball in level.level.BallInstance)
             {
-                if (!GameManager.loadedGooballs.ContainsKey(gball.type))
+                if (!GameManager.memoryGooballs.ContainsKey(gball.type))
                 {
                     JSONGooball ball = StaticData.RetrieveGooballDataFromType(gball.type);
-                    GameManager.loadedGooballs.Add(gball.type, ball);
+                    GameManager.memoryGooballs.Add(gball.type, ball);
                     foreach (var path in ball.resrc.resources)
                         if (!GameManager.ResourcePaths.ContainsKey(path.Key))
                             GameManager.ResourcePaths.Add(path.Key, path.Value);
@@ -206,7 +220,7 @@ public class JSONLevelLoader : MonoBehaviour
             foreach (var gball in level.level.BallInstance)
             {
                 JSONGooball ball = null;
-                GameManager.loadedGooballs.TryGetValue(gball.type, out ball);
+                GameManager.memoryGooballs.TryGetValue(gball.type, out ball);
                 GameObject gooball = new GameObject(gball.id);
 
                 gooball.transform.SetParent(StaticData.balls.transform);
@@ -216,8 +230,38 @@ public class JSONLevelLoader : MonoBehaviour
                 var g = gooball.AddComponent<Gooball>();
                 g.data = ball;
                 g.position = new Vector3(gball.pos.x, gball.pos.y, 0);
+                gooball.layer = LayerMask.NameToLayer("Detached Balls");
+            }
+
+            foreach(var strand in level.level.Strand)
+            {
+                /*var ball1 = StaticData.balls.transform.Find(strand.gb1).GetComponent<Gooball>();
+                var ball2 = StaticData.balls.transform.Find(strand.gb2).GetComponent<Gooball>();
+                ball1.MakeStrand(ball2);
+                ball1.SetTowered();
+                ball2.SetTowered();
+                */
+                StartCoroutine(makeStrand(strand));
+                //await Task.Run(
             }
 
         }
+    }
+
+    IEnumerator makeStrand(LStrand strand)
+    {
+        var ball1 = StaticData.balls.transform.Find(strand.gb1).GetComponent<Gooball>();
+        var ball2 = StaticData.balls.transform.Find(strand.gb2).GetComponent<Gooball>();
+        while (!ball1.finishedLoading)
+        {
+            yield return null;
+        }
+        while (!ball2.finishedLoading)
+        {
+            yield return null;
+        }
+        ball1.MakeStrand(ball2);
+        ball1.SetTowered();
+        ball2.SetTowered();
     }
 }

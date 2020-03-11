@@ -15,7 +15,7 @@ public class Strand : MonoBehaviour
     public SpriteRenderer renderer;
     public GameObject rendererObject;
 
-    [Header("Distance stuff")]
+    [Header("Distance stuff")]  
     public List<Gooball> gooballs = new List<Gooball>();
 
     [Header("Towermass stuff")]

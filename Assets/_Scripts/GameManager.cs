@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]public static Dictionary<string, AudioClip> audioFiles = new Dictionary<string, AudioClip>();
     [SerializeField]public static Dictionary<string, Sprite> imageFiles = new Dictionary<string, Sprite>();
-    [SerializeField] public static Dictionary<string, JSONGooball> loadedGooballs = new Dictionary<string, JSONGooball>();
+    [SerializeField] public static Dictionary<string, JSONGooball> memoryGooballs = new Dictionary<string, JSONGooball>();
 
     /// <summary>
     /// Creates a strand between gooball b1 and gooball b2

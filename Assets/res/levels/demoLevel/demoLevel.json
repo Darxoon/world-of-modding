@@ -21,13 +21,13 @@
                 "id": "1",
                 "type": "common",
                 "pos": {
-                    "x": 5.0,
+                    "x": 4.0,
                     "y": 5.0
                 }
             }, {
                 "angle": 0.0,
                 "discovered": true,
-                "id": "1",
+                "id": "2",
                 "type": "common",
                 "pos": {
                     "x": 5.0,
@@ -36,21 +36,26 @@
             }, {
                 "angle": 0.0,
                 "discovered": true,
-                "id": "1",
+                "id": "3",
                 "type": "common",
                 "pos": {
-                    "x": 5.0,
+                    "x": 6.0,
                     "y": 5.0
                 }
             }, {
                 "angle": 0.0,
                 "discovered": true,
-                "id": "1",
+                "id": "4",
                 "type": "common",
                 "pos": {
-                    "x": 5.0,
+                    "x": 7.0,
                     "y": 5.0
                 }
+            }
+        ],
+        "Strand": [{
+                "gb1": "1",
+                "gb2": "2"
             }
         ]
     },

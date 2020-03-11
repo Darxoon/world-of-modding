@@ -71,7 +71,7 @@ public class Ball
     public Shape shape = Shape.Circle;
     public float width;
     public float height;
-    public float diameter;
+    public float radius;
     public float sizeVariation;
     public float mass;
     public int strands;

@@ -4,7 +4,7 @@ public class Walk : MonoBehaviour
 {
     [Header("Walking Properties")]
     
-    [SerializeField] private Vector3 startingDirection;
+    [SerializeField] public Vector3 startingDirection;
     [SerializeField] public float walkSpeed;
     [SerializeField] public Vector2 randomSpeedScale;
 

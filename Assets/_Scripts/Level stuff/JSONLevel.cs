@@ -39,7 +39,7 @@ public class Level
     public Signpost signpost = null;
     public Pipe pipe = null;
     public Ballinstance[] BallInstance = null;
-    public Strand[] Strand = null;
+    public LStrand[] Strand = null;
     public Levelexit levelexit = null;
     public Endoncollision endoncollision = null;
     public Fire[] fire = null;
