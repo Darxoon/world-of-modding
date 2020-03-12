@@ -1,0 +1,193 @@
+{
+    "level": {
+        "allowskip": true,
+        "autobounds": false,
+        "ballsrequired": 1,
+        "letterboxed": false,
+        "retrytime": false,
+        "strandgeom": false,
+        "textcolor": {
+            "r": 255.0,
+            "g": 255.0,
+            "b": 255.0
+        },
+        "texteffects": true,
+        "timebugprobability": 0.5,
+        "visualdebug": false,
+        "zoomoutlimit": 0.0,
+        "BallInstance": [{
+                "angle": 0.0,
+                "discovered": true,
+                "id": "1",
+                "type": "common",
+                "pos": {
+                    "x": 4.0,
+                    "y": 5.0
+                }
+            }, {
+                "angle": 0.0,
+                "discovered": true,
+                "id": "2",
+                "type": "common",
+                "pos": {
+                    "x": 5.0,
+                    "y": 5.0
+                }
+            }, {
+                "angle": 0.0,
+                "discovered": true,
+                "id": "3",
+                "type": "common",
+                "pos": {
+                    "x": 6.0,
+                    "y": 5.0
+                }
+            }, {
+                "angle": 0.0,
+                "discovered": true,
+                "id": "4",
+                "type": "common",
+                "pos": {
+                    "x": 7.0,
+                    "y": 5.0
+                }
+            }
+        ],
+        "Strand": [{
+                "gb1": "1",
+                "gb2": "2"
+            }
+        ]
+    },
+    "scene": {
+        "backgroundcolor": {
+            "r": 255.0,
+            "g": 255.0,
+            "b": 255.0
+        },
+        "minX": 0.0,
+        "minY": 0.0,
+        "maxX": 0.0,
+        "maxY": 0.0,
+        "ForceFields": {},
+        "scenelayers": [{
+                "name": "",
+                "depth": 0.0,
+                "pos": {
+                    "x": 0.0,
+                    "y": 0.0
+                },
+                "scaleX": 1.0,
+                "scaleY": 1.0,
+                "rotation": 0.0,
+                "alpha": 1.0,
+                "colorize": {
+                    "r": 255.0,
+                    "g": 255.0,
+                    "b": 255.0
+                },
+                "image": "IMAGE_BACKGROUND",
+                "tileX": false,
+                "tileY": false
+            }
+        ],
+        "compositegeoms": [{
+                "name": "hi",
+                "position": {
+                    "x": 1.0,
+                    "y": 1.0
+                },
+                "dynamic": false,
+                "geometries": [{
+                        "id": "bottomL",
+                        "tag": "",
+                        "material": "",
+                        "center": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "radius": 0.0,
+                        "rotation": 0.0,
+                        "dynamic": false,
+                        "mass": 0.0,
+                        "type": 1,
+                        "size": {
+                            "x": 10.0,
+                            "y": 1.0
+                        },
+                        "rotspeed": 0.0
+                    }, {
+                        "id": "topL",
+                        "tag": "",
+                        "material": "",
+                        "center": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "radius": 0.0,
+                        "rotation": 90.0,
+                        "dynamic": false,
+                        "mass": 0.0,
+                        "type": 1,
+                        "size": {
+                            "x": 10.0,
+                            "y": 1.0
+                        },
+                        "rotspeed": 0.0
+                    }
+                ],
+                "imagerot": 0.0,
+                "rotspeed": 0.0
+            }
+        ],
+        "geometries": [{
+                "id": "ground",
+                "tag": "",
+                "material": "",
+                "center": {
+                    "x": -3.0,
+                    "y": 0.0
+                },
+                "radius": 0.0,
+                "rotation": 0.0,
+                "dynamic": false,
+                "mass": 0.0,
+                "type": 1,
+                "size": {
+                    "x": 10.0,
+                    "y": 1.0
+                },
+                "rotspeed": 0.0,
+                "image": {
+                    "name": "",
+                    "depth": 0.0,
+                    "pos": {
+                        "x": 0.0,
+                        "y": 0.0
+                    },
+                    "scaleX": 2.0,
+                    "scaleY": 2.0,
+                    "rotation": 0.0,
+                    "alpha": 1.0,
+                    "colorize": {
+                        "r": 255.0,
+                        "g": 255.0,
+                        "b": 255.0
+                    },
+                    "image": "IMAGE_BLACK",
+                    "tileX": false,
+                    "tileY": false
+                }
+            }
+        ]
+    },
+    "resrc": {
+        "id": "",
+        "prefixes": {},
+        "resources": {
+            "IMAGE_BACKGROUND": "levels/demoLevel/bg.png",
+            "IMAGE_BLACK": "levels/demoLevel/black.png"
+        }
+    },
+    "DebugDraw": false
+}
