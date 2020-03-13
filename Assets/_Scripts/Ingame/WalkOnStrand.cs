@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -16,7 +14,7 @@ public class WalkOnStrand : MonoBehaviour
 
     private bool isMoving;
     public float speed = 0.03f;
-    public GameObject currentStrand;
+    public Strand currentStrand;
     [FormerlySerializedAs("currentStrandObject")] public Strand strand;
 
 
@@ -40,13 +38,6 @@ public class WalkOnStrand : MonoBehaviour
     }
 
 
-    private Gooball[] GetNeighboringGooballs(Gooball source)
-    {
-        return source.attachedBalls.ToArray();
-    }
-
-
-    // Update is called once per frame
     private void FixedUpdate()
     {
         if(!initialized)
@@ -54,7 +45,7 @@ public class WalkOnStrand : MonoBehaviour
         
         if (isMoving == false)
         {
-            TowardsWhichGooball(GetNeighboringGooballs(nextBall));
+            TowardsWhichGooball(nextBall.attachedBalls);
         }
 
         if (isMoving)
@@ -66,20 +57,20 @@ public class WalkOnStrand : MonoBehaviour
         }
     }
 
-    private void TowardsWhichGooball(Gooball[] gooballs)
+    private void TowardsWhichGooball(IReadOnlyList<Gooball> gooballs)
     {
-        if (nextBall != null)
+        if (nextBall)
         {
             strand.ExitStrand(transform);
             currentGooball = nextBall;
         }
         System.Random check = new System.Random();
-        int whichGooball = check.Next(0, gooballs.Length);
+        int whichGooball = check.Next(0, gooballs.Count);
         nextBall = gooballs[whichGooball];
         isMoving = true;
-        if (nextBall != null)
+        if (nextBall)
         {
-            currentStrand = GameManager.instance.getStrandBetweenBalls(currentGooball.gameObject, nextBall.gameObject).gameObject;
+            currentStrand = GameManager.GetStrandBetweenBalls(currentGooball, nextBall);
             strand = currentStrand.GetComponent<Strand>();
             strand.EnterStrand(transform);
             transform.SetParent(currentStrand.transform, true);

@@ -113,7 +113,7 @@ public class Gooball : MonoBehaviour
                 foreach (Gooball gooball in strand.gooballs)
                 {
                     Vector3 position = transform.position;
-                    float distancePercent = Vector3.Distance(position, gooball.transform.position) / Vector3.Distance(position, strand.otherBall(this).transform.position);
+                    float distancePercent = Vector3.Distance(position, gooball.transform.position) / Vector3.Distance(position, strand.OtherBall(this).transform.position);
                     distancePercent = 1 - distancePercent;
                     extraMass += gooball.TowerMass * distancePercent;
                 }
@@ -248,7 +248,7 @@ public class Gooball : MonoBehaviour
 
     public void MakeStrand(Gooball other)
     {
-        Strand strand = StaticData.gameManager.MakeStrand(transform, other.transform, dampingRatio, jointFrequency, strandThickness);
+        Strand strand = GameManager.MakeStrand(this, other, dampingRatio, jointFrequency, strandThickness);
         if(strand)
         {
             strands.Add(strand);
