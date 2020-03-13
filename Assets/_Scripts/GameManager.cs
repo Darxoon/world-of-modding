@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     public Camera mainCam;
     
     
+    private Collider2D[] hoverStrandsUnfiltered = new Collider2D[8];
     private Collider2D[] hoverStrands = new Collider2D[8];
     
     private void Awake()
@@ -22,11 +23,8 @@ public class GameManager : MonoBehaviour
             enabled = false;
         else
             instance = this;
-
-    }
-
-    private void Start()
-    {
+        
+        
         mainCam = Camera.main;
         
         StaticData.balls = GameObject.Find("Balls");
@@ -34,6 +32,7 @@ public class GameManager : MonoBehaviour
         StaticData.sceneLayers = GameObject.Find("SceneLayers");
         StaticData.strands = GameObject.Find("Strands");
         StaticData.gameManager = this;
+
     }
 
     private void Update()
@@ -44,9 +43,13 @@ public class GameManager : MonoBehaviour
         Vector2 worldMousePos = mainCam.ScreenToWorldPoint(mousePosition);
         
         // get strand on mouse position
-        int size = Physics2D.OverlapPointNonAlloc(worldMousePos, hoverStrands, LayerMask.GetMask("Strands"));
-        Transform hoverStrandTransform = hoverStrands[hoverStrands.Length - 1].transform.parent;
-        if(hoverStrandTransform != hoverStrand.transform)
+        int size = Physics2D.OverlapPointNonAlloc(worldMousePos, hoverStrandsUnfiltered, LayerMask.GetMask("Strands"));
+
+        hoverStrands = hoverStrandsUnfiltered.Where(x => x != null).ToArray();
+        if(hoverStrands.Length == 0)
+            return;
+        Transform hoverStrandTransform = hoverStrands.Last().transform.parent;
+        if(hoverStrand == null || hoverStrandTransform != hoverStrand.transform)
             hoverStrand = size > 0 ? hoverStrandTransform.GetComponent<Strand>() : null;
     }
 

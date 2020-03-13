@@ -23,12 +23,11 @@ public class Strand : MonoBehaviour
     private float b1TotalWeight = 0f;
     private float b2TotalWeight = 0f;
 
-    bool spriteEnabled = false;
+    private bool spriteEnabled;
 
     [SerializeField] private float stretchMultiplier = 1.35f;
     public float strandThickness;
 
-    private float leThicc;
 
     private void Update()
     {
@@ -47,11 +46,7 @@ public class Strand : MonoBehaviour
         float distance = Vector3.Distance(ball2Position, ball1Position);
         // apply the scale
 
-        //le  t h i c c  calculation
-
-        leThicc = 1 / distance;
-
-        rendererObject.transform.localScale = new Vector3(strandThickness * leThicc, distance / 3f * stretchMultiplier, 0);
+        rendererObject.transform.localScale = new Vector3(strandThickness * 1 / distance, distance / 3f * stretchMultiplier, 0);
 
         // calculate and apply center
         Vector3 center = (ball2Position + ball1Position) * 0.5f;
