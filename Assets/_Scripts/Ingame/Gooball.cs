@@ -82,7 +82,6 @@ public class Gooball : MonoBehaviour
 
     private void Awake()
     {
-        rigidbody.mass = originalMass + extraMass;
         randomID = GameManager.GenerateRandomID(10);
         attachable = new List<Gooball>();
         attachablePoint = new List<Vector2>();
@@ -107,8 +106,8 @@ public class Gooball : MonoBehaviour
     private void Start()
     {
         rigidbody = GetComponent<Rigidbody2D>();
+        rigidbody.mass = originalMass + extraMass;
         mainCam = Camera.main;
-        
         
 
     }
