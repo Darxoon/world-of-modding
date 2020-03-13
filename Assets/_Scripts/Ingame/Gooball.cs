@@ -88,6 +88,15 @@ public class Gooball : MonoBehaviour
         
         StaticData.existingGooballs.Add(gameObject, this);
         
+        
+    }
+
+    private void Start()
+    {
+        rigidbody = GetComponent<Rigidbody2D>();
+        rigidbody.mass = originalMass + extraMass;
+        mainCam = Camera.main;
+        
         if(initialStrands.Length > 0)
         {
             SetTowered();
@@ -101,14 +110,6 @@ public class Gooball : MonoBehaviour
         {
             attachedBalls = new List<Gooball>();
         }
-    }
-
-    private void Start()
-    {
-        rigidbody = GetComponent<Rigidbody2D>();
-        rigidbody.mass = originalMass + extraMass;
-        mainCam = Camera.main;
-        
 
     }
 

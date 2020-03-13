@@ -54,6 +54,7 @@ public class GameManager : MonoBehaviour
 
     public static Strand MakeStrand(Gooball b1, Gooball b2, float dampingRatio, float frequency, float strandThickness)
     {
+        Debug.Log(StaticData.strands);
         //check if we already have a strand that is connected to the same gooballs
         foreach (Transform strandTransform in StaticData.strands.transform)
         {
