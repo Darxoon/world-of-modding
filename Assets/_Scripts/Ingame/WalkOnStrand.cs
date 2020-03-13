@@ -29,7 +29,7 @@ public class WalkOnStrand : MonoBehaviour
         System.Random rand = new System.Random();
         int next = rand.Next(0, 1);
         //get stuff into an array
-        strand = currentStrand.GetComponent<Strand>();
+        strand = currentStrand;
         
         //set the next ball and make it go to it
         nextBall = next == 0 ? strand.connectedBall1Class : strand.connectedBall2Class;
@@ -71,7 +71,7 @@ public class WalkOnStrand : MonoBehaviour
         if (nextBall)
         {
             currentStrand = GameManager.GetStrandBetweenBalls(currentGooball, nextBall);
-            strand = currentStrand.GetComponent<Strand>();
+            strand = currentStrand;
             strand.EnterStrand(transform);
             transform.SetParent(currentStrand.transform, true);
         }

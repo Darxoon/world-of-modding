@@ -102,7 +102,7 @@ public class Walk : MonoBehaviour
                     rigidbody.constraints = RigidbodyConstraints2D.FreezeAll;
                     WalkOnStrand walkOnStrand = gameObject.AddComponent<WalkOnStrand>();
                     Transform parent = raycastHit.transform.parent;
-                    walkOnStrand.currentStrand = parent.gameObject.GetComponent<Strand>();
+                    walkOnStrand.currentStrand = StaticData.existingStrands[parent.gameObject];
                     walkOnStrand.Initialize();
                     walkOnStrand.enabled = false;
                     inJumpingAnimation = true;

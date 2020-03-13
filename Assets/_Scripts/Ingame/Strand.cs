@@ -78,11 +78,11 @@ public class Strand : MonoBehaviour
     public void EnterStrand(Transform gooball)
     {
         gooball.SetParent(transform);
-        gooballs.Add(gooball.gameObject.GetComponent<Gooball>());
+        gooballs.Add(StaticData.existingGooballs[gooball.gameObject]);
     }
 
     public void ExitStrand(Transform gooball)
     {
-        gooballs.Remove(gooball.gameObject.GetComponent<Gooball>());
+        gooballs.Remove(StaticData.existingGooballs[gooball.gameObject]);
     }
 }

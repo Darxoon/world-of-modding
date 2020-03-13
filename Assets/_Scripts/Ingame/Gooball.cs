@@ -297,7 +297,7 @@ public class Gooball : MonoBehaviour
             // if it hit something
             if (hit)
             {
-                attachable.Add(hit.transform.gameObject.GetComponent<Gooball>());
+                attachable.Add(StaticData.existingGooballs[hit.transform.gameObject]);
                 attachablePoint.Add(hit.point);
             }
         }

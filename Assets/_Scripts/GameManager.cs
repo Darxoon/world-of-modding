@@ -49,8 +49,7 @@ public class GameManager : MonoBehaviour
         if(hoverStrands.Length == 0)
             return;
         Transform hoverStrandTransform = hoverStrands.Last().transform.parent;
-        if(hoverStrand == null || hoverStrandTransform != hoverStrand.transform)
-            hoverStrand = size > 0 ? hoverStrandTransform.GetComponent<Strand>() : null;
+        hoverStrand = StaticData.existingStrands[hoverStrandTransform.gameObject];
     }
 
     public static Strand MakeStrand(Gooball b1, Gooball b2, float dampingRatio, float frequency, float strandThickness)
@@ -58,7 +57,7 @@ public class GameManager : MonoBehaviour
         //check if we already have a strand that is connected to the same gooballs
         foreach (Transform strandTransform in StaticData.strands.transform)
         {
-            Strand strandComponent = strandTransform.GetComponent<Strand>();
+            Strand strandComponent = StaticData.existingStrands[strandTransform.gameObject];
             GameObject ball1 = strandComponent.connectedBall1;
             GameObject ball2 = strandComponent.connectedBall2;            
             if(ball1 == b1.gameObject && ball2 == b2.gameObject || ball2 == b1.gameObject && ball1 == b2.gameObject)
@@ -99,10 +98,10 @@ public class GameManager : MonoBehaviour
 
         Strand strand = child.AddComponent<Strand>();
         strand.connectedBall1 = b2.gameObject;
-        strand.connectedBall1Class = b2.GetComponent<Gooball>();
+        strand.connectedBall1Class = b2;
         //child.AddComponent<Strand>().connectedBall1 = b2.gameObject;
         strand.connectedBall2 = b1.gameObject;
-        strand.connectedBall2Class = b1.GetComponent<Gooball>();
+        strand.connectedBall2Class = b1;
         strand.renderer = spriteRenderer;
         strand.rendererObject = visual;
         strand.strandThickness = strandThickness;
@@ -120,7 +119,7 @@ public class GameManager : MonoBehaviour
         // ReSharper disable once LoopCanBeConvertedToQuery
         foreach(Transform strand in StaticData.strands.transform)
         {
-            Strand component = strand.GetComponent<Strand>();
+            Strand component = StaticData.existingStrands[strand.gameObject];
             Gooball ball1 = component.connectedBall1Class;
             Gooball ball2 = component.connectedBall2Class;
             if (ball1 == b1 && ball2 == b2 || ball2 == b1 && ball1 == b2)
