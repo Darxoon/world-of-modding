@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Strand : MonoBehaviour
@@ -28,6 +29,10 @@ public class Strand : MonoBehaviour
     [SerializeField] private float stretchMultiplier = 1.35f;
     public float strandThickness;
 
+    private void Awake()
+    {
+        StaticData.existingStrands.Add(gameObject, this);
+    }
 
     private void Update()
     {

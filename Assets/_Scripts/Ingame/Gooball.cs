@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -79,16 +80,15 @@ public class Gooball : MonoBehaviour
     #endregion
 
 
-
-    private void Start()
+    private void Awake()
     {
-        rigidbody = gameObject.GetComponent<Rigidbody2D>();
-        rigidbody.mass = OriginalMass + extraMass;
-        mainCam = Camera.main;
+        rigidbody.mass = originalMass + extraMass;
         randomID = GameManager.GenerateRandomID(10);
         attachable = new List<Gooball>();
         attachablePoint = new List<Vector2>();
-
+        
+        StaticData.existingGooballs.Add(gameObject, this);
+        
         if(initialStrands.Length > 0)
         {
             SetTowered();
@@ -102,6 +102,15 @@ public class Gooball : MonoBehaviour
         {
             attachedBalls = new List<Gooball>();
         }
+    }
+
+    private void Start()
+    {
+        rigidbody = GetComponent<Rigidbody2D>();
+        mainCam = Camera.main;
+        
+        
+
     }
 
     private void StrandMass()
