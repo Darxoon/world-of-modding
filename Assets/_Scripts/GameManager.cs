@@ -53,7 +53,34 @@ public class GameManager : MonoBehaviour
         StaticData.strands = GameObject.Find("Strands");
         StaticData.gameManager = this;
 
+        Vector3 mousePosition = Input.mousePosition;
+        mousePosition.z = 5f;
+        Vector2 v = UnityEngine.Camera.main.ScreenToWorldPoint(mousePosition);
+        Collider2D[] col = Physics2D.OverlapPointAll(v);
+        if (col.Length > 0)
+        {
+            foreach (Collider2D c in col)
+            {
+                //Debug.Log(c.gameObject.name + " " + c.gameObject.layer + " " + LayerMask.NameToLayer("Strands"));
+                if(c.gameObject.layer == LayerMask.NameToLayer("Strands"))
+                {
+                    Debug.Log("Found a strand");
+                    hoverStrand = c.gameObject.transform.parent.gameObject;
+                    FoundStrand = true;
+                }
+            }
+        }
+        if (!FoundStrand)
+        {
+            hoverStrand = null;
+        }
     }
+
+    [SerializeField]public static Dictionary<string, string> ResourcePaths = new Dictionary<string, string>();
+
+    [SerializeField]public static Dictionary<string, AudioClip> audioFiles = new Dictionary<string, AudioClip>();
+    [SerializeField]public static Dictionary<string, Sprite> imageFiles = new Dictionary<string, Sprite>();
+    [SerializeField] public static Dictionary<string, JSONGooball> memoryGooballs = new Dictionary<string, JSONGooball>();
 
     public static Strand MakeStrand(Gooball b1, Gooball b2, float dampingRatio, float frequency, float strandThickness)
     {

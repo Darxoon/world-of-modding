@@ -11,11 +11,11 @@ public class SceneLayerParallax : MonoBehaviour
     
     public Vector2 worldPosition;
 
-    private Camera mainCam;
+    private UnityEngine.Camera mainCam;
 
     private void Start()
     {
-        mainCam = Camera.main;
+        mainCam = UnityEngine.Camera.main;
     }
 
     private void Update()

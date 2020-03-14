@@ -7,8 +7,14 @@ public class BallSensor : MonoBehaviour
     public bool isGrounded = false;
     public bool isTouchingWall = false;
 
-    [SerializeField] private CapsuleCollider2D groundCollider;
-    [SerializeField] private CapsuleCollider2D wallCollider;
+    [SerializeField] public CapsuleCollider2D groundCollider;
+    [SerializeField] public CapsuleCollider2D wallCollider;
+
+    private void Start()
+    {
+        groundCollider = GetComponent<CapsuleCollider2D>();
+        wallCollider = transform.GetChild(0).GetComponent<CapsuleCollider2D>();
+    }
 
     private void Update()
     {
