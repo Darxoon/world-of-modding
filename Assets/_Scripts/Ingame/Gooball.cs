@@ -11,7 +11,7 @@ public class Gooball : MonoBehaviour
 
     // TODO: TEMPORARY (replaced with level loading)
     [SerializeField] public Sprite strandSprite;
-    
+    [SerializeField] private bool byPrefab;
     [SerializeField] public string randomID;
     public bool finishedLoading = false;
     #region Components
@@ -81,66 +81,75 @@ public class Gooball : MonoBehaviour
 
     private void Start()
     {
-        //do the loading move
-        initialStrands = new GameObject[] { };
-        rigidbody = gameObject.AddComponent<Rigidbody2D>();
-
-        CircleCollider2D mainCol = gameObject.AddComponent<CircleCollider2D>();
-        mainCol.radius = data.ball.radius;
-        GameObject Sensor = new GameObject("Sensor");
-        Sensor.transform.SetParent(transform);
-        var ccol = Sensor.AddComponent<CapsuleCollider2D>();
-
-        //TODO: ADD A WAY TO DEFINE THOSE TWO VARIABLES AUTOMAGICALLY
-        ccol.size = new Vector2(3.257942f, 0.9263445f);
-        ccol.offset = new Vector2(0, -2.43f);
-        ccol.direction = CapsuleDirection2D.Horizontal;
-        ccol.isTrigger = true;
-
-        GameObject WallCol = new GameObject("WallCollider");
-        WallCol.transform.SetParent(Sensor.transform);
-        var wcol = WallCol.AddComponent<CapsuleCollider2D>();
-        wcol.offset = new Vector2(-0.02958627f, -0.09866164f);
-        wcol.size = new Vector2(5.809811f, 1.444782f);
-        wcol.direction = CapsuleDirection2D.Horizontal;
-        wcol.isTrigger = true;
-        Sensor.AddComponent<BallSensor>();
-        Walk walkscript = gameObject.AddComponent<Walk>();
-
-        
-
-        //if 1 its going left, if 0 its right or the other way around idk
-        if(Random.Range(0,1) == 1)
+        if (byPrefab)
         {
-            walkscript.startingDirection = new Vector3(1, 0, 0);
+            rigidbody = gameObject.GetComponent<Rigidbody2D>();
+            rigidbody.mass = OriginalMass + extraMass;
         }
         else
-            walkscript.startingDirection = new Vector3(-1, 0, 0);
-
-        walkscript.walkSpeed = data.ball.walkSpeed;
-        walkscript.randomSpeedScale = data.ball.speedDifference.ToVector2();
-        walkscript.doesCheckForStrands = data.ball.climber;
-        randomSpeedMultiplier = Random.Range(data.ball.speedDifference.x, data.ball.speedDifference.y);
-        rigidbody.mass = data.ball.mass;
-        towerMass = data.ball.towerMass;
-        strandCount = data.ball.strands;
-        
-        //ayy graphics  
-        foreach(var part in data.parts)
         {
-            GameObject tada = new GameObject(part.name);
-            SpriteRenderer spr = tada.AddComponent<SpriteRenderer>();
-            Sprite sprait = null;
-            GameManager.imageFiles.TryGetValue(part.image[Random.Range(0, part.image.Length-1)], out sprait);
-            spr.sprite = sprait;
-            tada.transform.SetParent(transform);
+            //do the loading move
+            initialStrands = new GameObject[] { };
+            rigidbody = gameObject.AddComponent<Rigidbody2D>();
+
+            CircleCollider2D mainCol = gameObject.AddComponent<CircleCollider2D>();
+            mainCol.radius = data.ball.radius;
+            GameObject Sensor = new GameObject("Sensor");
+            Sensor.transform.SetParent(transform);
+            var ccol = Sensor.AddComponent<CapsuleCollider2D>();
+
+            //TODO: ADD A WAY TO DEFINE THOSE TWO VARIABLES AUTOMAGICALLY
+            ccol.size = new Vector2(3.257942f, 0.9263445f);
+            ccol.offset = new Vector2(0, -2.43f);
+            ccol.direction = CapsuleDirection2D.Horizontal;
+            ccol.isTrigger = true;
+
+            GameObject WallCol = new GameObject("WallCollider");
+            WallCol.transform.SetParent(Sensor.transform);
+            var wcol = WallCol.AddComponent<CapsuleCollider2D>();
+            wcol.offset = new Vector2(-0.02958627f, -0.09866164f);
+            wcol.size = new Vector2(5.809811f, 1.444782f);
+            wcol.direction = CapsuleDirection2D.Horizontal;
+            wcol.isTrigger = true;
+            Sensor.AddComponent<BallSensor>();
+            Walk walkscript = gameObject.AddComponent<Walk>();
+
+
+
+            //if 1 its going left, if 0 its right or the other way around idk
+            if (Random.Range(0, 1) == 1)
+            {
+                walkscript.startingDirection = new Vector3(1, 0, 0);
+            }
+            else
+                walkscript.startingDirection = new Vector3(-1, 0, 0);
+
+            walkscript.walkSpeed = data.ball.walkSpeed;
+            walkscript.randomSpeedScale = data.ball.speedDifference.ToVector2();
+            walkscript.doesCheckForStrands = data.ball.climber;
+            randomSpeedMultiplier = Random.Range(data.ball.speedDifference.x, data.ball.speedDifference.y);
+            rigidbody.mass = data.ball.mass;
+            towerMass = data.ball.towerMass;
+            strandCount = data.ball.strands;
+
+            //ayy graphics  
+            foreach (var part in data.parts)
+            {
+                GameObject tada = new GameObject(part.name);
+                SpriteRenderer spr = tada.AddComponent<SpriteRenderer>();
+                Sprite sprait = null;
+                GameManager.imageFiles.TryGetValue(part.image[Random.Range(0, part.image.Length - 1)], out sprait);
+                spr.sprite = sprait;
+                tada.transform.SetParent(transform);
+            }
+
+            //Sprite sprait = null;
+            GameManager.imageFiles.TryGetValue(data.strand.image, out strandSprite);
+            //strand
+            transform.localScale = new Vector3(0.1f, 0.1f);
+            transform.localPosition = position;
+            //rigidbody.mass = OriginalMass + extraMass;
         }
-        //Sprite sprait = null;
-        GameManager.imageFiles.TryGetValue(data.strand.image, out strandSprite);
-        //strand
-        transform.localScale = new Vector3(0.1f, 0.1f);
-        transform.localPosition = position;
-        //rigidbody.mass = OriginalMass + extraMass;
 
         mainCam = Camera.main;
         randomID = GameManager.GenerateRandomID(10);
