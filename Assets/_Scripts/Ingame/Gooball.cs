@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 [SuppressMessage("ReSharper", "ConvertToAutoPropertyWhenPossible")]
 [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
@@ -105,7 +106,7 @@ public class Gooball : MonoBehaviour
         else
         {
             //do the loading move
-            initialStrands = new GameObject[] { };
+            initialStrands = new Gooball[] { };
             rigidbody = gameObject.AddComponent<Rigidbody2D>();
 
             CircleCollider2D mainCol = gameObject.AddComponent<CircleCollider2D>();
@@ -133,12 +134,7 @@ public class Gooball : MonoBehaviour
 
 
             //if 1 its going left, if 0 its right or the other way around idk
-            if (Random.Range(0, 1) == 1)
-            {
-                walkscript.startingDirection = new Vector3(1, 0, 0);
-            }
-            else
-                walkscript.startingDirection = new Vector3(-1, 0, 0);
+            walkscript.startingDirection = Random.Range(0, 1) == 1 ? new Vector3(1, 0, 0) : new Vector3(-1, 0, 0);
 
             walkscript.walkSpeed = data.ball.walkSpeed;
             walkscript.randomSpeedScale = data.ball.speedDifference.ToVector2();

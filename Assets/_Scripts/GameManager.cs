@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -17,6 +18,24 @@ public class GameManager : MonoBehaviour
     private Collider2D[] hoverStrandsUnfiltered = new Collider2D[16];
     private Collider2D[] hoverStrands = new Collider2D[16];
 
+    private void Awake()
+    {
+        if (instance)
+            enabled = false;
+        else
+            instance = this;
+        
+        
+        mainCam = Camera.main;
+        
+        StaticData.balls = GameObject.Find("Balls");
+        StaticData.geometry = GameObject.Find("Geometry");
+        StaticData.sceneLayers = GameObject.Find("SceneLayers");
+        StaticData.strands = GameObject.Find("Strands");
+        StaticData.gameManager = this;
+
+    }
+
     private void Update()
     {
         // get world mouse position
@@ -34,45 +53,6 @@ public class GameManager : MonoBehaviour
         {
             GameObject hoverStrandGameObject = hoverStrands.Last().transform.parent.gameObject;
             hoverStrand = StaticData.existingStrands[hoverStrandGameObject];
-        }
-    }
-
-    private void Awake()
-    {
-        if (instance)
-            enabled = false;
-        else
-            instance = this;
-        
-        
-        mainCam = Camera.main;
-        
-        StaticData.balls = GameObject.Find("Balls");
-        StaticData.geometry = GameObject.Find("Geometry");
-        StaticData.sceneLayers = GameObject.Find("SceneLayers");
-        StaticData.strands = GameObject.Find("Strands");
-        StaticData.gameManager = this;
-
-        Vector3 mousePosition = Input.mousePosition;
-        mousePosition.z = 5f;
-        Vector2 v = UnityEngine.Camera.main.ScreenToWorldPoint(mousePosition);
-        Collider2D[] col = Physics2D.OverlapPointAll(v);
-        if (col.Length > 0)
-        {
-            foreach (Collider2D c in col)
-            {
-                //Debug.Log(c.gameObject.name + " " + c.gameObject.layer + " " + LayerMask.NameToLayer("Strands"));
-                if(c.gameObject.layer == LayerMask.NameToLayer("Strands"))
-                {
-                    Debug.Log("Found a strand");
-                    hoverStrand = c.gameObject.transform.parent.gameObject;
-                    FoundStrand = true;
-                }
-            }
-        }
-        if (!FoundStrand)
-        {
-            hoverStrand = null;
         }
     }
 
