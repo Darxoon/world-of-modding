@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class Strand : MonoBehaviour
@@ -18,11 +17,6 @@ public class Strand : MonoBehaviour
     [Header("Distance stuff")]  
     public List<Gooball> gooballs = new List<Gooball>();
 
-    [Header("Towermass stuff")]
-    private List<float> b1Weights = new List<float>();
-    private List<float> b2Weights = new List<float>();
-    private float b1TotalWeight = 0f;
-    private float b2TotalWeight = 0f;
 
     private bool spriteEnabled;
 

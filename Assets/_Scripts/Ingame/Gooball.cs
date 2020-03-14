@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 [SuppressMessage("ReSharper", "ConvertToAutoPropertyWhenPossible")]
@@ -15,7 +14,7 @@ public class Gooball : MonoBehaviour
     [SerializeField] public Sprite strandSprite;
     [SerializeField] private bool byPrefab;
     [SerializeField] public string randomID;
-    public bool finishedLoading = false;
+    public bool finishedLoading;
     #region Components
     
     private new Rigidbody2D rigidbody;
@@ -40,7 +39,7 @@ public class Gooball : MonoBehaviour
     [SerializeField] private float towerMass = 3f;
     public float extraMass;
 
-    public JSONGooball data = null;
+    public JSONGooball data;
     [Header("Strand physics")]
 
     [SerializeField] public float dampingRatio;
@@ -74,13 +73,13 @@ public class Gooball : MonoBehaviour
     #region Getters
     
     public float OriginalMass => originalMass;
-    public float TowerMass => towerMass;
     public bool IsDragged => isDragged;
     public bool IsTower => isTower;
 
     #endregion
 
-    public Vector3 position = new Vector3(); //i had to add this because for some reason unity decides to do weird shit and just make everything offset
+    [FormerlySerializedAs("position")] 
+    public Vector3 gooballPosition; //i had to add this because for some reason unity decides to do weird shit and just make everything offset
 
 
 
@@ -107,60 +106,59 @@ public class Gooball : MonoBehaviour
         {
             //do the loading move
             initialStrands = new Gooball[] { };
+            
             rigidbody = gameObject.AddComponent<Rigidbody2D>();
 
             CircleCollider2D mainCol = gameObject.AddComponent<CircleCollider2D>();
             mainCol.radius = data.ball.radius;
-            GameObject Sensor = new GameObject("Sensor");
-            Sensor.transform.SetParent(transform);
-            var ccol = Sensor.AddComponent<CapsuleCollider2D>();
-
-            //TODO: ADD A WAY TO DEFINE THOSE TWO VARIABLES AUTOMAGICALLY
-            ccol.size = new Vector2(3.257942f, 0.9263445f);
-            ccol.offset = new Vector2(0, -2.43f);
-            ccol.direction = CapsuleDirection2D.Horizontal;
-            ccol.isTrigger = true;
-
-            GameObject WallCol = new GameObject("WallCollider");
-            WallCol.transform.SetParent(Sensor.transform);
-            var wcol = WallCol.AddComponent<CapsuleCollider2D>();
-            wcol.offset = new Vector2(-0.02958627f, -0.09866164f);
-            wcol.size = new Vector2(5.809811f, 1.444782f);
-            wcol.direction = CapsuleDirection2D.Horizontal;
-            wcol.isTrigger = true;
-            Sensor.AddComponent<BallSensor>();
-            Walk walkscript = gameObject.AddComponent<Walk>();
-
-
-
+            
+            GameObject sensor = new GameObject("Sensor");
+            sensor.transform.SetParent(transform);
+            
+            CapsuleCollider2D capsuleCollider = sensor.AddComponent<CapsuleCollider2D>();
+            //TODO: ADD A WAY TO DEFINE THOSE TWO VARIABLES AUTOMATICALLY
+            capsuleCollider.size = new Vector2(3.257942f, 0.9263445f);
+            capsuleCollider.offset = new Vector2(0, -2.43f);
+            capsuleCollider.direction = CapsuleDirection2D.Horizontal;
+            capsuleCollider.isTrigger = true;
+            
+            GameObject wallColliderObject = new GameObject("WallCollider");
+            wallColliderObject.transform.SetParent(sensor.transform);
+            
+            CapsuleCollider2D wallCollider = wallColliderObject.AddComponent<CapsuleCollider2D>();
+            wallCollider.offset = new Vector2(-0.02958627f, -0.09866164f);
+            wallCollider.size = new Vector2(5.809811f, 1.444782f);
+            wallCollider.direction = CapsuleDirection2D.Horizontal;
+            wallCollider.isTrigger = true;
+            
+            sensor.AddComponent<BallSensor>();
+            Walk walkScript = gameObject.AddComponent<Walk>();
             //if 1 its going left, if 0 its right or the other way around idk
-            walkscript.startingDirection = Random.Range(0, 1) == 1 ? new Vector3(1, 0, 0) : new Vector3(-1, 0, 0);
-
-            walkscript.walkSpeed = data.ball.walkSpeed;
-            walkscript.randomSpeedScale = data.ball.speedDifference.ToVector2();
-            walkscript.doesCheckForStrands = data.ball.climber;
+            walkScript.startingDirection = Random.Range(0, 1) == 1 ? new Vector3(1, 0, 0) : new Vector3(-1, 0, 0);
+            walkScript.walkSpeed = data.ball.walkSpeed;
+            walkScript.randomSpeedScale = data.ball.speedDifference.ToVector2();
+            walkScript.doesCheckForStrands = data.ball.climber;
+            
             randomSpeedMultiplier = Random.Range(data.ball.speedDifference.x, data.ball.speedDifference.y);
             rigidbody.mass = data.ball.mass;
             towerMass = data.ball.towerMass;
             strandCount = data.ball.strands;
 
-            //ayy graphics  
-            foreach (var part in data.parts)
+            // parts  
+            foreach (Part part in data.parts)
             {
-                GameObject tada = new GameObject(part.name);
-                SpriteRenderer spr = tada.AddComponent<SpriteRenderer>();
-                Sprite sprait = null;
-                GameManager.imageFiles.TryGetValue(part.image[Random.Range(0, part.image.Length - 1)], out sprait);
-                spr.sprite = sprait;
-                tada.transform.SetParent(transform);
+                GameObject partObject = new GameObject(part.name);
+                SpriteRenderer spriteRenderer = partObject.AddComponent<SpriteRenderer>();
+                GameManager.imageFiles.TryGetValue(part.image[Random.Range(0, part.image.Length - 1)], out Sprite sprite);
+                spriteRenderer.sprite = sprite;
+                partObject.transform.SetParent(transform);
             }
 
-            //Sprite sprait = null;
             GameManager.imageFiles.TryGetValue(data.strand.image, out strandSprite);
             //strand
-            transform.localScale = new Vector3(0.1f, 0.1f);
-            transform.localPosition = position;
-            //rigidbody.mass = OriginalMass + extraMass;
+            Transform transform1 = transform;
+            transform1.localScale = new Vector3(0.1f, 0.1f);
+            transform1.localPosition = gooballPosition;
         }
 
         mainCam = Camera.main;

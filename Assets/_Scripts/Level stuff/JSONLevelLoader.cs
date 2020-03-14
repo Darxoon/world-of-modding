@@ -229,29 +229,22 @@ public class JSONLevelLoader : MonoBehaviour
                 //gooball.AddComponent<Walk>();
                 var g = gooball.AddComponent<Gooball>();
                 g.data = ball;
-                g.position = new Vector3(gball.pos.x, gball.pos.y, 0);
+                g.gooballPosition = new Vector3(gball.pos.x, gball.pos.y, 0);
                 gooball.layer = LayerMask.NameToLayer("Detached Balls");
             }
 
-            foreach(var strand in level.level.Strand)
+            foreach(LStrand strand in level.level.Strand)
             {
-                /*var ball1 = StaticData.balls.transform.Find(strand.gb1).GetComponent<Gooball>();
-                var ball2 = StaticData.balls.transform.Find(strand.gb2).GetComponent<Gooball>();
-                ball1.MakeStrand(ball2);
-                ball1.SetTowered();
-                ball2.SetTowered();
-                */
-                StartCoroutine(makeStrand(strand));
-                //await Task.Run(
+                StartCoroutine(MakeStrand(strand));
             }
 
         }
     }
 
-    IEnumerator makeStrand(LStrand strand)
+    IEnumerator MakeStrand(LStrand strand)
     {
-        var ball1 = StaticData.balls.transform.Find(strand.gb1).GetComponent<Gooball>();
-        var ball2 = StaticData.balls.transform.Find(strand.gb2).GetComponent<Gooball>();
+        Gooball ball1 = StaticData.balls.transform.Find(strand.gb1).GetComponent<Gooball>();
+        Gooball ball2 = StaticData.balls.transform.Find(strand.gb2).GetComponent<Gooball>();
         while (!ball1.finishedLoading)
         {
             yield return null;
