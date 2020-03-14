@@ -124,7 +124,7 @@ public class Gooball : MonoBehaviour
                     Vector3 position = transform.position;
                     float distancePercent = Vector3.Distance(position, gooball.transform.position) / Vector3.Distance(position, strand.OtherBall(this).transform.position);
                     distancePercent = 1 - distancePercent;
-                    extraMass += gooball.TowerMass * distancePercent;
+                    extraMass += gooball.towerMass * distancePercent;
                 }
         }
     }

@@ -14,9 +14,29 @@ public class GameManager : MonoBehaviour
     public Camera mainCam;
     
     
-    private Collider2D[] hoverStrandsUnfiltered = new Collider2D[8];
-    private Collider2D[] hoverStrands = new Collider2D[8];
-    
+    private Collider2D[] hoverStrandsUnfiltered = new Collider2D[16];
+    private Collider2D[] hoverStrands = new Collider2D[16];
+
+    private void Update()
+    {
+        // get world mouse position
+        Vector3 mousePosition = Input.mousePosition;
+        mousePosition.z = 5f;
+        Vector2 worldMousePos = mainCam.ScreenToWorldPoint(mousePosition);
+        
+        // get strand on mouse position
+        int size = Physics2D.OverlapPointNonAlloc(worldMousePos, hoverStrandsUnfiltered, LayerMask.GetMask("Strands"));
+        
+        hoverStrands = hoverStrandsUnfiltered.Where(x => x != null).ToArray();
+        if (size == 0)
+            hoverStrand = null;
+        else
+        {
+            GameObject hoverStrandGameObject = hoverStrands.Last().transform.parent.gameObject;
+            hoverStrand = StaticData.existingStrands[hoverStrandGameObject];
+        }
+    }
+
     private void Awake()
     {
         if (instance)
@@ -35,26 +55,8 @@ public class GameManager : MonoBehaviour
 
     }
 
-    private void Update()
-    {
-        // get world mouse position
-        Vector3 mousePosition = Input.mousePosition;
-        mousePosition.z = 5f;
-        Vector2 worldMousePos = mainCam.ScreenToWorldPoint(mousePosition);
-        
-        // get strand on mouse position
-        int size = Physics2D.OverlapPointNonAlloc(worldMousePos, hoverStrandsUnfiltered, LayerMask.GetMask("Strands"));
-
-        hoverStrands = hoverStrandsUnfiltered.Where(x => x != null).ToArray();
-        if(hoverStrands.Length == 0)
-            return;
-        Transform hoverStrandTransform = hoverStrands.Last().transform.parent;
-        hoverStrand = StaticData.existingStrands[hoverStrandTransform.gameObject];
-    }
-
     public static Strand MakeStrand(Gooball b1, Gooball b2, float dampingRatio, float frequency, float strandThickness)
     {
-        Debug.Log(StaticData.strands);
         //check if we already have a strand that is connected to the same gooballs
         foreach (Transform strandTransform in StaticData.strands.transform)
         {

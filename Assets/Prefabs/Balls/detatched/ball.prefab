@@ -156,14 +156,16 @@ MonoBehaviour:
   randomID: 
   initialStrands: []
   attachedBalls: []
-  strandSprite: {fileID: 21300000, guid: 900f2c3fc2b937946ab6397388692da8, type: 3}
-  _originalMass: 3.23
-  originalScale: {x: 0, y: 0, z: 0}
+  strands: []
+  ballLayerMask: Attached Balls
+  originalMass: 3.23
+  towerMass: 3
+  extraMass: 0
   dampingRatio: 0
-  frequency: 0
+  jointFrequency: 100
   strandDistanceRange: {x: 1, y: 4}
-  strandMulitplier: 1.01
-  StrandThickness: 0.7
+  strandMultiplier: 1.01
+  strandThickness: 0.72
   strandCount: 2
   strandLengthMax: 1.9
   strandLengthMin: 0
@@ -173,6 +175,8 @@ MonoBehaviour:
   isTower: 0
   isDragged: 0
   isOnStrand: 0
+  attachable: []
+  attachablePoint: []
 --- !u!1 &4896520077090206015
 GameObject:
   m_ObjectHideFlags: 0
