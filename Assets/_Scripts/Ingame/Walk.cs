@@ -18,7 +18,6 @@ public class Walk : MonoBehaviour
     
     [SerializeField] private BallSensor ballSensor;
 
-    private new CircleCollider2D collider;
     private Gooball gooball;
     private new Rigidbody2D rigidbody;
 
@@ -32,8 +31,8 @@ public class Walk : MonoBehaviour
     private Vector2 appliedForce;
     
     // Animation
-    private bool inJumpingAnimation = false;
-    private float jumpAnimationCounter = 0f;
+    private bool inJumpingAnimation;
+    private float jumpAnimationCounter;
     private Vector3 originalJumpPosition;
     private Vector3 newJumpPosition;
     
@@ -42,7 +41,6 @@ public class Walk : MonoBehaviour
         ballSensor = transform.GetChild(0).GetComponent<BallSensor>();
         rigidbody = GetComponent<Rigidbody2D>();
         gooball = GetComponent<Gooball>();
-        collider = GetComponent<CircleCollider2D>();
         
         dynamicDirection = startingDirection;
         // facing left or right?
@@ -104,13 +102,14 @@ public class Walk : MonoBehaviour
                 {
                     rigidbody.constraints = RigidbodyConstraints2D.FreezeAll;
                     WalkOnStrand walkOnStrand = gameObject.AddComponent<WalkOnStrand>();
-                    walkOnStrand.currentStrand = raycastHit.transform.parent.gameObject;
+                    Transform parent = raycastHit.transform.parent;
+                    walkOnStrand.currentStrand = StaticData.existingStrands[parent.gameObject];
                     walkOnStrand.Initialize();
                     walkOnStrand.enabled = false;
                     inJumpingAnimation = true;
                     originalJumpPosition = position;
                     newJumpPosition = new Vector3(raycastHit.point.x, raycastHit.point.y, position.z);
-                    transform.SetParent(raycastHit.transform.parent, true);
+                    transform.SetParent(parent, true);
                 }
                 
                 Debug.DrawRay(position, rigidbody.velocity.normalized * raycastHit.distance, Color.yellow);

@@ -1,71 +1,51 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class WalkOnStrand : MonoBehaviour
 {
-    private bool initialized = false;
-    void Start()
-    {
-        currentStrandObject = currentStrand.GetComponent<Strand>();
-        thisGooballObject = GetComponent<Gooball>();
-        
-    }
+    private bool initialized;
+
+    [FormerlySerializedAs("currentGooballObject")] public Gooball currentGooball;
+
+    [FormerlySerializedAs("thisGooballObject")] public Gooball gooball;
+    
+    public Gooball nextBall;
+
+    private bool isMoving;
+    public float speed = 0.03f;
+    public Strand currentStrand;
+    [FormerlySerializedAs("currentStrandObject")] public Strand strand;
+
 
     public void Initialize()
     {
         if(initialized)
             return;
-        thisGooballObject = GetComponent<Gooball>();
-        thisGooballObject.isOnStrand = true;
+        gooball = GetComponent<Gooball>();
+        gooball.isOnStrand = true;
         initialized = true;
         //find out which ball are we gonna go to
         System.Random rand = new System.Random();
-        int gooball = rand.Next(0, 1);
+        int next = rand.Next(0, 1);
         //get stuff into an array
-        Strand strand = currentStrand.GetComponent<Strand>();
+        strand = currentStrand;
         
         //set the next ball and make it go to it
-        nextBall = gooball == 0 ? strand.connectedBall1Class : strand.connectedBall2Class;
+        nextBall = next == 0 ? strand.connectedBall1Class : strand.connectedBall2Class;
         
         isMoving = true;
     }
-    
-    public List<Gooball> gooballs = new List<Gooball>();
 
 
-
-    void GetGooballs(Gooball gooball) {
-        gooballs.Clear();
-        foreach (GameObject ball in gooball.attachedBalls)
-        {
-            gooballs.Add(ball.GetComponent<Gooball>());
-        }
-    }
-
-    public GameObject currentGooball;
-    public Gooball currentGooballObject;
-
-    public Gooball thisGooballObject;
-    //Vector3 nextPos;
-    public Gooball nextBall;
-    public Gooball nextGooballObject;
-
-    bool isMoving = false;
-    public float speed = 0.03f;
-    public GameObject currentStrand;
-    public Strand currentStrandObject;
-
-    // Update is called once per frame
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         if(!initialized)
             return;
         
         if (isMoving == false)
         {
-            GetGooballs(nextBall);
-            TowardsWhichGooball();
+            TowardsWhichGooball(nextBall.attachedBalls);
         }
 
         if (isMoving)
@@ -77,24 +57,22 @@ public class WalkOnStrand : MonoBehaviour
         }
     }
 
-    public void TowardsWhichGooball()
+    private void TowardsWhichGooball(IReadOnlyList<Gooball> gooballs)
     {
-        if (nextBall != null)
+        if (nextBall)
         {
-            currentStrandObject.ExitStrand(transform);
-            currentGooball = nextBall.gameObject;
-            currentGooballObject = currentGooball.GetComponent<Gooball>();
+            strand.ExitStrand(transform);
+            currentGooball = nextBall;
         }
         System.Random check = new System.Random();
         int whichGooball = check.Next(0, gooballs.Count);
         nextBall = gooballs[whichGooball];
-        nextGooballObject = nextBall.GetComponent<Gooball>();
         isMoving = true;
-        if (nextBall != null)
+        if (nextBall)
         {
-            currentStrand = GameManager.instance.getStrandBetweenBalls(currentGooball, nextBall.gameObject).gameObject;
-            currentStrandObject = currentStrand.GetComponent<Strand>();
-            currentStrandObject.EnterStrand(transform);
+            currentStrand = GameManager.GetStrandBetweenBalls(currentGooball, nextBall);
+            strand = currentStrand;
+            strand.EnterStrand(transform);
             transform.SetParent(currentStrand.transform, true);
         }
     }
