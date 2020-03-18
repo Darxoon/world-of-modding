@@ -161,4 +161,6 @@ public class GameManager : MonoBehaviour
     }
 
     public bool isDragging = false;
+    public bool isDetaching = false;
+    public GameObject detach = null;
 }

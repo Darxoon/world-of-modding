@@ -63,56 +63,56 @@ public class Ball
 {
     #region Core attributes
     public string name = "";
-    public enum Shape
+    public enum Shape //gotta implement this
     {
         Rectangle,
         Circle
     }
-    public Shape shape = Shape.Circle;
-    public float width;
-    public float height;
-    public float radius;
-    public float sizeVariation;
-    public float mass;
+    public Shape shape = Shape.Circle; //just a default, still gotta implement this
+    public float width; //used for rectangle, gotta implement this
+    public float height; //same as above
+    public float radius; 
+    public float sizeVariation; //needs to be implemented
+    public float mass; 
     public int strands;
     public string material = ""; //curently unknown use
     public float towerMass;
-    public float dragMass;
+    public float dragMass; //used for rectangles
     #endregion
 
     #region Behaviour attributes
-    public bool climber;
-    public float antigrav;
-    public bool isAntiGravUnattached;
-    public bool dynamic;
-    public bool staticWhenSleeping;
-    public float wakeDist;
-    public Position jump;
-    public bool jumpOnWakeup;
-    public bool autoAttach;
-    public bool autoDisable;
-    public float decay;
+    public bool climber; 
+    public float antigrav; //idk what this does
+    public bool isAntiGravUnattached; //same as above
+    public bool dynamic; //gotta implement this, use is known
+    public bool staticWhenSleeping; //gotta implement sleeping first
+    public float wakeDist; //same as above
+    public Position jump; //gotta implement this, use is known
+    public bool jumpOnWakeup; //same as above
+    public bool autoAttach; //not sure what this does
+    public bool autoDisable; //no idea what's this
+    public float decay; //makes gooballs decay after being created
     #endregion
 
     #region Movement attributes
-    public float walkSpeed = 0;
+    public float walkSpeed = 0; 
     public float climbspeed = 0;
     public Position speedDifference = new Position(1, 1);
-    public float walkForce = 500;
-    public float thrust = 0;
+    public float walkForce = 500; //not sure how this works
+    public float thrust = 0; //ballons!
     #endregion
 
     #region Player interaction
     public bool draggable;
     public bool detachable;
-    public bool hingeDrag;
-    public Position fling;
+    public bool hingeDrag; //not sure what's hits
+    public Position fling; //gotta implement this
     #endregion
 
     #region Level interaction
-    public bool invulnerable;
-    public bool suckable;
-    public bool autobounds;
+    public bool invulnerable; //does what it says
+    public bool suckable; //still gotta use it somehow
+    public bool autobounds; //damn there's a lot of stuff unimplemented
     public bool autoboundsunattached;
     public bool sticky;
     public bool stickyunattached;

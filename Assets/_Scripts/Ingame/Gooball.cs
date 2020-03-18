@@ -58,6 +58,7 @@ public class Gooball : MonoBehaviour
     public int rays = 50;
     [SerializeField] private bool isTower;
     [SerializeField] private bool isDragged;
+    [SerializeField] private bool isDetaching;
     public bool isOnStrand = false;
 
     [SerializeField] private List<RaycastHit2D> attachable;
@@ -81,6 +82,7 @@ public class Gooball : MonoBehaviour
 
     private void Start()
     {
+        #region Creating the gooball
         //do the loading move
         initialStrands = new GameObject[] { };
         rigidbody = gameObject.AddComponent<Rigidbody2D>();
@@ -141,7 +143,7 @@ public class Gooball : MonoBehaviour
         transform.localScale = new Vector3(0.1f, 0.1f);
         transform.localPosition = position;
         //rigidbody.mass = OriginalMass + extraMass;
-
+        #endregion
         mainCam = Camera.main;
         randomID = GameManager.GenerateRandomID(10);
         attachable = new List<RaycastHit2D>();
@@ -203,8 +205,54 @@ public class Gooball : MonoBehaviour
                 }
             }
         }
+        if (data.ball.detachable)
+        {
+            if (Input.GetMouseButtonDown(0) && isTower)
+            {
+                RaycastHit2D[] hits = new RaycastHit2D[500];
+                int size = Physics2D.GetRayIntersectionNonAlloc(mainCam.ScreenPointToRay(Input.mousePosition), hits, Mathf.Infinity);
+                if (size > 0)
+                {
+                    foreach (RaycastHit2D raycastHit2D in hits)
+                    {
+                        //Debug.DrawLine(mainCam.transform.position, raycastHit2D.point, Color.red);
 
 
+                        if (raycastHit2D.transform == transform)
+                        {
+                            isDetaching = true;
+                            GameManager.instance.isDetaching = true;
+                            GameManager.instance.detach = transform.gameObject;
+                        }
+                    }
+                }
+            }
+
+            if (isDetaching)
+            {
+                Vector3 mousepos = mainCam.ScreenToWorldPoint(Input.mousePosition);
+                mousepos = new Vector3(mousepos.x, mousepos.y);
+                Debug.DrawLine(transform.position, mousepos, Color.red);
+
+                if(Vector3.Distance(mousepos, transform.position) > data.detachstrand.maxLen)
+                {
+                    RemoveStrand();
+                    isDragged = true;
+                    GameManager.instance.isDragging = true;
+                    GameManager.instance.drag = gameObject;
+                    GameManager.instance.detach = null;
+                    GameManager.instance.isDetaching = false;
+                    isDetaching = false;
+                }
+
+                if (Input.GetMouseButtonUp(0))
+                {
+                    GameManager.instance.detach = null;
+                    GameManager.instance.isDetaching = false;
+                    isDetaching = false;
+                }
+            }
+        }
         if (isDragged)
         {
             transform.SetParent(StaticData.balls.transform, true);
@@ -327,7 +375,44 @@ public class Gooball : MonoBehaviour
         isTower = true;
     }
 
+    public void RemoveStrand()
+    {
+        List<Strand> Strands = new List<Strand>();
+        foreach(GameObject gooball in attachedBalls)
+        {
+            Strands.Add(GameManager.instance.getStrandBetweenBalls(gameObject, gooball));
+            gooball.GetComponent<Gooball>().attachedBalls.Remove(gameObject);
+            foreach(SpringJoint2D spring in gooball.GetComponents<SpringJoint2D>())
+            {
+                if(spring.connectedBody == rigidbody)
+                {
+                    Destroy(spring);
+                }
+            }
+            
+        }
+        foreach (SpringJoint2D thing in GetComponents<SpringJoint2D>())
+        {
+            Destroy(thing);
+        }
+        foreach(Strand strand in Strands)
+        {
+            if(strand.connectedBall1Class != this)
+            {
+                strand.connectedBall1Class.attachedBalls.Remove(gameObject);
+            }
+            else
+            {
+                strand.connectedBall2Class.attachedBalls.Remove(gameObject);
+            }
+            Destroy(strand.gameObject);
 
+        }
+        attachedBalls.Clear();
+        isTower = false;
+        gameObject.layer = LayerMask.NameToLayer("Detached Balls");
+        rigidbody.constraints = RigidbodyConstraints2D.None;
+    }
 
     public void AttachRaycast()
     {
@@ -378,6 +463,6 @@ public class Gooball : MonoBehaviour
         isTower = true;
         gameObject.layer = LayerMask.NameToLayer("Attached Balls");
         // freeze THIS BALL's rotation
-        GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
+        rigidbody.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 }

@@ -163,6 +163,12 @@ public class JSONLevelLoader : MonoBehaviour
             {
                 image = "strand",
             };
+
+            gooball.detachstrand = new DetachStrand
+            {
+                maxLen = 5
+            };
+
             if (!Directory.Exists(StaticData.ballsFolder + "common/"))
                 Directory.CreateDirectory(StaticData.ballsFolder+ "common/");
             using (StreamWriter sw = File.CreateText(StaticData.ballsFolder + "common/common.json"))

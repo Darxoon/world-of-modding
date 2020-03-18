@@ -4,7 +4,7 @@
         "shape": 1,
         "width": 0.0,
         "height": 0.0,
-        "radius": 2.3,
+        "radius": 2.2,
         "sizeVariation": 0.0,
         "mass": 3.23,
         "strands": 2,
@@ -24,13 +24,13 @@
         "walkSpeed": 1.0,
         "climbspeed": 0.0,
         "speedDifference": {
-            "x": 10.0,
-            "y": 10.0
+            "x": 1.0,
+            "y": 1.0
         },
         "walkForce": 500.0,
         "thrust": 0.0,
         "draggable": true,
-        "detachable": false,
+        "detachable": true,
         "hingeDrag": false,
         "invulnerable": false,
         "suckable": false,
@@ -92,6 +92,9 @@
         "maxForce": 0.0,
         "burnSpeed": 0.0,
         "igniteDelay": 0.0
+    },
+    "detachstrand": {
+        "maxLen": 1.0
     },
     "resrc": {
         "id": "",
