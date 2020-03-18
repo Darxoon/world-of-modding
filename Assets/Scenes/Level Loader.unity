@@ -445,6 +445,8 @@ MonoBehaviour:
   drag: {fileID: 0}
   hoverStrand: {fileID: 0}
   isDragging: 0
+  isDetaching: 0
+  detach: {fileID: 0}
 --- !u!4 &1008654448
 Transform:
   m_ObjectHideFlags: 0
