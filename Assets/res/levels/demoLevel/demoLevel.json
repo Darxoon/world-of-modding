@@ -13,7 +13,7 @@
         },
         "texteffects": true,
         "timebugprobability": 0.5,
-        "visualdebug": false,
+        "visualdebug": true,
         "zoomoutlimit": 0.0,
         "BallInstance": [{
                 "angle": 0.0,
@@ -124,11 +124,11 @@
                             "x": 0.0,
                             "y": 0.0
                         },
-                        "radius": 0.0,
+                        "radius": 1.0,
                         "rotation": 90.0,
                         "dynamic": false,
                         "mass": 0.0,
-                        "type": 1,
+                        "type": 0,
                         "size": {
                             "x": 10.0,
                             "y": 1.0
@@ -188,6 +188,5 @@
             "IMAGE_BACKGROUND": "levels/demoLevel/bg.png",
             "IMAGE_BLACK": "levels/demoLevel/black.png"
         }
-    },
-    "DebugDraw": false
+    }
 }

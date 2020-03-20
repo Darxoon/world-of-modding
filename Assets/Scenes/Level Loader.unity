@@ -232,17 +232,16 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 0.742
       objectReference: {fileID: 0}
+    - target: {fileID: 1159126971961938282, guid: 4072e6efb6fc48b48aba95f716902388,
+        type: 3}
+      propertyPath: m_UsedByComposite
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4072e6efb6fc48b48aba95f716902388, type: 3}
 --- !u!4 &242377086 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1120464727032358424, guid: 4072e6efb6fc48b48aba95f716902388,
-    type: 3}
-  m_PrefabInstance: {fileID: 242377085}
-  m_PrefabAsset: {fileID: 0}
---- !u!61 &242377087 stripped
-BoxCollider2D:
-  m_CorrespondingSourceObject: {fileID: 1159126971961938282, guid: 4072e6efb6fc48b48aba95f716902388,
     type: 3}
   m_PrefabInstance: {fileID: 242377085}
   m_PrefabAsset: {fileID: 0}
@@ -323,17 +322,16 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 0.742
       objectReference: {fileID: 0}
+    - target: {fileID: 1159126971961938282, guid: 4072e6efb6fc48b48aba95f716902388,
+        type: 3}
+      propertyPath: m_UsedByComposite
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4072e6efb6fc48b48aba95f716902388, type: 3}
 --- !u!4 &245751957 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1120464727032358424, guid: 4072e6efb6fc48b48aba95f716902388,
-    type: 3}
-  m_PrefabInstance: {fileID: 245751956}
-  m_PrefabAsset: {fileID: 0}
---- !u!61 &245751958 stripped
-BoxCollider2D:
-  m_CorrespondingSourceObject: {fileID: 1159126971961938282, guid: 4072e6efb6fc48b48aba95f716902388,
     type: 3}
   m_PrefabInstance: {fileID: 245751956}
   m_PrefabAsset: {fileID: 0}
@@ -429,7 +427,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   saveMode: 2
-  DebugDraw: 0
+  visualdebug: 0
 --- !u!114 &1008654447
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -445,6 +443,7 @@ MonoBehaviour:
   drag: {fileID: 0}
   hoverStrand: {fileID: 0}
   isDragging: 0
+  mainCam: {fileID: 0}
   isDetaching: 0
   detach: {fileID: 0}
 --- !u!4 &1008654448
@@ -630,17 +629,16 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 0.742
       objectReference: {fileID: 0}
+    - target: {fileID: 1159126971961938282, guid: 4072e6efb6fc48b48aba95f716902388,
+        type: 3}
+      propertyPath: m_UsedByComposite
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4072e6efb6fc48b48aba95f716902388, type: 3}
 --- !u!4 &1457756957 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1120464727032358424, guid: 4072e6efb6fc48b48aba95f716902388,
-    type: 3}
-  m_PrefabInstance: {fileID: 1457756956}
-  m_PrefabAsset: {fileID: 0}
---- !u!61 &1457756958 stripped
-BoxCollider2D:
-  m_CorrespondingSourceObject: {fileID: 1159126971961938282, guid: 4072e6efb6fc48b48aba95f716902388,
     type: 3}
   m_PrefabInstance: {fileID: 1457756956}
   m_PrefabAsset: {fileID: 0}
@@ -733,7 +731,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1765769765}
   - component: {fileID: 1765769767}
-  - component: {fileID: 1765769766}
   m_Layer: 12
   m_Name: Geometry
   m_TagString: Geometry
@@ -758,70 +755,6 @@ Transform:
   m_Father: {fileID: 1008654448}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!66 &1765769766
-CompositeCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1765769764}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_GeometryType: 0
-  m_GenerationType: 0
-  m_EdgeRadius: 0
-  m_ColliderPaths:
-  - m_Collider: {fileID: 245751958}
-    m_ColliderPaths:
-    - - X: 119589971
-        Y: -54490004
-      - X: 119589971
-        Y: -17390000
-      - X: -120210000
-        Y: -17390029
-      - X: -120209971
-        Y: -54490004
-  - m_Collider: {fileID: 242377087}
-    m_ColliderPaths:
-    - - X: -106475821
-        Y: -19250000
-      - X: -106475821
-        Y: 17850000
-      - X: -144364208
-        Y: 17849971
-      - X: -144364179
-        Y: -19250000
-  - m_Collider: {fileID: 1457756958}
-    m_ColliderPaths:
-    - - X: 144144179
-        Y: -22350002
-      - X: 144144179
-        Y: 14750000
-      - X: 106255800
-        Y: 14749971
-      - X: 106255829
-        Y: -22350002
-  m_CompositePaths:
-    m_Paths:
-    - - {x: 11.958997, y: -2.2350001}
-      - {x: 14.414418, y: -2.2350001}
-      - {x: 14.414418, y: 1.475}
-      - {x: 10.62558, y: 1.4749972}
-      - {x: 10.625583, y: -1.7390002}
-      - {x: -10.647582, y: -1.7390028}
-      - {x: -10.647582, y: 1.785}
-      - {x: -14.436421, y: 1.7849972}
-      - {x: -14.436418, y: -1.9250001}
-      - {x: -12.021, y: -1.9250001}
-      - {x: -12.020997, y: -5.4490004}
-      - {x: 11.958997, y: -5.4490004}
-  m_VertexDistance: 0.0005
-  m_OffsetDistance: 0.000005
 --- !u!50 &1765769767
 Rigidbody2D:
   serializedVersion: 4

@@ -28,7 +28,7 @@ public class SceneLayer : MonoBehaviour
     void Update()
     {
 #if DEBUG
-        if (StaticData.levelLoader.DebugDraw)
+        if (StaticData.levelLoader.visualdebug)
         {
             Vector3 topRight = new Vector3(sprite.bounds.extents.x + transform.position.x, sprite.bounds.extents.y + transform.position.y, 0);
             Vector3 topLeft = new Vector3(-sprite.bounds.extents.x + transform.position.x, sprite.bounds.extents.y + transform.position.y, 0);

@@ -14,7 +14,7 @@ public class JSONLevelLoader : MonoBehaviour
         Level,Gooball,None
     }
     public SaveMode saveMode = SaveMode.None;
-    public bool DebugDraw;
+    public bool visualdebug;
     void Start()
     {
         StaticData.levelLoader = this;
@@ -28,7 +28,7 @@ public class JSONLevelLoader : MonoBehaviour
             #region serialize
 
             JSONLevel levelL = new JSONLevel();
-
+            levelL.level.visualdebug = true;
             Scenelayer[] layers = { new Scenelayer
         {
             image = "IMAGE_BACKGROUND",
@@ -181,8 +181,7 @@ public class JSONLevelLoader : MonoBehaviour
 
             JSONLevel level = JsonConvert.DeserializeObject<JSONLevel>(File.ReadAllText(StaticData.levelFolder + "demoLevel/demoLevel.json"), settings);
 
-            if (level.DebugDraw)
-                DebugDraw = true;
+            visualdebug = level.level.visualdebug;
 
             Camera.main.backgroundColor = level.scene.backgroundcolor.ToUnityColor();
 

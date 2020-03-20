@@ -12,8 +12,6 @@ public class JSONLevel
     public Scene scene = new Scene();
 
     public Resrc resrc = new Resrc();
-
-    public bool DebugDraw;
 }
 
 
