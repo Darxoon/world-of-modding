@@ -34,7 +34,7 @@ public class JSONLevelLoader : MonoBehaviour
             image = "IMAGE_BACKGROUND",
             alpha = 1,
         }};
-            levelL.level.tags = new string[]{"mainmenu"};
+
             LevelGeometry[] geoms = { new LevelGeometry
         {
             center = new Position(-3, 0),

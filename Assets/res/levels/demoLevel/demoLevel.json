@@ -57,8 +57,7 @@
                 "gb1": "1",
                 "gb2": "2"
             }
-        ],
-        "tags": ["mainmenu"]
+        ]
     },
     "scene": {
         "backgroundcolor": {
@@ -69,7 +68,7 @@
         "minX": 0.0,
         "minY": 0.0,
         "maxX": 0.0,
-        "maxY": 0.0,	
+        "maxY": 0.0,
         "ForceFields": {},
         "scenelayers": [{
                 "name": "",
@@ -125,11 +124,11 @@
                             "x": 0.0,
                             "y": 0.0
                         },
-                        "radius": 0.0,
+                        "radius": 1.0,
                         "rotation": 90.0,
                         "dynamic": false,
                         "mass": 0.0,
-                        "type": 1,
+                        "type": 0,
                         "size": {
                             "x": 10.0,
                             "y": 1.0

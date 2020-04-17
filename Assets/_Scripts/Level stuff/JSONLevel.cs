@@ -42,7 +42,6 @@ public class Level
     public Endoncollision endoncollision = null;
     public Fire[] fire = null;
     public Targetheight targetheight = null;
-    public string[] tags = null;
 }
 
 public class CameraData
