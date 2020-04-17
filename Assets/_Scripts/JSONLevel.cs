@@ -4,90 +4,92 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-[Serializable]
+
 public class JSONLevel
 {
-    public level level = new level();
+    public Level level = new Level();
 
-    public scene scene = new scene();
+    public Scene scene = new Scene();
+
+    public Resrc resrc = new Resrc();
 }
 
 
 
 #region level
-public class level
+public class Level
 {
     public bool allowskip = true;
     public bool autobounds = false;
     public int ballsrequired = 1;
-    public color cursorcolor;
+    public ColorData cursorcolor;
     public bool letterboxed = false;
     public bool retrytime = false;
     public bool strandgeom = false;
-    public color textcolor = new color();
+    public ColorData textcolor = new ColorData();
     public bool texteffects = true;
     public float timebugprobability = 0.5f;
     public bool visualdebug = false;
     public float zoomoutlimit = 0;
-    public camera camera = null;
-    public music music = null;
-    public loopsound loopsound = null;
-    public signpost signpost = null;
-    public pipe pipe = null;
-    public ballinstance[] BallInstance = null;
-    public strand[] Strand = null;
-    public levelexit levelexit = null;
-    public endoncollision endoncollision = null;
-    public fire[] fire = null;
-    public targetheight targetheight = null;
+    public CameraData camera = null;
+    public Music music = null;
+    public Loopsound loopsound = null;
+    public Signpost signpost = null;
+    public Pipe pipe = null;
+    public Ballinstance[] BallInstance = null;
+    public LStrand[] Strand = null;
+    public Levelexit levelexit = null;
+    public Endoncollision endoncollision = null;
+    public Fire[] fire = null;
+    public Targetheight targetheight = null;
+    public string[] tags = null;
 }
 
-[Serializable]
-public class camera
+public class CameraData
 {
     public string aspect = "widescreen";
-    public position endpos = new position();
+    public Position endpos = new Position();
     public float endzoom = 0;
-    public poi[] poi;
+    public Poi[] poi;
 }
 
-[Serializable]
-public class position
+public class Position
 {
-    public position(float posX = 0, float posY = 0)
+    public Position(float posX = 0, float posY = 0)
     {
         x = posX;
         y = posY;
     }
     public float x;
     public float y;
+
+    public Vector2 ToVector2()
+    {
+        return new Vector2(x, y);
+    }
 }
 
-[Serializable]
-public class poi
+public class Poi
 {
     public float pause = 0;
-    public position pos = new position();
+    public Position pos = new Position();
     public float traveltime = 0;
     public float zoom = 0; 
 }
 
-[Serializable]
-public class music
+public class Music
 {
     public string id = "";
 }
 
-[Serializable]
-public class loopsound
+public class Loopsound
 {
     public string id = "";
 }
 
-[Serializable]
-public class color
+public class ColorData
 {
-    public color(float colorR = 255, float colorG = 255, float colorB = 255)
+    public ColorData(float colorR = 255, float colorG = 255, float colorB = 255)
     {
         r = colorR;
         g = colorG;
@@ -96,13 +98,17 @@ public class color
     public float r = 255;
     public float g = 255;
     public float b = 255;
+
+    public Color ToUnityColor()
+    {
+        return new Color(r, g, b);
+    }
 }
 
-[Serializable]
-public class signpost
+public class Signpost
 {
     public float alpha;
-    public color colorize = new color();
+    public ColorData colorize = new ColorData();
     public float depth;
     public string image = "";
     public string name = "";
@@ -114,59 +120,51 @@ public class signpost
     public float y = 0;
 }
 
-[Serializable]
-public class pipe
+public class Pipe
 {
     public float depth = 0;
     public string id = "0";
     public string type = "";
-    public vertex[] Vertex;
+    public Vertex[] Vertex;
 }
 
-[Serializable]
-public class vertex
+public class Vertex
 {
     public float x = 0;
     public float y = 0;
 }
 
-[Serializable]
-public class ballinstance
+public class Ballinstance
 {
     public float angle = 0;
     public bool discovered = true;
     public string id = "";
     public string type = "";
-    public float x = 0;
-    public float y = 0;
+    public Position pos = new Position();
 }
 
-[Serializable]
-public class strand
+public class LStrand
 {
     public string gb1 = "";
     public string gb2 = "";
 }
 
-[Serializable]
-public class levelexit
+public class Levelexit
 {
     public string filter = "";
     public string id = "";
-    public position pos = new position();
+    public Position pos = new Position();
     public float radius = 0;
 }
 
-[Serializable]
-public class endoncollision
+public class Endoncollision
 {
     public float delay = 0;
     public string id1 = "";
     public string id2 = "";
 }
 
-[Serializable]
-public class fire
+public class Fire
 {
     public float depth = 0;
     public float particles = 0;
@@ -175,8 +173,7 @@ public class fire
     public float y = 0;
 }
 
-[Serializable]
-public class targetheight
+public class Targetheight
 {
     public float y = 0;
 }
@@ -184,92 +181,100 @@ public class targetheight
 #endregion
 
 #region scene
-public class scene
+public class Scene
 {
-    public color backgroundcolor = new color();
+    public ColorData backgroundcolor = new ColorData();
     public float minX;
     public float minY;
     public float maxX;
     public float maxY;
     public ForceFields ForceFields = new ForceFields();
-    public particle[] particles;
-    public scenelayer[] scenelayers;
-    buttongroup[] buttongroups;
+    public Particle[] particles = null;
+    public Scenelayer[] scenelayers = null;
+    public Buttongroup[] buttongroups = null;
+    public Label[] labels = null;
+    public Compositegeom[] compositegeoms = null;
+    public LevelGeometry[] geometries = null;
+    public Line[] lines = null;
+    public Motor[] motors = null;
+    public Hinge[] hinges = null;
 }
 
 public class ForceFields
 {
-    public linearforcefield[] linearforcefields = null;
-    public radialforcefield[] radialforcefields = null;
+    public LinearForceField[] linearforcefields = null;
+    public RadialForceField[] radialforcefields = null;
 }
-public class linearforcefield
+
+public class LinearForceField
 {
     public string type = "";
-    public position force = new position();
+    public Position force = new Position();
     public float dampeningfactor = 0;
     public bool antigrav = true;
     public bool geomonly = false;
     public bool? water = null;
-    public position center = null;
+    public Position center = null;
     public float? size = null;
 }
 
-public class radialforcefield
+public class RadialForceField
 {
     public string type = "";
-    public position force = new position();
+    public Position force = new Position();
     public float dampeningfactor = 0;
     public bool antigrav = true;
     //public bool geomonly = false;
     public float forceatcenter;
     public float forceatedge;
-    public position center = new position(0, 0);
+    public Position center = new Position(0, 0);
 }
 
-public class particle
+public class Particle
 {
-    public enum type : int
+    public enum Type : int
     {
         Ambient,
         PointSource
     }
+    public Type type;
     public float depth;
-    public position pos;
+    public Position pos;
     public float pretick;
 }
 
-public class scenelayer
+public class Scenelayer
 {
     public string name = "";
     public float depth = 0;
-    public position pos = new position(0,0);
+    public Position pos = new Position(0,0);
     public float scaleX = 1;
     public float scaleY = 1;
     public float rotation = 0;
     public float alpha = 1;
-    public color colorize = new color(255, 255, 255);
+    public ColorData colorize = new ColorData(255, 255, 255);
     public string image = "";
     public bool tileX = false;
     public bool tileY = false;
 }
 
-public class buttongroup
+public class Buttongroup
 {
     public string id = "";
-    public position osx = new position(); //what is osx i dont know
-    public button[] buttons;
+    public Position osx = new Position(); //what is osx i dont know
+    public Button[] buttons;
 }
 
-public class button
+public class Button
 {
     public string id = "";
     public float depth = 0;
-    public position pos = new position();
+    public Position pos = new Position();
     public float scaleX = 0;
     public float scaleY = 0;
     public float rotation = 0;
     public float alpha = 1;
-    public color colorize = new color();
+    public ColorData colorize = new ColorData();
     public string up = "";
     public string over = "";
     public string onclick = "";
@@ -277,8 +282,81 @@ public class button
     public string onmouseexit = "";
 }
 
-public class label
+public class Label
 {
-
+    public Position center = new Position();
+    public float rotation = 0;
+    public float scale = 0;
+    public float depth = 0;
+    public bool overlay = false;
+    public string text = "";
+    public string font = "";
 }
+
+public class Compositegeom
+{
+    public string name = "";
+    public Position position = new Position();
+    public bool dynamic = false;
+    public LevelGeometry[] geometries;
+    public string image;
+    public Position imagepos;
+    public float imagerot;
+    public Position imagescale;
+    public float rotspeed;
+}
+
+public class LevelGeometry
+{
+    public string id = "";
+    public string tag = "";
+    public string material = "";
+    public Position center = new Position();
+    public float radius;
+    public float rotation;
+    public bool dynamic = false;
+    public float mass;
+    public enum Type
+    {
+        Circle,
+        Rectangle
+    }
+    public Type type;
+    public Position size;
+    public float rotspeed;
+    public Scenelayer image;
+}
+
+public class Line
+{
+    public string id = "";
+    public string tag = "";
+    public string material = "";
+    public Position anchor = new Position();
+    public Position normal = new Position(1, 1);
+}
+
+public class Motor
+{
+    public string body = "";
+    public float speed = 0;
+    public float maxforce = 0;
+}
+
+public class Hinge
+{
+    public string body1 = "";
+    public string body2;
+    public Position anchor = new Position();
+}
+#endregion
+
+#region resources
+public class Resrc
+{
+    public string id = "";
+    public Dictionary<string, string> prefixes = new Dictionary<string, string>();
+    public Dictionary<string, string> resources = new Dictionary<string, string>();
+}
+
 #endregion
