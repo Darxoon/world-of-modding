@@ -14,6 +14,7 @@ public class JSONLevelLoader : MonoBehaviour
         Level,Gooball,None
     }
     public SaveMode saveMode = SaveMode.None;
+    public string levelName = "demoLevel";
     public bool visualdebug;
     void Start()
     {
@@ -177,14 +178,30 @@ public class JSONLevelLoader : MonoBehaviour
         }
         else if(saveMode == SaveMode.None)
         {
-
-
-            JSONLevel level = JsonConvert.DeserializeObject<JSONLevel>(File.ReadAllText(StaticData.levelFolder + "demoLevel/demoLevel.json"), settings);
-
+            JSONLevel level = null;
+            if(File.Exists(StaticData.levelFolder + $"{levelName}/{levelName}.json"))
+                level = JsonConvert.DeserializeObject<JSONLevel>(File.ReadAllText(StaticData.levelFolder + $"{levelName}/{levelName}.json"), settings);
+            else if(
+                File.Exists(StaticData.levelFolder + $"{levelName}/{levelName}.level") &&
+                File.Exists(StaticData.levelFolder + $"{levelName}/{levelName}.scene") &&
+                File.Exists(StaticData.levelFolder + $"{levelName}/{levelName}.resrc")
+            )
+                level = ResourceConverter.ConvertXMLLevelToJSON(
+                    StaticData.levelFolder + $"{levelName}/{levelName}.scene",
+                    StaticData.levelFolder + $"{levelName}/{levelName}.resrc",
+                    StaticData.levelFolder + $"{levelName}/{levelName}.level"
+                );
+            else
+                return;
             visualdebug = level.level.visualdebug;
 
             Camera.main.backgroundColor = level.scene.backgroundcolor.ToUnityColor();
-
+            //TODO: Implement POIs
+            try{
+                Camera.main.orthographicSize = level.level.camera.endzoom;
+                Camera.main.transform.position = new Vector3(level.level.camera.endpos.x, level.level.camera.endpos.y, -100);
+            } catch{}
+            
             foreach (var resource in level.resrc.resources)
             {
                 GameManager.ResourcePaths.Add(resource.Key, resource.Value);
@@ -216,6 +233,20 @@ public class JSONLevelLoader : MonoBehaviour
                 geom.transform.SetParent(StaticData.geometry.transform);
             }
 
+            foreach (var l in level.scene.lines){
+                GameObject line = new GameObject(l.id);
+                line.transform.position = l.anchor.ToVector2();
+                var box = line.AddComponent<BoxCollider2D>();
+                box.offset = new Vector2(-0.5f, 0);
+                box.size = new Vector2(1, 10000);
+                float cosNormal = Vector2.Dot(l.normal.ToVector2().normalized, Vector2.up);
+                if(l.normal.x > 0)
+                    line.transform.eulerAngles = new Vector3(0, 0, (System.MathF.Acos(cosNormal)*180/System.MathF.PI) - 90f);
+                else
+                    line.transform.eulerAngles = new Vector3(0, 0, (System.MathF.Acos(cosNormal)*180/System.MathF.PI) + 90f);
+                line.transform.SetParent(StaticData.geometry.transform);
+            }
+
             foreach (var compositegeom in level.scene.compositegeoms)
             {
                 GameObject geom = new GameObject(compositegeom.name);
@@ -236,6 +267,7 @@ public class JSONLevelLoader : MonoBehaviour
                 g.data = ball;
                 g.gooballPosition = new Vector3(gball.pos.x, gball.pos.y, 0);
                 gooball.layer = LayerMask.NameToLayer("Detached Balls");
+                gooball.tag = "Ball";
             }
 
             foreach(LStrand strand in level.level.Strand)

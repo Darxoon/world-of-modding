@@ -35,6 +35,8 @@ public class WalkOnStrand : MonoBehaviour
         nextBall = next == 0 ? strand.connectedBall1Class : strand.connectedBall2Class;
         
         isMoving = true;
+        //remove all collisions
+        GetComponent<CircleCollider2D>().enabled = false;
     }
 
 

@@ -98,69 +98,69 @@ public class Gooball : MonoBehaviour
 
     private void Start()
     {
-        if (byPrefab)
-        {
-            rigidbody = gameObject.GetComponent<Rigidbody2D>();
-            rigidbody.mass = OriginalMass + extraMass;
-        }
-        else
-        {
-            //do the loading move
-            initialStrands = new Gooball[] { };
-            
+        //random shit idk
+        data ??= new JSONGooball();
+        rigidbody = gameObject.GetComponent<Rigidbody2D>();
+        if(rigidbody == null)
             rigidbody = gameObject.AddComponent<Rigidbody2D>();
+        rigidbody.mass = OriginalMass + extraMass;
+        //do the loading move
+        initialStrands = new Gooball[] { };
+        
+        Debug.Log(data.ball.detachable);
 
-            CircleCollider2D mainCol = gameObject.AddComponent<CircleCollider2D>();
-            mainCol.radius = data.ball.radius;
-            
-            GameObject sensor = new GameObject("Sensor");
-            sensor.transform.SetParent(transform);
-            
-            CapsuleCollider2D capsuleCollider = sensor.AddComponent<CapsuleCollider2D>();
-            //TODO: ADD A WAY TO DEFINE THOSE TWO VARIABLES AUTOMATICALLY
-            capsuleCollider.size = new Vector2(3.257942f, 0.9263445f);
-            capsuleCollider.offset = new Vector2(0, -2.43f);
-            capsuleCollider.direction = CapsuleDirection2D.Horizontal;
-            capsuleCollider.isTrigger = true;
-            
-            GameObject wallColliderObject = new GameObject("WallCollider");
-            wallColliderObject.transform.SetParent(sensor.transform);
-            
-            CapsuleCollider2D wallCollider = wallColliderObject.AddComponent<CapsuleCollider2D>();
-            wallCollider.offset = new Vector2(-0.02958627f, -0.09866164f);
-            wallCollider.size = new Vector2(5.809811f, 1.444782f);
-            wallCollider.direction = CapsuleDirection2D.Horizontal;
-            wallCollider.isTrigger = true;
-            
-            sensor.AddComponent<BallSensor>();
-            Walk walkScript = gameObject.AddComponent<Walk>();
-            //if 1 its going left, if 0 its right or the other way around idk
-            walkScript.startingDirection = Random.Range(0, 1) == 1 ? new Vector3(1, 0, 0) : new Vector3(-1, 0, 0);
-            walkScript.walkSpeed = data.ball.walkSpeed;
-            walkScript.randomSpeedScale = data.ball.speedDifference.ToVector2();
-            walkScript.doesCheckForStrands = data.ball.climber;
-            
-            randomSpeedMultiplier = Random.Range(data.ball.speedDifference.x, data.ball.speedDifference.y);
-            rigidbody.mass = data.ball.mass;
-            towerMass = data.ball.towerMass;
-            strandCount = data.ball.strands;
+        CircleCollider2D mainCol = gameObject.AddComponent<CircleCollider2D>();
+        mainCol.radius = data.ball.radius;
+        
+        GameObject sensor = new GameObject("Sensor");
+        sensor.transform.SetParent(transform);
+        
+        CapsuleCollider2D capsuleCollider = sensor.AddComponent<CapsuleCollider2D>();
+        //TODO: ADD A WAY TO DEFINE THOSE TWO VARIABLES AUTOMATICALLY
+        capsuleCollider.size = new Vector2(3.257942f, 0.9263445f);
+        capsuleCollider.offset = new Vector2(0, -2.43f);
+        capsuleCollider.direction = CapsuleDirection2D.Horizontal;
+        capsuleCollider.isTrigger = true;
+        
+        GameObject wallColliderObject = new GameObject("WallCollider");
+        wallColliderObject.transform.SetParent(sensor.transform);
+        
+        CapsuleCollider2D wallCollider = wallColliderObject.AddComponent<CapsuleCollider2D>();
+        wallCollider.offset = new Vector2(-0.02958627f, -0.09866164f);
+        wallCollider.size = new Vector2(5.809811f, 1.444782f);
+        wallCollider.direction = CapsuleDirection2D.Horizontal;
+        wallCollider.isTrigger = true;
+        
+        sensor.AddComponent<BallSensor>();
+        Walk walkScript = gameObject.AddComponent<Walk>();
+        //if 1 its going left, if 0 its right or the other way around idk
+        walkScript.startingDirection = Random.Range(0, 1) == 1 ? new Vector3(1, 0, 0) : new Vector3(-1, 0, 0);
+        walkScript.walkSpeed = data.ball.walkSpeed;
+        walkScript.randomSpeedScale = data.ball.speedDifference.ToVector2();
+        walkScript.doesCheckForStrands = data.ball.climber;
+        
+        randomSpeedMultiplier = Random.Range(data.ball.speedDifference.x, data.ball.speedDifference.y);
+        rigidbody.mass = data.ball.mass;
+        towerMass = data.ball.towerMass;
+        strandCount = data.ball.strands;
 
-            // parts  
-            foreach (Part part in data.parts)
-            {
-                GameObject partObject = new GameObject(part.name);
-                SpriteRenderer spriteRenderer = partObject.AddComponent<SpriteRenderer>();
-                GameManager.imageFiles.TryGetValue(part.image[Random.Range(0, part.image.Length - 1)], out Sprite sprite);
-                spriteRenderer.sprite = sprite;
-                partObject.transform.SetParent(transform);
-            }
-
-            GameManager.imageFiles.TryGetValue(data.strand.image, out strandSprite);
-            //strand
-            Transform transform1 = transform;
-            transform1.localScale = new Vector3(0.1f, 0.1f);
-            transform1.localPosition = gooballPosition;
+        // parts  
+        foreach (Part part in data.parts)
+        {
+            GameObject partObject = new GameObject(part.name);
+            SpriteRenderer spriteRenderer = partObject.AddComponent<SpriteRenderer>();
+            GameManager.imageFiles.TryGetValue(part.image[Random.Range(0, part.image.Length - 1)], out Sprite sprite);
+            spriteRenderer.sprite = sprite;
+            spriteRenderer.sortingOrder = 1;
+            partObject.transform.SetParent(transform);
         }
+
+        GameManager.imageFiles.TryGetValue(data.strand.image, out strandSprite);
+        //strand
+        Transform transform1 = transform;
+        transform1.localScale = new Vector3(0.1f, 0.1f);
+        transform1.localPosition = gooballPosition;
+        
         mainCam = Camera.main;
         
         if(initialStrands.Length > 0)
@@ -281,16 +281,20 @@ public class Gooball : MonoBehaviour
             // changing the layer
             gameObject.layer = LayerMask.NameToLayer("Selected Ball");
 
+            //disable all collisions so we dont cause any problems
+            GetComponent<CircleCollider2D>().enabled = false;
+
             // attaching 
 
             AttachRaycast();
 
+            foreach(var walkOnStrand in GetComponents<WalkOnStrand>())
+                Destroy(walkOnStrand);
 
             // stop dragging
             if (Input.GetMouseButtonUp(0))
             {
                 GameManager.instance.isDragging = false;
-                AttachRaycast();
 
                 if (GameManager.instance.hoverStrand)
                 {
@@ -304,6 +308,8 @@ public class Gooball : MonoBehaviour
                     transform.SetParent(GameManager.instance.hoverStrand.transform, true);
                     return;
                 }
+                
+                AttachRaycast();
 
                 // remove constraints
                 if (GameManager.instance.drag != null) { rigidbody.constraints = RigidbodyConstraints2D.None; }
@@ -355,6 +361,8 @@ public class Gooball : MonoBehaviour
                     
                 }
                 Debug.Log("stopped dragging");
+                GetComponent<CircleCollider2D>().enabled = true;
+
             }
 
         }
@@ -420,8 +428,18 @@ public class Gooball : MonoBehaviour
             {
                 strand.connectedBall2Class.attachedBalls.Remove(this);
             }
+            for(int i = 0; i < strand.transform.childCount; i++){
+                Transform obj = strand.transform.GetChild(i);
+                if(obj.CompareTag("Ball")){
+                    obj.SetParent(StaticData.balls.transform);
+                    obj.GetComponent<Gooball>().isOnStrand = false;
+                    foreach(var walkOnStrand in obj.GetComponents<WalkOnStrand>())
+                        Destroy(walkOnStrand);
+                    obj.GetComponent<Rigidbody2D>().constraints = 0;
+                    obj.GetComponent<CircleCollider2D>().enabled = true;
+                }
+            }
             Destroy(strand.gameObject);
-
         }
         attachedBalls.Clear();
         isTower = false;
@@ -482,6 +500,9 @@ public class Gooball : MonoBehaviour
         isTower = true;
         gameObject.layer = LayerMask.NameToLayer("Attached Balls");
         // freeze THIS BALL's rotation
+        if(byPrefab && rigidbody == null){
+            rigidbody = gameObject.GetComponent<Rigidbody2D>();
+        }
         rigidbody.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 }

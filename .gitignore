@@ -7,3 +7,9 @@ obj/*
 Assets/Plugins/JetBrains/*
 *.swp
 *.sln
+Assets/res/images/levelimages/*
+Assets/res/levels/GoingUp/*
+Assets/res/music/*
+game/*
+*.log
+.vscode/*

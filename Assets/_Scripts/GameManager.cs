@@ -18,6 +18,12 @@ public class GameManager : MonoBehaviour
     private Collider2D[] hoverStrandsUnfiltered = new Collider2D[16];
     private Collider2D[] hoverStrands = new Collider2D[16];
 
+    [Header("Positioning fine tuning")]
+
+    [SerializeField] private float scale;
+    [SerializeField] public float positiveDistanceScale;
+    [SerializeField] public float negativeDistanceScale;
+    
     private void Awake()
     {
         if (instance)
@@ -103,7 +109,7 @@ public class GameManager : MonoBehaviour
         SpriteRenderer spriteRenderer = visual.AddComponent<SpriteRenderer>();
         spriteRenderer.sprite = b1.strandSprite;
         spriteRenderer.flipY = true;
-        spriteRenderer.sortingLayerName = "Strands";
+        //spriteRenderer.sortingLayerName = "Strands"; - this makes strands render in front of gooballs, which is undesireable
         spriteRenderer.enabled = false;
 
         Strand strand = child.AddComponent<Strand>();

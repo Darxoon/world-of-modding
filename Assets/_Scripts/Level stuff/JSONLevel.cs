@@ -198,6 +198,17 @@ public class Scene
     public Line[] lines = null;
     public Motor[] motors = null;
     public Hinge[] hinges = null;
+    public Scene() {
+        particles = new Particle[0];
+        scenelayers = new Scenelayer[0];
+        buttongroups = new Buttongroup[0];
+        labels = new Label[0];
+        compositegeoms = new Compositegeom[0];
+        geometries = new LevelGeometry[0];
+        lines = new Line[0];
+        motors = new Motor[0];
+        hinges = new Hinge[0];
+    }
 }
 
 public class ForceFields
@@ -232,6 +243,7 @@ public class RadialForceField
 
 public class Particle
 {
+    public string effect;
     public enum Type : int
     {
         Ambient,

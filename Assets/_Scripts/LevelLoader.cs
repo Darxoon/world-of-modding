@@ -1,9 +1,11 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System;
 using System.Xml;
+using System.Globalization;
+using System.Linq;
 
 
 public class LevelLoader : MonoBehaviour
@@ -74,6 +76,7 @@ public class LevelLoader : MonoBehaviour
     [SerializeField] private Vector2 fixedScreenSize;
 
     [SerializeField] private GameObject sceneLayerPrefab;
+    [SerializeField] private GameObject ballPrefab; //ideally would cache all balls on startup
 
     [Header("Positioning fine tuning")]
 
@@ -84,6 +87,8 @@ public class LevelLoader : MonoBehaviour
     [Header("References")]
 
     [SerializeField] private Transform sceneLayerGroup;
+    [SerializeField] private Transform ballGroup;
+    [SerializeField] private Transform geometryGroup;
 
     // references that can be guessed automatically 
 
@@ -104,22 +109,30 @@ public class LevelLoader : MonoBehaviour
         // load the files
         try
         {
-            
+            XmlDocument level = new XmlDocument();
+            Debug.Log($"{Path.Combine(resDirectory, "res", levelDirectory, levelToLoad, levelToLoad + ".level")}");
+            XmlTextReader levelReader = new XmlTextReader(Path.Combine(resDirectory, "res", levelDirectory, levelToLoad, levelToLoad + ".level"));
+            levelReader.Read();
+            level.Load(levelReader);
+
+            Debug.LogWarning("loading .level");
+            LoadLevel(level);
+
             XmlDocument resrc = new XmlDocument();
             Debug.Log($"{Path.Combine(resDirectory, "res", levelDirectory, levelToLoad, levelToLoad + ".resrc")}");
             XmlTextReader resrcReader = new XmlTextReader(Path.Combine(resDirectory, "res", levelDirectory, levelToLoad, levelToLoad + ".resrc"));
             resrcReader.Read();
             resrc.Load(resrcReader);
 
-            Debug.LogWarning("loading resrc");
+            Debug.LogWarning("loading .resrc");
             LoadResrc(resrc);
 
             XmlDocument scene = new XmlDocument();
-            XmlTextReader levelReader = new XmlTextReader(Path.Combine(resDirectory, "res", levelDirectory, levelToLoad, levelToLoad + ".scene"));
-            levelReader.Read();
-            scene.Load(levelReader);
+            XmlTextReader sceneReader = new XmlTextReader(Path.Combine(resDirectory, "res", levelDirectory, levelToLoad, levelToLoad + ".scene"));
+            sceneReader.Read();
+            scene.Load(sceneReader);
 
-            Debug.LogWarning("loading scene");
+            Debug.LogWarning("loading .scene");
             LoadScene(scene);
 
             //Path.Combine(resDirectory, levelDirectory, levelToLoad, levelToLoad + ".scene
@@ -130,8 +143,51 @@ public class LevelLoader : MonoBehaviour
             Debug.Log(e.Message);
             return;
         } 
+    }
 
-
+    private void LoadLevel(XmlDocument level)
+    {
+        // ------ load camera info ------
+        XmlNodeList cameras = level.SelectNodes("/level/camera");
+        foreach(XmlNode camera in cameras){
+            if(camera.Attributes["aspect"].Value == "widescreen"){
+                Camera mainCam = UnityEngine.Camera.main;
+                mainCam.orthographicSize = float.Parse(camera.Attributes["endzoom"].Value, CultureInfo.InvariantCulture)*1.7f;
+                string[] endpos = camera.Attributes["endpos"].Value.Split(",");
+                Vector2 pos = new Vector2(float.Parse(endpos[0], CultureInfo.InvariantCulture), float.Parse(endpos[1], CultureInfo.InvariantCulture))
+                / 15 * scale / fixedScreenSize;
+                mainCam.transform.position = new Vector3(pos.x, pos.y, -100);
+                break;
+            }
+        }
+        // ------ load balls -----------
+        XmlNodeList balls = level.SelectNodes("/level/BallInstance");
+        foreach(XmlNode ball in balls){
+            string ballType = ball.Attributes["type"].Value;
+            string x = ball.Attributes["x"].Value;
+            string y = ball.Attributes["y"].Value;
+            string id = ball.Attributes["id"].Value;
+            GameObject scnBall = Instantiate(ballPrefab, ballGroup);
+            var data = new JSONGooball();
+            data.ball.towerMass = 0.7f;
+            data.ball.mass = 3;
+            data.strand.image = "balls/common/strand.png";
+            scnBall.GetComponent<Gooball>().data = data;
+            float scaleDiv = 100f;
+            scnBall.transform.position = new Vector3(float.Parse(x, CultureInfo.InvariantCulture) / scaleDiv, float.Parse(y, CultureInfo.InvariantCulture) / scaleDiv);
+            scnBall.name = id;
+        }
+        // -------- load strands ----------
+        XmlNodeList strands = level.SelectNodes("/level/Strand");
+        foreach(XmlNode strand in strands){
+            Gooball gb1 = ballGroup.Find(strand.Attributes["gb1"].Value).GetComponent<Gooball>();
+            Gooball gb2 = ballGroup.Find(strand.Attributes["gb2"].Value).GetComponent<Gooball>();
+            List<Gooball> strs = new List<Gooball>(gb1.initialStrands)
+            {
+                gb2
+            };
+            gb1.initialStrands = strs.ToArray();
+        }
     }
 
     private void LoadResrc(XmlDocument resrc)
@@ -179,7 +235,21 @@ public class LevelLoader : MonoBehaviour
 
         //}
     }
-
+    private void CreateBlackBar(Vector2 pivot, Vector3 offset){
+        GameObject leftBar = new GameObject("BlackBar");
+        SpriteRenderer leftRenderer = leftBar.AddComponent<SpriteRenderer>();
+        Texture2D texture = new Texture2D(100, 1000);
+        for(int i = 0; i < texture.width; i++)
+            for(int j = 0; j < texture.height; j++)
+                texture.SetPixel(i, j, new Color(0,0,0));
+        texture.filterMode = FilterMode.Point;
+        texture.Apply();
+        leftBar.transform.position = offset;
+        leftBar.transform.localScale = new Vector3(100, 100, 1);
+        leftRenderer.sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), pivot);
+        leftRenderer.color = new Color(0,0,0);
+        leftRenderer.sortingOrder = 1000;
+    }
     private void LoadScene(XmlDocument scene)
     {
         XmlNode sceneAttributes = scene.SelectSingleNode("/scene");
@@ -191,39 +261,38 @@ public class LevelLoader : MonoBehaviour
             sceneAttributes.Attributes["maxy"].Value,
             sceneAttributes.Attributes["backgroundcolor"].Value);
 
+        //set up black bars
+        float minXOffset = sceneInfo.minX / 12 * scale / fixedScreenSize.x;
+        float minYOffset = sceneInfo.minY / 12 * scale / fixedScreenSize.y;
+        float maxXOffset = sceneInfo.maxX / 12 * scale / fixedScreenSize.x;
+        float maxYOffset = sceneInfo.maxY / 12 * scale / fixedScreenSize.y;
+        CreateBlackBar(new Vector2(1f, 0.5f), new Vector3(minXOffset, 0));
+        CreateBlackBar(new Vector2(0f, 0.5f), new Vector3(maxXOffset, 0));
+        CreateBlackBar(new Vector2(0.5f, 1f), new Vector3(0, minYOffset));
+        CreateBlackBar(new Vector2(0.5f, 0f), new Vector3(0, maxYOffset));
+
         // scene layers
         XmlNodeList sceneLayerNodes = scene.SelectNodes("/scene/SceneLayer");
         List<SceneLayer> sceneLayers = new List<SceneLayer>();
         foreach (XmlNode item in sceneLayerNodes)
         {
-            //sceneLayers.Add(new SceneLayer(
-            //    item.Attributes["depth"].Value,
-            //    item.Attributes["x"].Value,
-            //    item.Attributes["y"].Value,
-            //    item.Attributes["scalex"].Value,
-            //    item.Attributes["scaley"].Value,
-            //    item.Attributes["rotation"].Value,
-            //    item.Attributes["alpha"].Value,
-            //    item.Attributes["colorize"].Value,
-            //    item.Attributes["image"].Value), 
-            //    item.Attributes["name"].Value);
-
             string[] colors = item.Attributes["colorize"].Value.Split(',');
-
-            sceneLayers.Add(new SceneLayer
+            SceneLayer l = new SceneLayer
             {
-                depth = float.Parse(item.Attributes["depth"].Value),
-                pos = new Vector2(float.Parse(item.Attributes["x"].Value), float.Parse(item.Attributes["y"].Value)),
-                scale = new Vector2(float.Parse(item.Attributes["scalex"].Value), float.Parse(item.Attributes["scaley"].Value)),
-                rotation = float.Parse(item.Attributes["rotation"].Value),
+                depth = float.Parse(item.Attributes["depth"].Value, CultureInfo.InvariantCulture),
+                pos = new Vector2(float.Parse(item.Attributes["x"].Value, CultureInfo.InvariantCulture), float.Parse(item.Attributes["y"].Value, CultureInfo.InvariantCulture)),
+                scale = new Vector2(float.Parse(item.Attributes["scalex"].Value, CultureInfo.InvariantCulture), float.Parse(item.Attributes["scaley"].Value, CultureInfo.InvariantCulture)),
+                rotation = float.Parse(item.Attributes["rotation"].Value, CultureInfo.InvariantCulture),
                 colorize = new UnityEngine.Color(
-                    float.Parse(colors[0]) / 255,
-                    float.Parse(colors[1]) / 255,
-                    float.Parse(colors[2]) / 255,
-                    float.Parse(item.Attributes["alpha"].Value)),
+                    float.Parse(colors[0], CultureInfo.InvariantCulture) / 255,
+                    float.Parse(colors[1], CultureInfo.InvariantCulture) / 255,
+                    float.Parse(colors[2], CultureInfo.InvariantCulture) / 255,
+                    float.Parse(item.Attributes["alpha"].Value, CultureInfo.InvariantCulture)),
                 image = item.Attributes["image"].Value,
                 name = item.Attributes["name"].Value
-            });
+            };
+            Console.WriteLine("----------------" + l.scale);
+            sceneLayers.Add(l);
         }
         this.sceneLayers = sceneLayers.ToArray();
 
@@ -245,8 +314,10 @@ public class LevelLoader : MonoBehaviour
                 distance = relativeWorldPosition.magnitude;
             Vector2 offsettedRelativeWorldPosition = relativeWorldPosition.normalized * distance;
 
-            sceneLayer.transform.position = offsettedRelativeWorldPosition + (Vector2)mainCam.transform.position;
-            sceneLayer.transform.position = new Vector3(sceneLayer.transform.position.x, sceneLayer.transform.position.y, -item.depth / 100);
+            //sceneLayer.transform.position = offsettedRelativeWorldPosition + (Vector2)mainCam.transform.position;
+            //sceneLayer.transform.position = new Vector3(sceneLayer.transform.position.x, sceneLayer.transform.position.y, Math.Abs(item.depth / 100));
+            
+            sceneLayer.transform.position = new Vector3(worldPosition.x, worldPosition.y, -item.depth / 100);
 
             // rotation 
 
@@ -267,9 +338,55 @@ public class LevelLoader : MonoBehaviour
             parallaxComponent.positiveDistanceScale = positiveDistanceScale;
             parallaxComponent.negativeDistanceScale = negativeDistanceScale;
             parallaxComponent.depth = item.depth;
-            parallaxComponent.worldPosition = worldPosition; 
+            parallaxComponent.worldPosition = sceneLayer.transform.position; 
 
         }
 
+        XmlNodeList circles = scene.SelectNodes("/scene/circle");
+        foreach(XmlNode circle in circles){
+            string id = circle.Attributes["id"].Value;
+            bool staticval = bool.Parse(circle.Attributes["static"].Value);
+            string tag = circle.Attributes["tag"].Value;
+            string material = circle.Attributes["material"].Value;
+            float x = float.Parse(circle.Attributes["x"].Value, CultureInfo.InvariantCulture) / 15 * scale / fixedScreenSize.x;
+            float y = float.Parse(circle.Attributes["y"].Value, CultureInfo.InvariantCulture) / 15 * scale / fixedScreenSize.y;
+            Debug.Log(y);
+            float radius = float.Parse(circle.Attributes["radius"].Value, CultureInfo.InvariantCulture) / 15 * scale / fixedScreenSize.x;
+            GameObject obj = new GameObject(id);
+            if(staticval){
+                CircleCollider2D col = obj.AddComponent<CircleCollider2D>();
+                col.radius = radius;
+            }
+            obj.transform.position = new Vector3(x, y, 0);
+            obj.transform.SetParent(geometryGroup);
+        }
+        XmlNodeList lines = scene.SelectNodes("/scene/line");
+        foreach(XmlNode line in lines){
+            string id = line.Attributes["id"].Value;
+            bool staticval = bool.Parse(line.Attributes["static"].Value);
+            try{string tag = line.Attributes["tag"].Value;            } catch{}
+            string material = line.Attributes["material"].Value;
+            string[] anchor = line.Attributes["anchor"].Value.Split(",");
+            float x = float.Parse(anchor[0], CultureInfo.InvariantCulture) / 14 * scale / fixedScreenSize.x;
+            float y = float.Parse(anchor[1], CultureInfo.InvariantCulture) / 14 * scale / fixedScreenSize.y;
+            string[] normal = line.Attributes["normal"].Value.Split(",");
+            float nx = float.Parse(normal[0], CultureInfo.InvariantCulture);
+            float ny = float.Parse(normal[1], CultureInfo.InvariantCulture);
+            Vector2 normalvec = new Vector2(MathF.Round(nx,1), MathF.Round(ny,1));
+            float rotRadians = Vector2.Dot(normalvec.normalized, Vector2.up);
+            GameObject obj = new GameObject(id);
+            if(normalvec.x > 0)
+                obj.transform.eulerAngles = new Vector3(0, 0, (float)(Math.Acos(rotRadians)*180/Math.PI) - 90f);
+            else
+                obj.transform.eulerAngles = new Vector3(0, 0, (float)(Math.Acos(rotRadians)*180/Math.PI) + 90f);
+            Debug.Log($"{rotRadians} - {Math.Acos(rotRadians)} - {Math.Acos(rotRadians)*180/Math.PI}");
+            if(staticval){
+                BoxCollider2D col = obj.AddComponent<BoxCollider2D>();
+                col.offset = new Vector2(-0.5f, 0);
+                col.size = new Vector2(1, 10000);
+            }
+            obj.transform.position = new Vector3(x, y, 0);
+            obj.transform.SetParent(geometryGroup);
+        }
     }
 }
