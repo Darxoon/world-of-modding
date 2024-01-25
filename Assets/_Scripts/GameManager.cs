@@ -62,6 +62,33 @@ public class GameManager : MonoBehaviour
             GameObject hoverStrandGameObject = hoverStrands.Last().transform.parent.gameObject;
             hoverStrand = StaticData.existingStrands[hoverStrandGameObject];
         }
+        DragGooball();
+    }
+
+    private void DragGooball(){
+        if(Input.GetMouseButtonDown(0) && !isDragging){
+            RaycastHit2D[] hits = new RaycastHit2D[500];
+            int size = Physics2D.GetRayIntersectionNonAlloc(mainCam.ScreenPointToRay(Input.mousePosition), hits, Mathf.Infinity, 
+            LayerMask.GetMask("Detached Balls", "Attached Balls"));
+            if (size > 0)
+            {
+                foreach (RaycastHit2D raycastHit2D in hits)
+                {
+                    //Debug.DrawLine(mainCam.transform.position, raycastHit2D.point, Color.red);
+                    if(raycastHit2D.transform == null)
+                        continue;
+                    Gooball ball = raycastHit2D.transform.GetComponent<Gooball>();
+                    //Debug.Log(raycastHit2D.transform.name);
+                    if (ball != null && (ball.IsTower == false || ball.data.ball.detachable))
+                    {
+                        ball.isDragged = true;
+                        isDragging = true;
+                        drag = raycastHit2D.transform.gameObject;
+                        return;
+                    }
+                }
+            }
+        }
     }
 
     [SerializeField]public static Dictionary<string, string> ResourcePaths = new Dictionary<string, string>();

@@ -58,7 +58,7 @@ public class Gooball : MonoBehaviour
 
     public int rays = 50;
     [SerializeField] private bool isTower;
-    [SerializeField] private bool isDragged;
+    [SerializeField] public bool isDragged;
     [SerializeField] private bool isDetaching;
     public bool isOnStrand = false;
 
@@ -214,6 +214,7 @@ public class Gooball : MonoBehaviour
 
     private void Update()
     {
+        /*
         if (Input.GetMouseButtonDown(0) && !IsTower && !GameManager.instance.isDragging)
         {
             RaycastHit2D[] hits = new RaycastHit2D[500];
@@ -234,6 +235,7 @@ public class Gooball : MonoBehaviour
                 }
             }
         }
+        */
         if (data.ball.detachable)
         {
             if (Input.GetMouseButtonDown(0) && isTower)
