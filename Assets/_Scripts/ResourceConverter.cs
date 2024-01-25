@@ -231,7 +231,7 @@ public class ResourceConverter
         Dictionary<string, float> optionalrootvardict = new Dictionary<string, float>();
         foreach(var optionalvar in optionalrootvars)
         try{
-            optionalrootvardict.Add(optionalvar, float.Parse(root[optionalvar].Value, CultureInfo.InvariantCulture));
+            optionalrootvardict.Add(optionalvar, float.Parse(root.Attributes[optionalvar].Value, CultureInfo.InvariantCulture)/DivFac);
         } catch {}
         scene.minX = optionalrootvardict.GetValueOrDefault("minx");
         scene.minY = optionalrootvardict.GetValueOrDefault("miny");

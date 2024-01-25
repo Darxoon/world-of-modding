@@ -70,6 +70,7 @@
     <Compile Include="Assets\_Scripts\Level stuff\SceneLayer.cs" />
     <Compile Include="Assets\_Scripts\ResourceConverter.cs" />
     <Compile Include="Assets\_Scripts\Ingame\SpriteData.cs" />
+    <Compile Include="Assets\CameraController.cs" />
     <Compile Include="Assets\_Scripts\Level stuff\CompositeGeom.cs" />
     <Compile Include="Assets\_Scripts\UI\ButtonHitbox.cs" />
     <Compile Include="Assets\_Scripts\Ingame\Strand.cs" />

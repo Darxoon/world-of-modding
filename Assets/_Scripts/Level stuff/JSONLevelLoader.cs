@@ -222,7 +222,7 @@ public class JSONLevelLoader : MonoBehaviour
             return;
         }
         visualdebug = level.level.visualdebug;
-
+        GameManager.instance.currentLevel = level;
         Camera.main.backgroundColor = level.scene.backgroundcolor.ToUnityColor();
         //TODO: Implement POIs
         try{

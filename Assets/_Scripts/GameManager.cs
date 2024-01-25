@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float scale;
     [SerializeField] public float positiveDistanceScale;
     [SerializeField] public float negativeDistanceScale;
+    public JSONLevel currentLevel = null;
     
     private void Awake()
     {
