@@ -23,12 +23,16 @@ public class Strand : MonoBehaviour
 
     [SerializeField] private float stretchMultiplier = 1.35f;
     public float strandThickness;
+    private float spritelen = 0;
 
     private void Awake()
     {
         StaticData.existingStrands.Add(gameObject, this);
     }
-
+    void Start(){
+        rendererObject.transform.localScale = Vector2.one;
+        spritelen = renderer.sprite.bounds.max.y - renderer.sprite.bounds.min.y;
+    }
     private void Update()
     {
         
@@ -45,8 +49,11 @@ public class Strand : MonoBehaviour
         // calculate the actual difference between this goo ball and the other gooball
         float distance = Vector3.Distance(ball2Position, ball1Position);
         // apply the scale
-
-        rendererObject.transform.localScale = new Vector3(strandThickness * 0.6f / distance, distance / 3f * stretchMultiplier / 2f, 0);
+        //renderer.drawMode = SpriteDrawMode.Sliced;
+        renderer.size = new Vector2(strandThickness * 0.6f / distance, distance);
+        //renderer.sprite.textureRect
+        //rendererObject.transform.localScale = new Vector3(strandThickness * 0.6f / distance, distance / 3f * stretchMultiplier / 2f, 0);
+        rendererObject.transform.localScale = new Vector3(strandThickness * 0.6f / distance, distance/spritelen, 0);
 
         // calculate and apply center
         Vector3 center = (ball2Position + ball1Position) * 0.5f;

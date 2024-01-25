@@ -41,11 +41,12 @@ public static class StaticData
             else if(!GameManager.imageFiles.ContainsKey(Path.Key))
             {
                 string fullpath = resFolder + Path.Value;
-                if(fullpath.Contains("/balls/")){
-
-                }
                 if(File.Exists(fullpath.Substring(0, fullpath.Length-4) + "@2x.png")){
                     fullpath = fullpath.Substring(0, fullpath.Length-4) + "@2x.png";
+                }
+                if(!File.Exists(fullpath)){
+                    Debug.LogWarning($"Texture at {fullpath} for ID {Path.Key} was not found. Skipping loading...");
+                    continue;
                 }
                 byte[] imageData = File.ReadAllBytes(fullpath);
                 Texture2D tex = new Texture2D(2,2);

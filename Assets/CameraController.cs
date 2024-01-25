@@ -36,7 +36,6 @@ public class CameraController : MonoBehaviour
             if(bottom < GameManager.instance.currentLevel.scene.minY && dir.y < 0){
                 dir.y = 0;
             }
-            Debug.Log(dir);
             transform.position += dir * Time.deltaTime;
         }
     }

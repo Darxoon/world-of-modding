@@ -127,6 +127,7 @@ public class ResourceConverter
         try{level.strandgeom = bool.Parse(root.Attributes["strandgeom"].Value);} catch{}
         try{level.allowskip = bool.Parse(root.Attributes["allowskip"].Value);} catch{}
         XmlNodeList cameras = root.SelectNodes("camera");
+        float zoomMult = 3f;
         foreach(XmlNode camera in cameras){
             if(camera.Attributes["aspect"].Value == "widescreen"){
                 CameraData data = new CameraData();
@@ -135,7 +136,7 @@ public class ResourceConverter
                     float[] pos = camera.Attributes["endpos"].Value.Split(",").Select(s => float.Parse(s, CultureInfo.InvariantCulture)).ToArray();
                     data.endpos = new(pos[0] / DivFac, pos[1] / DivFac);
                 } catch{data.endpos = new(0,0); hasEndPos = false;}
-                try{data.endzoom = float.Parse(camera.Attributes["endzoom"].Value, CultureInfo.InvariantCulture) * 2.5f;} catch{data.endzoom = 2.5f;}
+                try{data.endzoom = float.Parse(camera.Attributes["endzoom"].Value, CultureInfo.InvariantCulture) * zoomMult;} catch{data.endzoom = zoomMult;}
                 XmlNodeList pois = camera.SelectNodes("poi");
                 data.poi = new Poi[pois.Count];
                 for(int i = 0; i < pois.Count; i++){
@@ -146,7 +147,7 @@ public class ResourceConverter
                     } catch{}
                     try{poi.traveltime = float.Parse(pois[i].Attributes["traveltime"].Value, CultureInfo.InvariantCulture);} catch{}
                     try{poi.pause = float.Parse(pois[i].Attributes["pause"].Value, CultureInfo.InvariantCulture);} catch{}
-                    try{poi.zoom = float.Parse(pois[i].Attributes["zoom"].Value, CultureInfo.InvariantCulture) * 2f;} catch{}
+                    try{poi.zoom = float.Parse(pois[i].Attributes["zoom"].Value, CultureInfo.InvariantCulture) * zoomMult;} catch{}
                     data.poi[i] = poi;
                     if(i == pois.Count-1)
                         data.endpos = poi.pos;
