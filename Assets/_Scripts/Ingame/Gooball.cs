@@ -156,15 +156,16 @@ public class Gooball : MonoBehaviour
         // parts  
         foreach (Part part in data.parts)
         {
-            GameObject partObject = new GameObject(part.name);
-            partObject.transform.localScale = part.scale.ToVector2();
-            SpriteRenderer spriteRenderer = partObject.AddComponent<SpriteRenderer>();
             int randomsel = Random.Range(0, part.image.Length - 1);
-            partObject.transform.SetParent(transform);
             if(!GameManager.imageFiles.TryGetValue(part.image[randomsel], out SpriteData sprite)) {
                 Debug.LogWarning($"Could not find the texture for {part.image[randomsel]}");
                 continue;
             }
+            GameObject partObject = new GameObject(part.name);
+            partObject.transform.localScale = part.scale.ToVector2();
+            partObject.transform.localPosition = new Vector2(Random.Range(part.x.x, part.x.y), Random.Range(part.y.x, part.y.y));
+            SpriteRenderer spriteRenderer = partObject.AddComponent<SpriteRenderer>();
+            partObject.transform.SetParent(transform);
             spriteRenderer.sortingOrder = part.layer;
             if(sprite.sprite2x != null){
                 spriteRenderer.sprite = sprite.sprite2x;
@@ -356,7 +357,7 @@ public class Gooball : MonoBehaviour
                         if (attachable.Count >= minStrands)
                         {
                             // attach to them normally
-                            for (int i = 0; i < strandCount; i++)
+                            for (int i = 0; i < (attachable.Count < strandCount ? attachable.Count : strandCount); i++)
                             {
                                 MakeStrand(attachable[i]);
                             }

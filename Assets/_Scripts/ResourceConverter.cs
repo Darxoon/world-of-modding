@@ -127,7 +127,7 @@ public class ResourceConverter
         try{level.strandgeom = bool.Parse(root.Attributes["strandgeom"].Value);} catch{}
         try{level.allowskip = bool.Parse(root.Attributes["allowskip"].Value);} catch{}
         XmlNodeList cameras = root.SelectNodes("camera");
-        float zoomMult = 3f;
+        float zoomMult = 3f; //man i cannot find a proper zoom multiplier for the camera, at times it should be 1.9-ish, at other times it is more like 3
         foreach(XmlNode camera in cameras){
             if(camera.Attributes["aspect"].Value == "widescreen"){
                 CameraData data = new CameraData();
@@ -149,7 +149,7 @@ public class ResourceConverter
                     try{poi.pause = float.Parse(pois[i].Attributes["pause"].Value, CultureInfo.InvariantCulture);} catch{}
                     try{poi.zoom = float.Parse(pois[i].Attributes["zoom"].Value, CultureInfo.InvariantCulture) * zoomMult;} catch{}
                     data.poi[i] = poi;
-                    if(i == pois.Count-1)
+                    if(i == pois.Count-1 && !hasEndPos)
                         data.endpos = poi.pos;
                 }
                 level.camera = data;
@@ -583,11 +583,11 @@ public class ResourceConverter
             try{jsonpart.name = part.Attributes["name"].Value;} catch{}
             try{jsonpart.layer = int.Parse(part.Attributes["layer"].Value);} catch{}
             try{
-                float[] x = part.Attributes["x"].Value.Split(",").Select(x => float.Parse(x, CultureInfo.InvariantCulture)).ToArray();
+                float[] x = part.Attributes["x"].Value.Split(",").Select(x => float.Parse(x, CultureInfo.InvariantCulture)/DivFac).ToArray();
                 jsonpart.x = new(x[0], x.Length > 1 ? x[1] : x[0]);
             } catch{}
             try{
-                float[] y = part.Attributes["y"].Value.Split(",").Select(x => float.Parse(x, CultureInfo.InvariantCulture)).ToArray();
+                float[] y = part.Attributes["y"].Value.Split(",").Select(x => float.Parse(x, CultureInfo.InvariantCulture)/DivFac).ToArray();
                 jsonpart.y = new(y[0], y.Length > 1 ? y[1] : y[0]);
             } catch{}
             try{jsonpart.image = part.Attributes["image"].Value.Split(",");} catch{}
