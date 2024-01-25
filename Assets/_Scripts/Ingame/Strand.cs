@@ -8,7 +8,8 @@ public class Strand : MonoBehaviour
     public GameObject connectedBall2;
     public Gooball connectedBall1Class;
     public Gooball connectedBall2Class;
-
+    public bool shouldDropSelf = false;
+    public JSONGooball baseJSON;
 
     [Header("Render stuff")]
     public new SpriteRenderer renderer;
@@ -45,7 +46,7 @@ public class Strand : MonoBehaviour
         float distance = Vector3.Distance(ball2Position, ball1Position);
         // apply the scale
 
-        rendererObject.transform.localScale = new Vector3(strandThickness * 1 / distance, distance / 3f * stretchMultiplier, 0);
+        rendererObject.transform.localScale = new Vector3(strandThickness * 0.6f / distance, distance / 3f * stretchMultiplier / 2f, 0);
 
         // calculate and apply center
         Vector3 center = (ball2Position + ball1Position) * 0.5f;

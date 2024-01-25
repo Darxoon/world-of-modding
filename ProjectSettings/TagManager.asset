@@ -9,6 +9,8 @@ TagManager:
   - Geometry
   - Visual
   - BallSensor
+  - RadialForcefield
+  - LinearForcefield
   layers:
   - Default
   - TransparentFX
@@ -28,7 +30,7 @@ TagManager:
   - LightSources
   - LightObstacles
   - AmbientLight
-  - 
+  - Forcefield
   - 
   - 
   - 

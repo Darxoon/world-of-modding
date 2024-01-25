@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -32,7 +33,7 @@ public class JSONGooball
         resrc = new Resrc();
     }
 }
-
+[Flags]
 public enum States
 {
     attached,
@@ -113,7 +114,8 @@ public class Ball
     #region Movement attributes
     public float walkSpeed = 0; 
     public float climbspeed = 0;
-    public Position speedDifference = new Position(1, 1);
+    public Position speedDifference = new Position(1, 1); //no clue what is this anymore
+    public float speedvariance = 0;
     public float walkForce = 500; //not sure how this works
     public float thrust = 0; //ballons!
     #endregion
@@ -203,7 +205,7 @@ public class Part
     public int layer;
     public States[] state = { States.all };
     public Position scale = new Position(1,1);
-    public float rotate;
+    public bool rotate;
     public Stretch stretch;
     public Eye eye;
     public Position xRange;
@@ -239,7 +241,7 @@ public class Shadow
 public class Particles //tag
 {
     public string effect = "";
-    public States[] state = { };
+    public States states;
     public bool overBall;
 }
 
@@ -255,8 +257,8 @@ public class StrandJSON //tag
     public string image = "";
     public string inactiveImage = "";
     public float minLen;
-    public float maxLen2;
-    public float maxLen1;
+    public float maxLen2; // The maximum length of a new strand between the ball being "dragged" and another attached ball. 
+    public float maxLen1; // The maximum length of a new strand which connects two balls that are both already attached. ie. where a new strand is made between two balls, but the ball you were holding "disappears". 
     public float shrinkLen;
     public float thickness;
     public Position springConst = new Position(0, 20);
@@ -277,7 +279,7 @@ public class DetachStrand //tag
 
 public class Splat //tag
 {
-    public string image;
+    public string[] images;
 }
 
 public class Sound

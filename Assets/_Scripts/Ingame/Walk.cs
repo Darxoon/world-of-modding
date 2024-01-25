@@ -38,7 +38,7 @@ public class Walk : MonoBehaviour
     
     private void Start()
     {
-        ballSensor = transform.GetChild(0).GetComponent<BallSensor>();
+        ballSensor = transform.Find("Sensor").GetComponent<BallSensor>();
         rigidbody = GetComponent<Rigidbody2D>();
         gooball = GetComponent<Gooball>();
         
@@ -60,6 +60,8 @@ public class Walk : MonoBehaviour
             float scaledCounter = Mathf.Sqrt(jumpAnimationCounter * jumpAnimationSpeed);
             if (scaledCounter >= 1f)
             {
+                if(GetComponent<WalkOnStrand>() == null)
+                    gameObject.AddComponent<WalkOnStrand>();
                 GetComponent<WalkOnStrand>().enabled = true;
                 inJumpingAnimation = false;
             }

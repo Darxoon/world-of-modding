@@ -38,6 +38,8 @@ public class GameManager : MonoBehaviour
         StaticData.geometry = GameObject.Find("Geometry");
         StaticData.sceneLayers = GameObject.Find("SceneLayers");
         StaticData.strands = GameObject.Find("Strands");
+        StaticData.forcefields = GameObject.Find("Forcefields");
+        StaticData.ui = GameObject.Find("UI");
         StaticData.gameManager = this;
 
     }
@@ -65,7 +67,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]public static Dictionary<string, string> ResourcePaths = new Dictionary<string, string>();
 
     [SerializeField]public static Dictionary<string, AudioClip> audioFiles = new Dictionary<string, AudioClip>();
-    [SerializeField]public static Dictionary<string, Sprite> imageFiles = new Dictionary<string, Sprite>();
+    [SerializeField]public static Dictionary<string, SpriteData> imageFiles = new Dictionary<string, SpriteData>();
     [SerializeField] public static Dictionary<string, JSONGooball> memoryGooballs = new Dictionary<string, JSONGooball>();
 
     public static Strand MakeStrand(Gooball b1, Gooball b2, float dampingRatio, float frequency, float strandThickness)
@@ -74,6 +76,7 @@ public class GameManager : MonoBehaviour
         foreach (Transform strandTransform in StaticData.strands.transform)
         {
             Strand strandComponent = StaticData.existingStrands[strandTransform.gameObject];
+            strandComponent.shouldDropSelf = true;
             GameObject ball1 = strandComponent.connectedBall1;
             GameObject ball2 = strandComponent.connectedBall2;            
             if(ball1 == b1.gameObject && ball2 == b2.gameObject || ball2 == b1.gameObject && ball1 == b2.gameObject)
@@ -91,11 +94,12 @@ public class GameManager : MonoBehaviour
         SpringJoint2D joint = b1.gameObject.AddComponent<SpringJoint2D>();
         joint.dampingRatio = dampingRatio;
         joint.frequency = frequency;
+        b1.GetComponent<Gooball>().springs.Add(joint);
             
         joint.connectedBody = b2.gameObject.GetComponent<Rigidbody2D>();
         joint.autoConfigureDistance = false;
-        joint.dampingRatio = b1.dampingRatio;
-        joint.frequency = b1.jointFrequency;
+        //joint.dampingRatio = b1.dampingRatio;
+        //joint.frequency = b1.jointFrequency;
         joint.distance = Mathf.Clamp(joint.distance, b1.strandDistanceRange.x, b1.strandDistanceRange.y) * b1.strandMultiplier;
 
         //physical
@@ -107,7 +111,11 @@ public class GameManager : MonoBehaviour
         GameObject visual = new GameObject("StrandDisplay");
         visual.transform.SetParent(child.transform);
         SpriteRenderer spriteRenderer = visual.AddComponent<SpriteRenderer>();
-        spriteRenderer.sprite = b1.strandSprite;
+        if(b1.strandSprite.sprite2x != null){
+            visual.transform.localScale /= 2;
+            spriteRenderer.sprite = b1.strandSprite.sprite2x;
+        } else
+            spriteRenderer.sprite = b1.strandSprite.sprite;
         spriteRenderer.flipY = true;
         //spriteRenderer.sortingLayerName = "Strands"; - this makes strands render in front of gooballs, which is undesireable
         spriteRenderer.enabled = false;
@@ -150,6 +158,17 @@ public class GameManager : MonoBehaviour
     {
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         return new string(Enumerable.Repeat(chars, length).Select(s => s[Random.Range(0, s.Length)]).ToArray());
+    }
+
+    public void RunEvent(string onclick)
+    {
+        if(onclick.StartsWith("island")){
+            StaticData.levelLoader.LoadLevel(onclick);
+        } else if(onclick.StartsWith("pl_")){
+            StaticData.levelLoader.LoadLevel(onclick.Substring(3));
+        } else if(onclick.StartsWith("blimp")){
+            StaticData.levelLoader.LoadLevel("Route99");
+        }
     }
 
     public bool isDetaching = false;

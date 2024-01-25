@@ -67,6 +67,9 @@ public class Position
     {
         return new Vector2(x, y);
     }
+    public Vector3 ToVector3(){
+        return new Vector3(x, y, 0);
+    }
 }
 
 public class Poi
@@ -192,6 +195,7 @@ public class Scene
     public Particle[] particles = null;
     public Scenelayer[] scenelayers = null;
     public Buttongroup[] buttongroups = null;
+    public Button[] buttons = null;
     public Label[] labels = null;
     public Compositegeom[] compositegeoms = null;
     public LevelGeometry[] geometries = null;
@@ -219,6 +223,7 @@ public class ForceFields
 
 public class LinearForceField
 {
+    public string id = "";
     public string type = "";
     public Position force = new Position();
     public float dampeningfactor = 0;
@@ -231,18 +236,22 @@ public class LinearForceField
 
 public class RadialForceField
 {
+    public string id = "";
     public string type = "";
     public Position force = new Position();
     public float dampeningfactor = 0;
     public bool antigrav = true;
-    //public bool geomonly = false;
+    public bool geomonly = false;
     public float forceatcenter;
     public float forceatedge;
     public Position center = new Position(0, 0);
+    public float radius;
+    public bool enabled = true;
 }
 
 public class Particle
 {
+    #region  Level type particle data
     public string effect;
     public enum Type : int
     {
@@ -253,6 +262,12 @@ public class Particle
     public float depth;
     public Position pos;
     public float pretick;
+    #endregion
+    #region  Gooball type particle data
+    public string id;
+    public string[] states;
+    public bool overball = false;
+    #endregion
 }
 
 public class Scenelayer
@@ -292,6 +307,7 @@ public class Button
     public string onclick = "";
     public string onmouseenter = "";
     public string onmouseexit = "";
+    public string disabled = "";
 }
 
 public class Label
@@ -367,7 +383,6 @@ public class Hinge
 public class Resrc
 {
     public string id = "";
-    public Dictionary<string, string> prefixes = new Dictionary<string, string>();
     public Dictionary<string, string> resources = new Dictionary<string, string>();
 }
 

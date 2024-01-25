@@ -8,15 +8,19 @@ public class SceneLayer : MonoBehaviour
     void Start()
     {
         sprite = gameObject.AddComponent<SpriteRenderer>();
-        Sprite thing = null;
+        SpriteData thing = null;
         GameManager.imageFiles.TryGetValue(data.image, out thing);
-        sprite.sprite = thing;
         sprite.color = new Color(data.colorize.r, data.colorize.g, data.colorize.b, data.alpha);
-        gameObject.name = data.image;
+        //gameObject.name = data.image;
         transform.localPosition = data.pos.ToVector2();
         transform.localScale = new Vector2(data.scaleX, data.scaleY);
         transform.rotation = Quaternion.Euler(0, 0, data.rotation);
         sprite.sortingOrder = (int)data.depth;
+        if(thing.sprite2x != null){
+            transform.localScale /= 2;
+            sprite.sprite = thing.sprite2x;
+        } else
+            sprite.sprite = thing.sprite;
         //TODO: ADD TILING
     }
 

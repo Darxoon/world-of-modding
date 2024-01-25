@@ -12,6 +12,8 @@ public static class StaticData
     public static GameObject sceneLayers = null;
     public static GameObject geometry = null;
     public static GameObject strands = null;
+    public static GameObject forcefields = null;
+    public static GameObject ui = null;
 
     public static Dictionary<GameObject, Strand> existingStrands = new Dictionary<GameObject, Strand>();
     public static Dictionary<GameObject, Gooball> existingGooballs = new Dictionary<GameObject, Gooball>();
@@ -39,11 +41,21 @@ public static class StaticData
             else if(!GameManager.imageFiles.ContainsKey(Path.Key))
             {
                 string fullpath = resFolder + Path.Value;
+                if(fullpath.Contains("/balls/")){
+
+                }
+                if(File.Exists(fullpath.Substring(0, fullpath.Length-4) + "@2x.png")){
+                    fullpath = fullpath.Substring(0, fullpath.Length-4) + "@2x.png";
+                }
                 byte[] imageData = File.ReadAllBytes(fullpath);
                 Texture2D tex = new Texture2D(2,2);
                 tex.LoadImage(imageData);
-                Sprite sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
-                GameManager.imageFiles.Add(Path.Key, sprite);
+                Vector2 texsize = new Vector2(tex.width, tex.height);
+                Sprite sprite = Sprite.Create(tex, new Rect(Vector2.zero, texsize), new Vector2(0.5f, 0.5f));
+                if(!fullpath.EndsWith("@2x.png"))
+                    GameManager.imageFiles.Add(Path.Key, new SpriteData() { sprite = sprite });
+                else
+                    GameManager.imageFiles.Add(Path.Key, new SpriteData() { sprite2x = sprite });
             }
         }
     }
@@ -68,8 +80,18 @@ public static class StaticData
     {
         if(Directory.Exists(ballsFolder + type))
         {
-            string json = File.ReadAllText(ballsFolder + type + "/" + type + ".json");
-            return JsonConvert.DeserializeObject<JSONGooball>(json);
+            if(File.Exists(ballsFolder + type + "/" + type + ".json")){
+                string json = File.ReadAllText(ballsFolder + type + "/" + type + ".json");
+                return JsonConvert.DeserializeObject<JSONGooball>(json);
+            } else if (File.Exists(ballsFolder + type + "/balls.xml")){
+                //Legacy data
+                return ResourceConverter.ConvertXMLBallToJSON(ballsFolder + type + "/balls.xml", 
+                ballsFolder + type + "/resources.xml");
+            } else if (File.Exists(ballsFolder + type + "/balls.xml.bin")){
+                //Encrypted legacy data
+                return ResourceConverter.ConvertEncryptedXMLBallToJSON(ballsFolder + type + "/balls.xml.bin",
+                ballsFolder + type + "/resources.xml.bin");
+            }
         }
         return null;
     }

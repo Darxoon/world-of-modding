@@ -11,7 +11,7 @@ public class Gooball : MonoBehaviour
 {
 
     // TODO: TEMPORARY (replaced with level loading)
-    [SerializeField] public Sprite strandSprite;
+    [SerializeField] public SpriteData strandSprite;
     [SerializeField] private bool byPrefab;
     [SerializeField] public string randomID;
     public bool finishedLoading;
@@ -81,9 +81,7 @@ public class Gooball : MonoBehaviour
 
     [FormerlySerializedAs("position")] 
     public Vector3 gooballPosition; //i had to add this because for some reason unity decides to do weird shit and just make everything offset
-
-
-
+    public List<SpringJoint2D> springs = new List<SpringJoint2D>();
     private void Awake()
     {
         randomID = GameManager.GenerateRandomID(10);
@@ -91,8 +89,6 @@ public class Gooball : MonoBehaviour
         attachablePoint = new List<Vector2>();
         
         StaticData.existingGooballs.Add(gameObject, this);
-        
-        
     }
 
 
@@ -107,12 +103,21 @@ public class Gooball : MonoBehaviour
         //do the loading move
         initialStrands = new Gooball[] { };
         
-        Debug.Log(data.ball.detachable);
-
         CircleCollider2D mainCol = gameObject.AddComponent<CircleCollider2D>();
-        mainCol.radius = data.ball.radius;
-        
+        mainCol.radius = data.ball.radius/100/2;
+        GameObject forcefieldeffector = new GameObject("ffeffector");
+        var eff = forcefieldeffector.AddComponent<CircleCollider2D>();
+        eff.callbackLayers = LayerMask.GetMask("Forcefield");
+        eff.contactCaptureLayers = LayerMask.GetMask("Forcefield");
+        eff.radius = mainCol.radius;
+        eff.transform.SetParent(transform);
+        eff.excludeLayers = Physics2D.AllLayers & ~LayerMask.GetMask("Forcefield");
+        eff.includeLayers = LayerMask.GetMask("Forcefield");
+        //forcefieldeffector.layer = LayerMask.GetMask("Forcefield");
+        forcefieldeffector.AddComponent<ForcefieldEffector>().rb = rigidbody;
+
         GameObject sensor = new GameObject("Sensor");
+        sensor.transform.localScale = new Vector2(mainCol.radius/3, mainCol.radius/3);
         sensor.transform.SetParent(transform);
         
         CapsuleCollider2D capsuleCollider = sensor.AddComponent<CapsuleCollider2D>();
@@ -124,6 +129,7 @@ public class Gooball : MonoBehaviour
         
         GameObject wallColliderObject = new GameObject("WallCollider");
         wallColliderObject.transform.SetParent(sensor.transform);
+        wallColliderObject.transform.localScale = Vector3.one;
         
         CapsuleCollider2D wallCollider = wallColliderObject.AddComponent<CapsuleCollider2D>();
         wallCollider.offset = new Vector2(-0.02958627f, -0.09866164f);
@@ -148,17 +154,27 @@ public class Gooball : MonoBehaviour
         foreach (Part part in data.parts)
         {
             GameObject partObject = new GameObject(part.name);
+            partObject.transform.localScale = part.scale.ToVector2();
             SpriteRenderer spriteRenderer = partObject.AddComponent<SpriteRenderer>();
-            GameManager.imageFiles.TryGetValue(part.image[Random.Range(0, part.image.Length - 1)], out Sprite sprite);
-            spriteRenderer.sprite = sprite;
-            spriteRenderer.sortingOrder = 1;
+            int randomsel = Random.Range(0, part.image.Length - 1);
             partObject.transform.SetParent(transform);
+            if(!GameManager.imageFiles.TryGetValue(part.image[randomsel], out SpriteData sprite)) {
+                Debug.LogWarning($"Could not find the texture for {part.image[randomsel]}");
+                continue;
+            }
+            spriteRenderer.sortingOrder = part.layer;
+            if(sprite.sprite2x != null){
+                spriteRenderer.sprite = sprite.sprite2x;
+                partObject.transform.localScale /= 2;
+            } else
+                spriteRenderer.sprite = sprite.sprite;
         }
 
         GameManager.imageFiles.TryGetValue(data.strand.image, out strandSprite);
         //strand
         Transform transform1 = transform;
-        transform1.localScale = new Vector3(0.1f, 0.1f);
+        float scale = Random.Range(1f, 1f + (data.ball.sizeVariation/5));
+        transform1.localScale = new Vector3(scale, scale);
         transform1.localPosition = gooballPosition;
         
         mainCam = Camera.main;
@@ -176,12 +192,12 @@ public class Gooball : MonoBehaviour
         {
             attachedBalls = new List<Gooball>();
         }
-
         finishedLoading = true;
     }
 
     private void StrandMass()
     {
+        return; //this method causes the structure to spaz out
         extraMass = 0;
         foreach (Strand strand in strands)
         {
@@ -198,8 +214,6 @@ public class Gooball : MonoBehaviour
 
     private void Update()
     {
-
-
         if (Input.GetMouseButtonDown(0) && !IsTower && !GameManager.instance.isDragging)
         {
             RaycastHit2D[] hits = new RaycastHit2D[500];
@@ -352,8 +366,9 @@ public class Gooball : MonoBehaviour
 
                         Gooball other1 = attachable[0];
                         other1.gooStrands.Add(other1.attachedBalls.Count, this);
-                        other1.MakeStrand(attachable[1]);
-                        gameObject.SetActive(false);
+                        other1.MakeStrand(attachable[1], true, data);
+                        //gameObject.SetActive(false);
+                        Destroy(gameObject);
                     }
                 }
                 else
@@ -371,15 +386,19 @@ public class Gooball : MonoBehaviour
         {
             StrandMass();
             rigidbody.mass = originalMass + extraMass;
+            foreach(var spring in springs){
+                if(spring.distance > data.strand.maxLen1){
+                    spring.distance = Mathf.Lerp(spring.distance, data.strand.maxLen1, 0.1f*Time.deltaTime);
+                } else if(spring.distance < data.strand.minLen){
+                    spring.distance = Mathf.Lerp(spring.distance, data.strand.minLen, 0.1f*Time.deltaTime);
+                }
+            }
         }
     }
-
-
-
-
-    public void MakeStrand(Gooball other)
+    public void MakeStrand(Gooball other, bool shouldDropSelf = false, JSONGooball baseData = null)
     {
-        Strand strand = GameManager.MakeStrand(this, other, dampingRatio, jointFrequency, strandThickness);
+        Strand strand = GameManager.MakeStrand(this, other, data.strand.dampFac, data.strand.springConst.x, strandThickness);
+        //Debug.Log(Vector3.Distance(this.transform.position, other.transform.position));
         if(strand)
         {
             strands.Add(strand);
@@ -388,7 +407,10 @@ public class Gooball : MonoBehaviour
                 other.strands.Add(strand);
             }
         }
-            
+        if(shouldDropSelf){
+            strand.shouldDropSelf = true;
+            strand.baseJSON = baseData;
+        }
         rigidbody.constraints = RigidbodyConstraints2D.FreezeRotation;
         // add the other goo ball to attached list
         if(!attachedBalls.Contains(other))
@@ -438,6 +460,9 @@ public class Gooball : MonoBehaviour
                     obj.GetComponent<Rigidbody2D>().constraints = 0;
                     obj.GetComponent<CircleCollider2D>().enabled = true;
                 }
+            }
+            if(strand.shouldDropSelf){
+                JSONLevelLoader.SpawnGooball(strand.baseJSON, "", strand.transform.position);
             }
             Destroy(strand.gameObject);
         }

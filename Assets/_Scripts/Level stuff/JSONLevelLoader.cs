@@ -14,7 +14,7 @@ public class JSONLevelLoader : MonoBehaviour
         Level,Gooball,None
     }
     public SaveMode saveMode = SaveMode.None;
-    public string levelName = "demoLevel";
+    public string level_Name = "demoLevel";
     public bool visualdebug;
     void Start()
     {
@@ -178,106 +178,177 @@ public class JSONLevelLoader : MonoBehaviour
         }
         else if(saveMode == SaveMode.None)
         {
-            JSONLevel level = null;
-            if(File.Exists(StaticData.levelFolder + $"{levelName}/{levelName}.json"))
-                level = JsonConvert.DeserializeObject<JSONLevel>(File.ReadAllText(StaticData.levelFolder + $"{levelName}/{levelName}.json"), settings);
-            else if(
-                File.Exists(StaticData.levelFolder + $"{levelName}/{levelName}.level") &&
-                File.Exists(StaticData.levelFolder + $"{levelName}/{levelName}.scene") &&
-                File.Exists(StaticData.levelFolder + $"{levelName}/{levelName}.resrc")
-            )
-                level = ResourceConverter.ConvertXMLLevelToJSON(
-                    StaticData.levelFolder + $"{levelName}/{levelName}.scene",
-                    StaticData.levelFolder + $"{levelName}/{levelName}.resrc",
-                    StaticData.levelFolder + $"{levelName}/{levelName}.level"
-                );
-            else
-                return;
-            visualdebug = level.level.visualdebug;
-
-            Camera.main.backgroundColor = level.scene.backgroundcolor.ToUnityColor();
-            //TODO: Implement POIs
-            try{
-                Camera.main.orthographicSize = level.level.camera.endzoom;
-                Camera.main.transform.position = new Vector3(level.level.camera.endpos.x, level.level.camera.endpos.y, -100);
-            } catch{}
-            
-            foreach (var resource in level.resrc.resources)
-            {
-                GameManager.ResourcePaths.Add(resource.Key, resource.Value);
-                
-            }
-            foreach (var gball in level.level.BallInstance)
-            {
-                if (!GameManager.memoryGooballs.ContainsKey(gball.type))
-                {
-                    JSONGooball ball = StaticData.RetrieveGooballDataFromType(gball.type);
-                    GameManager.memoryGooballs.Add(gball.type, ball);
-                    foreach (var path in ball.resrc.resources)
-                        if (!GameManager.ResourcePaths.ContainsKey(path.Key))
-                            GameManager.ResourcePaths.Add(path.Key, path.Value);
-                }
-            }
-            StaticData.PopulateAllResources();
-            foreach (var scenelayer in level.scene.scenelayers)
-            {
-                GameObject sl = new GameObject(scenelayer.name);
-                sl.AddComponent<SceneLayer>().data = scenelayer;
-                sl.transform.SetParent(StaticData.sceneLayers.transform);
-            }
-
-            foreach (var geometry in level.scene.geometries)
-            {
-                GameObject geom = new GameObject(geometry.id);
-                geom.AddComponent<Geometry>().data = geometry;
-                geom.transform.SetParent(StaticData.geometry.transform);
-            }
-
-            foreach (var l in level.scene.lines){
-                GameObject line = new GameObject(l.id);
-                line.transform.position = l.anchor.ToVector2();
-                var box = line.AddComponent<BoxCollider2D>();
-                box.offset = new Vector2(-0.5f, 0);
-                box.size = new Vector2(1, 10000);
-                float cosNormal = Vector2.Dot(l.normal.ToVector2().normalized, Vector2.up);
-                if(l.normal.x > 0)
-                    line.transform.eulerAngles = new Vector3(0, 0, (System.MathF.Acos(cosNormal)*180/System.MathF.PI) - 90f);
-                else
-                    line.transform.eulerAngles = new Vector3(0, 0, (System.MathF.Acos(cosNormal)*180/System.MathF.PI) + 90f);
-                line.transform.SetParent(StaticData.geometry.transform);
-            }
-
-            foreach (var compositegeom in level.scene.compositegeoms)
-            {
-                GameObject geom = new GameObject(compositegeom.name);
-                geom.AddComponent<CompositeGeom>().data = compositegeom;
-                geom.transform.SetParent(StaticData.geometry.transform);
-            }
-            foreach (var gball in level.level.BallInstance)
-            {
-                JSONGooball ball = null;
-                GameManager.memoryGooballs.TryGetValue(gball.type, out ball);
-                GameObject gooball = new GameObject(gball.id);
-
-                gooball.transform.SetParent(StaticData.balls.transform);
-                //gooball.transform.position   = new Vector3(gball.pos.x, gball.pos.y, 0);
-                //gooball.AddComponent<Rigidbody2D>();
-                //gooball.AddComponent<Walk>();
-                var g = gooball.AddComponent<Gooball>();
-                g.data = ball;
-                g.gooballPosition = new Vector3(gball.pos.x, gball.pos.y, 0);
-                gooball.layer = LayerMask.NameToLayer("Detached Balls");
-                gooball.tag = "Ball";
-            }
-
-            foreach(LStrand strand in level.level.Strand)
-            {
-                StartCoroutine(MakeStrand(strand));
-            }
-
+            LoadLevel(level_Name);
         }
     }
+    public void LoadLevel(string levelName){
+        Debug.Log("Loading level " + levelName);
+        DestroyAllChildren(StaticData.balls.transform);
+        DestroyAllChildren(StaticData.sceneLayers.transform);
+        DestroyAllChildren(StaticData.geometry.transform);
+        DestroyAllChildren(StaticData.strands.transform);
+        DestroyAllChildren(StaticData.forcefields.transform);
+        DestroyAllChildren(StaticData.ui.transform);
+        JsonSerializerSettings settings = new JsonSerializerSettings
+        {
+            NullValueHandling = NullValueHandling.Ignore
+        };
+        JSONLevel level = null;
+        if(File.Exists(StaticData.levelFolder + $"{levelName}/{levelName}.json"))
+            level = JsonConvert.DeserializeObject<JSONLevel>(File.ReadAllText(StaticData.levelFolder + $"{levelName}/{levelName}.json"), settings);
+        else if(
+            File.Exists(StaticData.levelFolder + $"{levelName}/{levelName}.level") &&
+            File.Exists(StaticData.levelFolder + $"{levelName}/{levelName}.scene") &&
+            File.Exists(StaticData.levelFolder + $"{levelName}/{levelName}.resrc")
+        )
+            level = ResourceConverter.ConvertXMLLevelToJSON(
+                StaticData.levelFolder + $"{levelName}/{levelName}.scene",
+                StaticData.levelFolder + $"{levelName}/{levelName}.resrc",
+                StaticData.levelFolder + $"{levelName}/{levelName}.level"
+            );
+        else if(
+            File.Exists(StaticData.levelFolder + $"{levelName}/{levelName}.level.bin") &&
+            File.Exists(StaticData.levelFolder + $"{levelName}/{levelName}.scene.bin") &&
+            File.Exists(StaticData.levelFolder + $"{levelName}/{levelName}.resrc.bin")
+        )
+                level = ResourceConverter.ConvertEncryptedXMLLevelToJSON(
+                StaticData.levelFolder + $"{levelName}/{levelName}.scene.bin",
+                StaticData.levelFolder + $"{levelName}/{levelName}.resrc.bin",
+                StaticData.levelFolder + $"{levelName}/{levelName}.level.bin"
+            );
+        else
+        {
+            Debug.LogError($"Level {levelName} does not exist.");
+            return;
+        }
+        visualdebug = level.level.visualdebug;
 
+        Camera.main.backgroundColor = level.scene.backgroundcolor.ToUnityColor();
+        //TODO: Implement POIs
+        try{
+            Camera.main.orthographicSize = level.level.camera.endzoom;
+            Camera.main.transform.position = new Vector3(level.level.camera.endpos.x, level.level.camera.endpos.y, -100);
+        } catch {
+            Camera.main.orthographicSize = 1;
+        }
+        
+        foreach (var resource in level.resrc.resources)
+        {
+            GameManager.ResourcePaths.Add(resource.Key, resource.Value);
+            
+        }
+        foreach (var gball in level.level.BallInstance)
+        {
+            if (!GameManager.memoryGooballs.ContainsKey(gball.type))
+            {
+                JSONGooball ball = StaticData.RetrieveGooballDataFromType(gball.type);
+                if(ball == null)
+                    continue;
+                GameManager.memoryGooballs.Add(gball.type, ball);
+                foreach (var path in ball.resrc.resources)
+                    if (!GameManager.ResourcePaths.ContainsKey(path.Key))
+                        GameManager.ResourcePaths.Add(path.Key, path.Value);
+            }
+        }
+        StaticData.PopulateAllResources();
+        foreach (var scenelayer in level.scene.scenelayers)
+        {
+            GameObject sl = new GameObject(scenelayer.name);
+            sl.AddComponent<SceneLayer>().data = scenelayer;
+            sl.transform.SetParent(StaticData.sceneLayers.transform);
+        }
+
+        foreach (var geometry in level.scene.geometries)
+        {
+            GameObject geom = new GameObject(geometry.id);
+            geom.AddComponent<Geometry>().data = geometry;
+            geom.transform.SetParent(StaticData.geometry.transform);
+            geom.isStatic = !geometry.dynamic;
+        }
+
+        foreach (var l in level.scene.lines){
+            GameObject line = new GameObject(l.id);
+            line.transform.position = l.anchor.ToVector2();
+            var box = line.AddComponent<BoxCollider2D>();
+            box.offset = new Vector2(-0.5f, 0);
+            box.size = new Vector2(1, 10000);
+            float cosNormal = Vector2.Dot(l.normal.ToVector2().normalized, Vector2.up);
+            if(l.normal.x > 0)
+                line.transform.eulerAngles = new Vector3(0, 0, (System.MathF.Acos(cosNormal)*180/System.MathF.PI) - 90f);
+            else
+                line.transform.eulerAngles = new Vector3(0, 0, (System.MathF.Acos(cosNormal)*180/System.MathF.PI) + 90f);
+            line.transform.SetParent(StaticData.geometry.transform);
+            line.isStatic = true;
+            line.layer = LayerMask.NameToLayer("Geometry");
+        }
+
+        foreach (var compositegeom in level.scene.compositegeoms)
+        {
+            GameObject geom = new GameObject(compositegeom.name);
+            geom.AddComponent<CompositeGeom>().data = compositegeom;
+            geom.transform.SetParent(StaticData.geometry.transform);
+        }
+        foreach (var gball in level.level.BallInstance)
+        {
+            SpawnGooball(gball.type, gball.id, gball.pos.ToVector2());
+        }
+
+        foreach(LStrand strand in level.level.Strand)
+        {
+            StartCoroutine(MakeStrand(strand));
+        }
+        foreach(var ff in level.scene.ForceFields.radialforcefields){
+            GameObject obj = new GameObject(ff.id != "" ? ff.id : ff.type);
+            var comp = obj.AddComponent<RadialForceFieldComponent>();
+            comp.data = ff;
+            obj.transform.SetParent(StaticData.forcefields.transform);
+            obj.tag = "RadialForcefield";
+            obj.layer = LayerMask.NameToLayer("Forcefield");
+        }
+        foreach(var ff in level.scene.ForceFields.linearforcefields){
+            if(ff.type == "gravity"){
+                Physics2D.gravity = ff.force.ToVector2();
+                continue;
+            }
+            GameObject obj = new GameObject(ff.id != "" ? ff.id : ff.type);
+            var comp = obj.AddComponent<LinearForceFieldComponent>();
+            //TODO: Implement linear forcefields
+        }
+        foreach(var btngrp in level.scene.buttongroups){
+            foreach(var btn in btngrp.buttons){
+                GameObject button = new GameObject(btn.id);
+                button.AddComponent<ButtonController>().data = btn;
+                button.transform.SetParent(StaticData.ui.transform);
+            }
+        }
+        foreach(var btn in level.scene.buttons){
+            GameObject button = new GameObject(btn.id);
+            button.AddComponent<ButtonController>().data = btn;
+            button.transform.SetParent(StaticData.ui.transform);
+        }
+    }
+    private void DestroyAllChildren(Transform transform){
+        for(int i = 0; i < transform.childCount; i++){
+            Destroy(transform.GetChild(i).gameObject);
+        }
+    }
+    public static void SpawnGooball(string type, string id, Vector2 pos){
+        JSONGooball ball = null;
+        GameManager.memoryGooballs.TryGetValue(type, out ball);
+        SpawnGooball(ball, id, pos, type);
+    }
+    public static void SpawnGooball(JSONGooball ball, string id, Vector2 pos, string type = "N/A"){
+        GameObject gooball = new GameObject(id);
+        gooball.transform.SetParent(StaticData.balls.transform);
+        //gooball.transform.position   = new Vector3(gball.pos.x, gball.pos.y, 0);
+        //gooball.AddComponent<Rigidbody2D>();
+        //gooball.AddComponent<Walk>();
+        var g = gooball.AddComponent<Gooball>();
+        g.data = ball;
+        g.gooballPosition = new Vector3(pos.x, pos.y, 0);
+        gooball.layer = LayerMask.NameToLayer("Detached Balls");
+        gooball.tag = "Ball";
+    }
     IEnumerator MakeStrand(LStrand strand)
     {
         Gooball ball1 = StaticData.balls.transform.Find(strand.gb1).GetComponent<Gooball>();
