@@ -21,6 +21,11 @@ public class SceneLayer : MonoBehaviour
             sprite.sprite = thing.sprite2x;
         } else
             sprite.sprite = thing.sprite;
+        var parallax = gameObject.AddComponent<SceneLayerParallax>();
+        parallax.positiveDistanceScale = GameManager.instance.positiveDistanceScale;
+        parallax.negativeDistanceScale = GameManager.instance.negativeDistanceScale;
+        parallax.depth = data.depth;
+        parallax.worldPosition = data.pos.ToVector2();
         //TODO: ADD TILING
     }
 
