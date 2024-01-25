@@ -129,7 +129,9 @@ public class ResourceConverter
         XmlNodeList cameras = root.SelectNodes("camera");
         float zoomMult = 3f; //man i cannot find a proper zoom multiplier for the camera, at times it should be 1.9-ish, at other times it is more like 3
         foreach(XmlNode camera in cameras){
-            if(camera.Attributes["aspect"].Value == "widescreen"){
+            string aspect = "n/a";
+            try{aspect = camera.Attributes["aspect"].Value;} catch{}
+            if(aspect == "widescreen"){
                 CameraData data = new CameraData();
                 bool hasEndPos = true;
                 try{
@@ -515,7 +517,7 @@ public class ResourceConverter
         try{jsonball.ball.walkSpeed = float.Parse(root.Attributes["walkspeed"].Value, CultureInfo.InvariantCulture);} catch{}
         try{jsonball.ball.climbspeed = float.Parse(root.Attributes["climbspeed"].Value, CultureInfo.InvariantCulture);} catch{}
         try{jsonball.ball.speedvariance = float.Parse(root.Attributes["speedvariance"].Value, CultureInfo.InvariantCulture);} catch{}
-        try{jsonball.ball.detachable = bool.Parse(root.Attributes["detachable"].Value);} catch{}
+        try{jsonball.ball.detachable = bool.Parse(root.Attributes["detachable"].Value);} catch{jsonball.ball.detachable = true;}
         try{
             float[] jmp = root.Attributes["jump"].Value.Split(",").Select(s => float.Parse(s, CultureInfo.InvariantCulture)).ToArray();
             jsonball.ball.jump = new(jmp[0], jmp[1]);
@@ -570,7 +572,7 @@ public class ResourceConverter
 
         XmlNode detachstrand = root.SelectSingleNode("detachstrand");
         try{jsonball.detachstrand.image = detachstrand.Attributes["image"].Value;} catch{}
-        try{jsonball.detachstrand.maxLen = float.Parse(detachstrand.Attributes["maxlen"].Value, CultureInfo.InvariantCulture);} catch{}
+        try{jsonball.detachstrand.maxLen = float.Parse(detachstrand.Attributes["maxlen"].Value, CultureInfo.InvariantCulture) / DivFac;} catch{}
 
         XmlNode splat = root.SelectSingleNode("splat");
         try{jsonball.splat.images = splat.Attributes["image"].Value.Split(",");} catch{}

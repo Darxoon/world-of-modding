@@ -79,7 +79,6 @@ public class GameManager : MonoBehaviour
                     if(raycastHit2D.transform == null)
                         continue;
                     Gooball ball = raycastHit2D.transform.GetComponent<Gooball>();
-                    //Debug.Log(raycastHit2D.transform.name);
                     if (ball != null && (ball.IsTower == false || ball.data.ball.detachable == true))
                     {
                         ball.isDragged = true;

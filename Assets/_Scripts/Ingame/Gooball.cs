@@ -295,8 +295,21 @@ public class Gooball : MonoBehaviour
             // positioning
             rigidbody.constraints = RigidbodyConstraints2D.FreezeAll;
             Vector3 mousePosition = Input.mousePosition;
-            Vector2 point = mainCam.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 3600f));
-            transform.position = new Vector3(point.x, point.y, 0);
+            Vector2 point = mainCam.ScreenToWorldPoint(new Vector3(mousePosition.x, mousePosition.y, 0f));
+            if(!isTower)
+                transform.position = new Vector3(point.x, point.y, 0);
+            if(isTower){
+                float dist = Vector3.Distance(point, transform.position);
+                if(dist > data.detachstrand.maxLen){
+                    //StopDrag();
+                    RemoveStrand();
+                    isTower = false;
+                    //gameObject.layer = LayerMask.NameToLayer("Selected Ball");
+                    //return;
+                    //gameObject.layer = LayerMask.NameToLayer("Detached Balls");
+                    //rigidbody.constraints = RigidbodyConstraints2D.None;
+                }
+            }
 
             // changing the layer
             gameObject.layer = LayerMask.NameToLayer("Selected Ball");
@@ -305,87 +318,12 @@ public class Gooball : MonoBehaviour
             GetComponent<CircleCollider2D>().enabled = false;
 
             // attaching 
-
-            AttachRaycast();
-
             foreach(var walkOnStrand in GetComponents<WalkOnStrand>())
                 Destroy(walkOnStrand);
 
             // stop dragging
             if (Input.GetMouseButtonUp(0))
-            {
-                GameManager.instance.isDragging = false;
-
-                if (GameManager.instance.hoverStrand)
-                {
-                    gameObject.layer = LayerMask.NameToLayer("Detached Balls");
-                    isDragged = false;
-                    GameManager.instance.drag = null;
-                    WalkOnStrand walkOnStrand = gameObject.AddComponent<WalkOnStrand>();
-                    walkOnStrand.currentStrand = GameManager.instance.hoverStrand;
-                    walkOnStrand.speed = data.ball.climbspeed * randomSpeedMultiplier;
-                    walkOnStrand.Initialize();
-                    transform.SetParent(GameManager.instance.hoverStrand.transform, true);
-                    return;
-                }
-                
-                AttachRaycast();
-
-                // remove constraints
-                if (GameManager.instance.drag != null) { rigidbody.constraints = RigidbodyConstraints2D.None; }
-                // update fields
-                isDragged = false;
-                GameManager.instance.drag = null;
-
-                //check if we are hovering over a strand
-
-
-
-                // are the strands 1?
-                if (strandCount == 1)
-                {
-                    MakeStrand(attachable[0]);
-                    SetTowered();
-                }
-                else if (attachable.Count > 1)
-                {
-                    // are they connected?
-                    if (attachable[0].attachedBalls.Contains(attachable[1])
-                        || attachable[1].attachedBalls.Contains(attachable[0]))
-                    {
-                        // if there are enough balls to attach to
-                        if (attachable.Count >= minStrands)
-                        {
-                            // attach to them normally
-                            for (int i = 0; i < (attachable.Count < strandCount ? attachable.Count : strandCount); i++)
-                            {
-                                MakeStrand(attachable[i]);
-                            }
-                            SetTowered();
-                        }
-                    }
-                    // else
-                    else
-                    {
-                        // act as a strand
-                        //Debug.Log("I'm a strand!", gameObject);
-
-                        Gooball other1 = attachable[0];
-                        other1.gooStrands.Add(other1.attachedBalls.Count, this);
-                        other1.MakeStrand(attachable[1], true, data);
-                        //gameObject.SetActive(false);
-                        Destroy(gameObject);
-                    }
-                }
-                else
-                {
-                    
-                }
-                Debug.Log("stopped dragging");
-                GetComponent<CircleCollider2D>().enabled = true;
-
-            }
-
+                StopDrag();
         }
 
         if (isTower)
@@ -399,6 +337,81 @@ public class Gooball : MonoBehaviour
                     spring.distance = Mathf.Lerp(spring.distance, data.strand.minLen, 0.1f*Time.deltaTime);
                 }
             }
+        }
+    }
+    public void StopDrag(){
+        GameManager.instance.isDragging = false;
+        // update fields
+        isDragged = false;
+        GameManager.instance.drag = null;
+        Debug.Log("stopped dragging");
+
+        if(!isTower){
+            gameObject.layer = LayerMask.NameToLayer("Detached Balls");
+            if (GameManager.instance.hoverStrand)
+            {
+                isDragged = false;
+                GameManager.instance.drag = null;
+                WalkOnStrand walkOnStrand = gameObject.AddComponent<WalkOnStrand>();
+                walkOnStrand.currentStrand = GameManager.instance.hoverStrand;
+                walkOnStrand.speed = data.ball.climbspeed * randomSpeedMultiplier;
+                walkOnStrand.Initialize();
+                transform.SetParent(GameManager.instance.hoverStrand.transform, true);
+                return;
+            }
+            
+            AttachRaycast();
+
+            // remove constraints
+            rigidbody.constraints = RigidbodyConstraints2D.None;
+            //if (GameManager.instance.drag != null) {  }
+            
+
+            //TODO: check if we are hovering over a strand
+
+            // are the strands 1?
+            if (strandCount == 1)
+            {
+                MakeStrand(attachable[0]);
+                SetTowered();
+            }
+            else if (attachable.Count > 1)
+            {
+                // are they connected?
+                if (attachable[0].attachedBalls.Contains(attachable[1])
+                    || attachable[1].attachedBalls.Contains(attachable[0]))
+                {
+                    // if there are enough balls to attach to
+                    if (attachable.Count >= minStrands)
+                    {
+                        // attach to them normally
+                        for (int i = 0; i < (attachable.Count < strandCount ? attachable.Count : strandCount); i++)
+                        {
+                            MakeStrand(attachable[i]);
+                        }
+                        SetTowered();
+                    }
+                }
+                // else
+                else
+                {
+                    // act as a strand
+                    Gooball other1 = attachable[0];
+                    other1.gooStrands.Add(other1.attachedBalls.Count, this);
+                    other1.MakeStrand(attachable[1], true, data);
+                    Destroy(gameObject);
+                }
+            }
+            else
+            {
+                
+            }
+            GetComponent<CircleCollider2D>().enabled = true;
+        }
+        else{
+            rigidbody.constraints = RigidbodyConstraints2D.None;
+            gameObject.layer = LayerMask.NameToLayer("Attached Balls");
+            GetComponent<CircleCollider2D>().enabled = true;
         }
     }
     public void MakeStrand(Gooball other, bool shouldDropSelf = false, JSONGooball baseData = null)
@@ -440,7 +453,7 @@ public class Gooball : MonoBehaviour
                     Destroy(spring);
                 }
             }
-            
+            springs.Clear();   
         }
         foreach (SpringJoint2D thing in GetComponents<SpringJoint2D>())
         {

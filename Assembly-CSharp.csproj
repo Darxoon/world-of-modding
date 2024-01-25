@@ -74,6 +74,7 @@
     <Compile Include="Assets\_Scripts\Level stuff\CompositeGeom.cs" />
     <Compile Include="Assets\_Scripts\UI\ButtonHitbox.cs" />
     <Compile Include="Assets\_Scripts\Ingame\Strand.cs" />
+    <Compile Include="Assets\FunThings.cs" />
     <Compile Include="Assets\_Scripts\StaticData.cs" />
     <Compile Include="Assets\_Scripts\Level stuff\JSONGooball.cs" />
     <Compile Include="Assets\_Scripts\Level stuff\JSONLevelLoader.cs" />
