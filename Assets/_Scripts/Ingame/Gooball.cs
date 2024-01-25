@@ -82,6 +82,7 @@ public class Gooball : MonoBehaviour
     [FormerlySerializedAs("position")] 
     public Vector3 gooballPosition; //i had to add this because for some reason unity decides to do weird shit and just make everything offset
     public List<SpringJoint2D> springs = new List<SpringJoint2D>();
+    private int minStrands = 0;
     private void Awake()
     {
         randomID = GameManager.GenerateRandomID(10);
@@ -96,6 +97,8 @@ public class Gooball : MonoBehaviour
     {
         //random shit idk
         data ??= new JSONGooball();
+        if(data.ball.strands > 2)
+            minStrands = 2;
         rigidbody = gameObject.GetComponent<Rigidbody2D>();
         if(rigidbody == null)
             rigidbody = gameObject.AddComponent<Rigidbody2D>();
@@ -350,7 +353,7 @@ public class Gooball : MonoBehaviour
                         || attachable[1].attachedBalls.Contains(attachable[0]))
                     {
                         // if there are enough balls to attach to
-                        if (attachable.Count >= strandCount)
+                        if (attachable.Count >= minStrands)
                         {
                             // attach to them normally
                             for (int i = 0; i < strandCount; i++)
