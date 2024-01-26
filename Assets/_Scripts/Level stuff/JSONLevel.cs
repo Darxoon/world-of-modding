@@ -332,6 +332,9 @@ public class Compositegeom
     public float imagerot;
     public Position imagescale;
     public float rotspeed;
+    public float rotation;
+    public string tag;
+    public string material;
 }
 
 public class LevelGeometry

@@ -72,7 +72,6 @@
     <Compile Include="Assets\_Scripts\Ingame\SpriteData.cs" />
     <Compile Include="Assets\_Scripts\Level stuff\LevelExitComponent.cs" />
     <Compile Include="Assets\CameraController.cs" />
-    <Compile Include="Assets\_Scripts\Level stuff\CompositeGeom.cs" />
     <Compile Include="Assets\_Scripts\UI\ButtonHitbox.cs" />
     <Compile Include="Assets\_Scripts\Ingame\Strand.cs" />
     <Compile Include="Assets\FunThings.cs" />

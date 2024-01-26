@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class SceneLayer : MonoBehaviour
 {
+    public bool needsParallax = true;
     // Start is called before the first frame update
     void Start()
     {
         sprite = gameObject.AddComponent<SpriteRenderer>();
         SpriteData thing = null;
         GameManager.imageFiles.TryGetValue(data.image, out thing);
-        sprite.color = new Color(data.colorize.r, data.colorize.g, data.colorize.b, data.alpha);
+        try{sprite.color = new Color(data.colorize.r, data.colorize.g, data.colorize.b, data.alpha);} catch{}
         //gameObject.name = data.image;
         transform.localPosition = data.pos.ToVector2();
         transform.localScale = new Vector2(data.scaleX, data.scaleY);
@@ -21,11 +22,13 @@ public class SceneLayer : MonoBehaviour
             sprite.sprite = thing.sprite2x;
         } else
             sprite.sprite = thing.sprite;
-        var parallax = gameObject.AddComponent<SceneLayerParallax>();
-        parallax.positiveDistanceScale = GameManager.instance.positiveDistanceScale;
-        parallax.negativeDistanceScale = GameManager.instance.negativeDistanceScale;
-        parallax.depth = data.depth;
-        parallax.worldPosition = data.pos.ToVector2();
+        if(needsParallax){
+            var parallax = gameObject.AddComponent<SceneLayerParallax>();
+            parallax.positiveDistanceScale = GameManager.instance.positiveDistanceScale;
+            parallax.negativeDistanceScale = GameManager.instance.negativeDistanceScale;
+            parallax.depth = data.depth;
+            parallax.worldPosition = data.pos.ToVector2();
+        }
         //TODO: ADD TILING
     }
 

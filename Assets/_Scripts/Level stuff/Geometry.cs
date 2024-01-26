@@ -36,7 +36,9 @@ public class Geometry : MonoBehaviour
         if(data.image != null)
         {
             GameObject sl = new GameObject(data.image.name);
-            sl.AddComponent<SceneLayer>().data = data.image;
+            var comp = sl.AddComponent<SceneLayer>();
+            comp.data = data.image;
+            comp.needsParallax = false;
             sl.transform.SetParent(transform);
         }
     }

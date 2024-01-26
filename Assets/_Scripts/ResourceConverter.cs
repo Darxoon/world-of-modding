@@ -329,6 +329,51 @@ public class ResourceConverter
         scene.buttons = ReadButtons(root);
 
         //TODO: IMPLEMENT LABELS
+        List<LevelGeometry> levelGeometries = new List<LevelGeometry>(ReadGeometry(root));
+        
+        //TODO: IMPLEMENT COMPOSITEGEOMS
+        XmlNodeList composite = root.SelectNodes("compositegeom");
+        scene.compositegeoms = new Compositegeom[composite.Count];
+        for(int i = 0; i < composite.Count; i++){
+            XmlNode node = composite[i];
+            Compositegeom geom = new Compositegeom();
+            try{geom.name = node.Attributes["id"].Value;} catch{}
+            try{
+                float x = float.Parse(node.Attributes["x"].Value,CultureInfo.InvariantCulture);
+                float y = float.Parse(node.Attributes["y"].Value,CultureInfo.InvariantCulture);
+                geom.position = new(x/DivFac, y/DivFac);
+            } catch{}
+            try{geom.rotation = float.Parse(node.Attributes["rotation"].Value,CultureInfo.InvariantCulture);} catch{}
+            try{geom.dynamic = !bool.Parse(node.Attributes["static"].Value);} catch{}
+            try{geom.tag = node.Attributes["tag"].Value;} catch{}
+            try{geom.material = node.Attributes["material"].Value;} catch{}
+            geom.geometries = ReadGeometry(node);
+            scene.compositegeoms[i] = geom;
+        }
+        scene.geometries = levelGeometries.ToArray();
+        
+        XmlNodeList lines = root.SelectNodes("line");
+        scene.lines = new Line[lines.Count];
+        for(int i = 0; i < lines.Count; i++){
+            Line line = new Line();
+            try{line.id = lines[i].Attributes["id"].Value;} catch{}
+            try{line.tag = lines[i].Attributes["tag"].Value;} catch{}
+            try{line.material = lines[i].Attributes["material"].Value;} catch{}
+            try{
+                float[] pos = lines[i].Attributes["anchor"].Value.Split(",").Select(s => float.Parse(s, CultureInfo.InvariantCulture)).ToArray();
+                line.anchor = new(pos[0] / DivFac, pos[1] / DivFac);
+            } catch{}
+            try{
+                float[] pos = lines[i].Attributes["normal"].Value.Split(",").Select(s => float.Parse(s, CultureInfo.InvariantCulture)).ToArray();
+                line.normal = new(pos[0], pos[1]);
+            } catch{}
+            scene.lines[i] = line;
+        }
+        inStream.Dispose();
+        sceneReader.Dispose();
+        return scene;
+    }
+    public static LevelGeometry[] ReadGeometry(XmlNode root){
         List<LevelGeometry> levelGeometries = new List<LevelGeometry>();
         XmlNodeList circles = root.SelectNodes("circle");
         foreach(XmlNode circle in circles){
@@ -344,6 +389,24 @@ public class ResourceConverter
                 geom.center = new(x, y);
             } catch{}
             try{geom.radius = float.Parse(circle.Attributes["radius"].Value, CultureInfo.InvariantCulture) / DivFac;} catch{}
+            string image = "";
+            try{image = circle.Attributes["image"].Value;} catch{}
+            if(image != ""){
+                Scenelayer layer = new Scenelayer();
+                layer.image = image;
+                layer.colorize = new ColorData(255, 255, 255);
+                try{
+                    float[] pos = circle.Attributes["imagepos"].Value.Split(",").Select(s => float.Parse(s, CultureInfo.InvariantCulture)).ToArray();
+                    layer.pos = new(geom.center.x - pos[0]/DivFac, geom.center.y - pos[1]/DivFac);
+                } catch{}
+                try{layer.rotation = float.Parse(circle.Attributes["imagerot"].Value, CultureInfo.InvariantCulture) * 180 / Mathf.PI;} catch{}
+                try{
+                    float[] pos = circle.Attributes["imagescale"].Value.Split(",").Select(s => float.Parse(s, CultureInfo.InvariantCulture)).ToArray();
+                    layer.scaleX = pos[0];
+                    layer.scaleY = pos[1];
+                } catch{}
+                geom.image = layer;
+            }
             //TODO: IMPLEMENT REST OF PROPERTIES
             levelGeometries.Add(geom);
         }
@@ -368,35 +431,29 @@ public class ResourceConverter
             } catch{}
             // this is in radians for some reason
             try{geom.rotation = float.Parse(rectangle.Attributes["rotation"].Value, CultureInfo.InvariantCulture) * 180 / Mathf.PI;} catch{}
+            string image = "";
+            try{image = rectangle.Attributes["image"].Value;} catch{}
+            if(image != ""){
+                Scenelayer layer = new Scenelayer();
+                layer.image = image;
+                layer.colorize = new ColorData(255, 255, 255);
+                try{
+                    float[] pos = rectangle.Attributes["imagepos"].Value.Split(",").Select(s => float.Parse(s, CultureInfo.InvariantCulture)).ToArray();
+                    layer.pos = new((pos[0]/DivFac) - geom.center.x, (pos[1]/DivFac) - geom.center.y);
+                } catch{}
+                try{layer.rotation = float.Parse(rectangle.Attributes["imagerot"].Value, CultureInfo.InvariantCulture) * 180 / Mathf.PI;} catch{}
+                try{
+                    float[] pos = rectangle.Attributes["imagescale"].Value.Split(",").Select(s => float.Parse(s, CultureInfo.InvariantCulture)).ToArray();
+                    layer.scaleX = pos[0];
+                    layer.scaleY = pos[1];
+                } catch{}
+                geom.image = layer;
+            }
             //TODO: IMPLEMENT REST OF PROPERTIES
             levelGeometries.Add(geom);
         }
-        //TODO: IMPLEMENT COMPOSITEGEOMS
-        scene.compositegeoms = new Compositegeom[0];
-        scene.geometries = levelGeometries.ToArray();
-        
-        XmlNodeList lines = root.SelectNodes("line");
-        scene.lines = new Line[lines.Count];
-        for(int i = 0; i < lines.Count; i++){
-            Line line = new Line();
-            try{line.id = lines[i].Attributes["id"].Value;} catch{}
-            try{line.tag = lines[i].Attributes["tag"].Value;} catch{}
-            try{line.material = lines[i].Attributes["material"].Value;} catch{}
-            try{
-                float[] pos = lines[i].Attributes["anchor"].Value.Split(",").Select(s => float.Parse(s, CultureInfo.InvariantCulture)).ToArray();
-                line.anchor = new(pos[0] / DivFac, pos[1] / DivFac);
-            } catch{}
-            try{
-                float[] pos = lines[i].Attributes["normal"].Value.Split(",").Select(s => float.Parse(s, CultureInfo.InvariantCulture)).ToArray();
-                line.normal = new(pos[0], pos[1]);
-            } catch{}
-            scene.lines[i] = line;
-        }
-        inStream.Dispose();
-        sceneReader.Dispose();
-        return scene;
+        return levelGeometries.ToArray();
     }
-
     public static Button[] ReadButtons(XmlNode baseNode){
         XmlNodeList buttons = baseNode.SelectNodes("button");
         Button[] btns = new Button[buttons.Count];

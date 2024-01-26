@@ -286,7 +286,7 @@ public class JSONLevelLoader : MonoBehaviour
             line.transform.position = l.anchor.ToVector2();
             var box = line.AddComponent<BoxCollider2D>();
             box.offset = new Vector2(-0.5f, 0);
-            box.size = new Vector2(1, 10000);
+            box.size = new Vector2(0.06f, 10000);
             float cosNormal = Vector2.Dot(l.normal.ToVector2().normalized, Vector2.up);
             if(l.normal.x > 0)
                 line.transform.eulerAngles = new Vector3(0, 0, (System.MathF.Acos(cosNormal)*180/System.MathF.PI) - 90f);
@@ -300,7 +300,15 @@ public class JSONLevelLoader : MonoBehaviour
         foreach (var compositegeom in level.scene.compositegeoms)
         {
             GameObject geom = new GameObject(compositegeom.name);
-            geom.AddComponent<CompositeGeom>().data = compositegeom;
+            geom.transform.localPosition = compositegeom.position.ToVector2();
+            //geom.AddComponent<CompositeGeom>().data = compositegeom;
+            foreach (var geometry in compositegeom.geometries)
+            {
+                GameObject part = new GameObject(geometry.id);
+                part.transform.SetParent(geom.transform);
+                part.AddComponent<Geometry>().data = geometry;
+                part.isStatic = !geometry.dynamic;
+            }
             geom.transform.SetParent(StaticData.geometry.transform);
         }
         foreach (var gball in level.level.BallInstance)
@@ -435,6 +443,7 @@ public class JSONLevelLoader : MonoBehaviour
                 } catch{}
             }
         }
+
     }
     private void DestroyAllChildren(Transform transform){
         for(int i = 0; i < transform.childCount; i++){
