@@ -164,8 +164,9 @@ public class ResourceConverter
             XmlNode pipe = root.SelectSingleNode("pipe");
             level.pipe = new();
             level.pipe.id = pipe.Attributes["id"].Value;
+            try{level.pipe.type = pipe.Attributes["type"].Value;} catch{}
             level.pipe.depth = float.Parse(pipe.Attributes["depth"].Value);
-            XmlNodeList vertices = pipe.SelectNodes("vertex");
+            XmlNodeList vertices = pipe.SelectNodes("Vertex");
             level.pipe.Vertex = new Vertex[vertices.Count];
             for(int i = 0; i < vertices.Count; i++){
                 level.pipe.Vertex[i] = new();
@@ -205,10 +206,10 @@ public class ResourceConverter
             try{level.levelexit.filter = exit.Attributes["filter"].Value;} catch{}
             try{level.levelexit.id = exit.Attributes["id"].Value;} catch{}
             try{
-                float[] pos = exit.Attributes["pos"].Value.Split(",").Select(s => float.Parse(s, CultureInfo.InvariantCulture)).ToArray();
+                float[] pos = exit.Attributes["pos"].Value.Split(",").Select(s => float.Parse(s, CultureInfo.InvariantCulture) / DivFac).ToArray();
                 level.levelexit.pos = new(pos[0], pos[1]);
             } catch{}
-            try{level.levelexit.radius = float.Parse(exit.Attributes["radius"].Value, CultureInfo.InvariantCulture);} catch{}
+            try{level.levelexit.radius = float.Parse(exit.Attributes["radius"].Value, CultureInfo.InvariantCulture) / DivFac;} catch{}
         } catch{}
         //TODO: the rest of the stuff
         inStream.Dispose();
@@ -510,6 +511,7 @@ public class ResourceConverter
                 try{jsonball.ball.sizeVariation = float.Parse(shapestr[2], CultureInfo.InvariantCulture);} catch{}
             }
         } catch{}
+        try{jsonball.ball.suckable = bool.Parse(root.Attributes["suckable"].Value);} catch{jsonball.ball.suckable = true;}
         try{jsonball.ball.material = root.Attributes["material"].Value;} catch{}
         try{jsonball.ball.mass = float.Parse(root.Attributes["mass"].Value, CultureInfo.InvariantCulture);} catch{}
         try{jsonball.ball.towerMass = float.Parse(root.Attributes["towermass"].Value, CultureInfo.InvariantCulture);} catch{}

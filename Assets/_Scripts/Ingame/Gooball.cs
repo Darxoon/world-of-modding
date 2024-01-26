@@ -359,7 +359,25 @@ public class Gooball : MonoBehaviour
                 transform.SetParent(GameManager.instance.hoverStrand.transform, true);
                 return;
             }
-            
+            //check if we are in front of a levelExit
+            Vector3 pos = Input.mousePosition;
+            pos.z = 5f;
+            Vector2 worldMousePos = mainCam.ScreenToWorldPoint(pos);
+            Collider2D[] result = new Collider2D[16];
+            int size = Physics2D.OverlapPointNonAlloc(worldMousePos, result, LayerMask.GetMask("Geometry"));
+            for(int i = 0; i < size; i++){
+                Collider2D r = result[i];
+                if(r.CompareTag("levelExit"))
+                {
+                    var comp = r.GetComponent<LevelExitComponent>();
+                    if(comp.pipeOpen)
+                        if(comp.GooballApproached(gameObject)){
+                            RemoveStrand();
+                            Destroy(gameObject);
+                            return;
+                        }
+                }
+            }
             AttachRaycast();
 
             // remove constraints

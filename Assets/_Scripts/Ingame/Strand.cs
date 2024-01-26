@@ -35,7 +35,6 @@ public class Strand : MonoBehaviour
     }
     private void Update()
     {
-        
 
         Vector3 ball1Position = connectedBall1.transform.position;
         Vector3 ball2Position = connectedBall2.transform.position;

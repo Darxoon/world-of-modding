@@ -14,6 +14,7 @@ public static class StaticData
     public static GameObject strands = null;
     public static GameObject forcefields = null;
     public static GameObject ui = null;
+    public static GameObject pipe = null;
 
     public static Dictionary<GameObject, Strand> existingStrands = new Dictionary<GameObject, Strand>();
     public static Dictionary<GameObject, Gooball> existingGooballs = new Dictionary<GameObject, Gooball>();

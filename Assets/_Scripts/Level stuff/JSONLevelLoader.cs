@@ -5,6 +5,7 @@ using System.IO;
 using UnityEngine;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using System;
 
 public class JSONLevelLoader : MonoBehaviour
 {
@@ -183,12 +184,6 @@ public class JSONLevelLoader : MonoBehaviour
     }
     public void LoadLevel(string levelName){
         Debug.Log("Loading level " + levelName);
-        DestroyAllChildren(StaticData.balls.transform);
-        DestroyAllChildren(StaticData.sceneLayers.transform);
-        DestroyAllChildren(StaticData.geometry.transform);
-        DestroyAllChildren(StaticData.strands.transform);
-        DestroyAllChildren(StaticData.forcefields.transform);
-        DestroyAllChildren(StaticData.ui.transform);
         JsonSerializerSettings settings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore
@@ -221,6 +216,12 @@ public class JSONLevelLoader : MonoBehaviour
             Debug.LogError($"Level {levelName} does not exist.");
             return;
         }
+        DestroyAllChildren(StaticData.balls.transform);
+        DestroyAllChildren(StaticData.sceneLayers.transform);
+        DestroyAllChildren(StaticData.geometry.transform);
+        DestroyAllChildren(StaticData.strands.transform);
+        DestroyAllChildren(StaticData.forcefields.transform);
+        DestroyAllChildren(StaticData.ui.transform);
         visualdebug = level.level.visualdebug;
         GameManager.instance.currentLevel = level;
         Camera.main.backgroundColor = level.scene.backgroundcolor.ToUnityColor();
@@ -234,8 +235,8 @@ public class JSONLevelLoader : MonoBehaviour
         
         foreach (var resource in level.resrc.resources)
         {
-            GameManager.ResourcePaths.Add(resource.Key, resource.Value);
-            
+            if(!GameManager.ResourcePaths.ContainsKey(resource.Key))
+                GameManager.ResourcePaths.Add(resource.Key, resource.Value);
         }
         foreach (var gball in level.level.BallInstance)
         {
@@ -248,6 +249,19 @@ public class JSONLevelLoader : MonoBehaviour
                 foreach (var path in ball.resrc.resources)
                     if (!GameManager.ResourcePaths.ContainsKey(path.Key))
                         GameManager.ResourcePaths.Add(path.Key, path.Value);
+            }
+        }
+        string pipepath = $"images/levelimages/";
+        string pipetype = level.level.pipe.type == "" ? "" : "_" + level.level.pipe.type;
+        string[] pipeRes = { $"pipe_horiz", "pipe_bend_bl", "pipe_bend_br", "pipe_bend_tl", "pipe_bend_tr", "pipeCap", "pipeCap_closed" };
+        foreach(var res in pipeRes){
+            if(level.level.pipe.type == "Black" || level.level.pipe.type == "Beauty"){
+                if((res == "pipe_horiz") && !GameManager.ResourcePaths.ContainsKey(res))
+                    GameManager.ResourcePaths.Add(res, $"{pipepath}{res}{pipetype}.png");
+                else if (!GameManager.ResourcePaths.ContainsKey(res))
+                    GameManager.ResourcePaths.Add(res, $"{pipepath}{res}.png");
+            } else if (!GameManager.ResourcePaths.ContainsKey(res)){
+                GameManager.ResourcePaths.Add(res, $"{pipepath}{res}{pipetype}.png");
             }
         }
         StaticData.PopulateAllResources();
@@ -325,6 +339,98 @@ public class JSONLevelLoader : MonoBehaviour
             GameObject button = new GameObject(btn.id);
             button.AddComponent<ButtonController>().data = btn;
             button.transform.SetParent(StaticData.ui.transform);
+        }
+        
+        //Create pipe
+        float pipeDiv = 2f;
+        SpriteData pipe_horiz;
+        GameManager.imageFiles.TryGetValue("pipe_horiz", out pipe_horiz);
+        if(pipe_horiz != null && level.level.pipe.Vertex != null)
+        for(int i = 1; i < level.level.pipe.Vertex.Length; i++){
+            Vector2 vtx = new Vector2(level.level.pipe.Vertex[i].x, level.level.pipe.Vertex[i].y);
+            Vector2 prev_vtx = new Vector2(level.level.pipe.Vertex[i-1].x, level.level.pipe.Vertex[i-1].y);
+            GameObject obj = new GameObject("segment");
+            obj.transform.SetParent(StaticData.pipe.transform);
+            obj.transform.localPosition = new Vector3((vtx.x + prev_vtx.x)/2, (vtx.y + prev_vtx.y)/2, 0);
+            SpriteRenderer renderer = obj.AddComponent<SpriteRenderer>();
+            
+            float cosNormal = Vector2.Dot((vtx-prev_vtx).normalized, Vector2.up);
+            obj.transform.eulerAngles = new Vector3(0, 0, (System.MathF.Acos(cosNormal)*180/System.MathF.PI) - 90f);
+
+            
+            if(pipe_horiz.sprite2x != null){
+                renderer.sprite = pipe_horiz.sprite2x;
+                obj.transform.localScale = new Vector3(1, 0.5f, 0);
+            } else
+                renderer.sprite = pipe_horiz.sprite;
+            renderer.sortingOrder = (int)level.level.pipe.depth;
+            float spritelen = renderer.sprite.bounds.max.x - renderer.sprite.bounds.min.x;
+            obj.transform.localScale = new Vector3(Vector3.Distance(vtx, prev_vtx)/spritelen, obj.transform.localScale.y/pipeDiv, 0);
+        }
+        //pipe bends
+        SpriteData pipe_bend_bl, pipe_bend_br, pipe_bend_tl, pipe_bend_tr;
+        GameManager.imageFiles.TryGetValue("pipe_bend_bl", out pipe_bend_bl);
+        GameManager.imageFiles.TryGetValue("pipe_bend_tl", out pipe_bend_tl);
+        GameManager.imageFiles.TryGetValue("pipe_bend_br", out pipe_bend_br);
+        GameManager.imageFiles.TryGetValue("pipe_bend_tr", out pipe_bend_tr);
+        for(int i = 1; i < level.level.pipe.Vertex.Length-1; i++){
+            Vector2 vtx = new Vector2(level.level.pipe.Vertex[i].x, level.level.pipe.Vertex[i].y);
+            Vector2 prev_vtx = new Vector2(level.level.pipe.Vertex[i-1].x, level.level.pipe.Vertex[i-1].y);
+            Vector2 next_vtx = new Vector2(level.level.pipe.Vertex[i+1].x, level.level.pipe.Vertex[i+1].y);
+            Vector2 prevcur = (vtx-prev_vtx).normalized;
+            Vector2 curnext = (next_vtx-vtx).normalized;
+            Vector3 inside = curnext-prevcur;
+            SpriteData cur_data = null;
+            if(inside.x < 0 && inside.y > 0)
+                cur_data = pipe_bend_br;
+            else if(inside.x > 0 && inside.y > 0)
+                cur_data = pipe_bend_bl;
+            else if(inside.x < 0 && inside.y < 0)
+                cur_data = pipe_bend_tr;
+            else if(inside.x > 0 && inside.y < 0)
+                cur_data = pipe_bend_tl;
+            GameObject obj = new GameObject("bend");
+            obj.transform.SetParent(StaticData.pipe.transform);
+            obj.transform.localPosition = vtx;
+            SpriteRenderer renderer = obj.AddComponent<SpriteRenderer>();
+            if(cur_data.sprite2x != null){
+                renderer.sprite = cur_data.sprite2x;
+                obj.transform.localScale /= 2;
+            } else{
+                renderer.sprite = cur_data.sprite;
+            }
+            obj.transform.localScale /= pipeDiv;
+            renderer.sortingOrder = (int)level.level.pipe.depth+2;
+        }
+        //Pipe cap
+        SpriteData pipeCap, pipeCapOpen;
+        if(GameManager.imageFiles.TryGetValue("pipeCap_closed", out pipeCap) && 
+        GameManager.imageFiles.TryGetValue("pipeCap", out pipeCapOpen)){
+            GameObject obj = new GameObject("cap");
+            SpriteRenderer renderer = obj.AddComponent<SpriteRenderer>();
+            if(pipeCap.sprite2x != null){
+                renderer.sprite = pipeCap.sprite2x;
+                obj.transform.localScale /= 6;
+            } else
+                renderer.sprite = pipeCap.sprite;
+            Vector3 vtx = new Vector2(level.level.pipe.Vertex[0].x, level.level.pipe.Vertex[0].y);
+            Vector3 prev_vtx = new Vector2(level.level.pipe.Vertex[1].x, level.level.pipe.Vertex[1].y);
+            Vector3 move = renderer.sprite.bounds.max;
+            obj.transform.localPosition = new Vector2(level.level.pipe.Vertex[0].x, level.level.pipe.Vertex[0].y);
+            renderer.sortingOrder = (int)level.level.pipe.depth+1;
+            obj.transform.SetParent(StaticData.pipe.transform);
+            Vector3 diff = (vtx-prev_vtx).normalized;
+            obj.transform.localPosition += new Vector3(diff.x * move.x/12, diff.y * move.y/12);
+            //Level exit
+            try{
+                GameObject exit = new GameObject(level.level.levelexit.id);
+                exit.tag = "levelExit";
+                exit.transform.localPosition = level.level.levelexit.pos.ToVector2();
+                var comp = exit.AddComponent<LevelExitComponent>();
+                comp.data = level.level.levelexit; comp.capObj = obj; 
+                comp.capRender = renderer; comp.closed = pipeCap; comp.open = pipeCapOpen;
+                exit.transform.SetParent(StaticData.pipe.transform);
+            } catch{}
         }
     }
     private void DestroyAllChildren(Transform transform){

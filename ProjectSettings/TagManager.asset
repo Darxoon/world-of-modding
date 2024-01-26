@@ -11,6 +11,7 @@ TagManager:
   - BallSensor
   - RadialForcefield
   - LinearForcefield
+  - levelExit
   layers:
   - Default
   - TransparentFX

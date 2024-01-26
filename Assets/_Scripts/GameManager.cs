@@ -24,7 +24,15 @@ public class GameManager : MonoBehaviour
     [SerializeField] public float positiveDistanceScale;
     [SerializeField] public float negativeDistanceScale;
     public JSONLevel currentLevel = null;
-    
+    private int _collected = 0;
+    public int collected {
+        get {return _collected;} 
+        set {
+             _collected = value;
+            if(_collected >= currentLevel.level.ballsrequired)
+                StaticData.levelLoader.LoadLevel("MapWorldView");
+        }
+    }
     private void Awake()
     {
         if (instance)
@@ -41,6 +49,7 @@ public class GameManager : MonoBehaviour
         StaticData.strands = GameObject.Find("Strands");
         StaticData.forcefields = GameObject.Find("Forcefields");
         StaticData.ui = GameObject.Find("UI");
+        StaticData.pipe = GameObject.Find("Pipe");
         StaticData.gameManager = this;
 
     }

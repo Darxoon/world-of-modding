@@ -129,7 +129,7 @@ public class Ball
 
     #region Level interaction
     public bool invulnerable; //does what it says
-    public bool suckable; //still gotta use it somehow
+    public bool suckable = true; //still gotta use it somehow
     public bool autobounds; //damn there's a lot of stuff unimplemented
     public bool autoboundsunattached;
     public bool sticky;
